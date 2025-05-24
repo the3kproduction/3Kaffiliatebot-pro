@@ -6,4 +6,7 @@ requires-python = ">=3.11"
 dependencies = [
     "python-dotenv>=1.1.0",
     "requests>=2.32.3",
+    "sendgrid>=6.12.2",
+    "slack-sdk>=3.35.0",
+    "twilio>=9.6.1",
 ]
