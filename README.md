@@ -37,9 +37,18 @@ pip install requests python-dotenv
 python main.py
 ```
 
+## Multi-Platform Marketing
+
+Your automation now posts to ALL major platforms:
+
+- 🎮 **Discord** - Rich embeds with product images
+- 📱 **Telegram** - Formatted messages with product links  
+- 💬 **Slack** - Professional blocks with action buttons
+- 📧 **Email** - HTML newsletters via SendGrid
+
 ## Deployment to Render
 
-This project is ready for 24/7 automated deployment on Render:
+Ready for 24/7 automated deployment:
 
 ### 1. Push to GitHub
 1. Create a new repository on GitHub
@@ -50,21 +59,52 @@ This project is ready for 24/7 automated deployment on Render:
 2. Click "New" → "Cron Job"
 3. Connect your GitHub repository
 4. Render will automatically detect the `render.yaml` configuration
-5. Set your `WEBHOOK_URL` environment variable in the Render dashboard
+5. Add your platform credentials in environment variables
 6. Deploy!
 
-The script will run automatically every 3 hours, posting random products to your Zapier webhook.
+The script runs every 3 hours, posting random products to ALL your configured platforms.
 
 ### Render Configuration
-- **Type**: Cron Job (runs on schedule)
+- **Type**: Cron Job (scheduled automation)
 - **Schedule**: Every 3 hours (`0 */3 * * *`)
 - **Runtime**: Python
 - **Command**: `python main.py`
 
+## Platform Setup (Choose Your Favorites!)
+
+### Discord (Easiest & FREE!)
+1. Create a Discord server or use existing one
+2. Go to Server Settings → Integrations → Webhooks
+3. Create New Webhook, copy the URL
+4. Add to `DISCORD_WEBHOOK_URL`
+
+### Telegram (FREE)
+1. Message @BotFather on Telegram
+2. Create a new bot with `/newbot`
+3. Get your bot token and chat ID
+4. Add to `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`
+
+### Slack (FREE)
+1. Create a Slack app at api.slack.com
+2. Get your bot token
+3. Add to `SLACK_BOT_TOKEN` and `SLACK_CHANNEL_ID`
+
+### Email via SendGrid (FREE tier)
+1. Sign up at sendgrid.com
+2. Get your API key
+3. Add to `SENDGRID_API_KEY`, `EMAIL_FROM`, `EMAIL_TO`
+
 ## Environment Variables
 
-You need to set these in Render's dashboard:
+Set these in Render's dashboard (you only need the platforms you want):
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `WEBHOOK_URL` | Your Zapier webhook URL | `https://hooks.zapier.com/hooks/catch/123/abc` |
+| Variable | Platform | Required |
+|----------|----------|----------|
+| `DISCORD_WEBHOOK_URL` | Discord | For Discord posting |
+| `TELEGRAM_BOT_TOKEN` | Telegram | For Telegram posting |
+| `TELEGRAM_CHAT_ID` | Telegram | For Telegram posting |
+| `SLACK_BOT_TOKEN` | Slack | For Slack posting |
+| `SLACK_CHANNEL_ID` | Slack | For Slack posting |
+| `SENDGRID_API_KEY` | Email | For email marketing |
+| `EMAIL_FROM` | Email | Sender email address |
+| `EMAIL_TO` | Email | Recipient email address |

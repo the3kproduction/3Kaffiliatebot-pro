@@ -3,8 +3,22 @@ services:
     name: product-marketing-automation
     env: python
     schedule: "0 */3 * * *"  # Runs every 3 hours
-    buildCommand: "pip install requests python-dotenv"
+    buildCommand: "pip install requests python-dotenv sendgrid slack-sdk"
     startCommand: "python main.py"
     envVars:
-      - key: WEBHOOK_URL
-        value: ""  # You'll set this in Render dashboard
+      - key: DISCORD_WEBHOOK_URL
+        value: ""
+      - key: TELEGRAM_BOT_TOKEN
+        value: ""
+      - key: TELEGRAM_CHAT_ID
+        value: ""
+      - key: SLACK_BOT_TOKEN
+        value: ""
+      - key: SLACK_CHANNEL_ID
+        value: ""
+      - key: SENDGRID_API_KEY
+        value: ""
+      - key: EMAIL_FROM
+        value: ""
+      - key: EMAIL_TO
+        value: ""
