@@ -4,9 +4,21 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
+    "beautifulsoup4>=4.13.4",
+    "flask>=3.1.1",
+    "flask-dance>=7.1.0",
+    "flask-login>=0.6.3",
+    "flask-sqlalchemy>=3.1.1",
+    "lxml>=5.4.0",
+    "oauthlib>=3.2.2",
+    "psycopg2-binary>=2.9.10",
+    "pyjwt>=2.10.1",
     "python-dotenv>=1.1.0",
     "requests>=2.32.3",
     "sendgrid>=6.12.2",
     "slack-sdk>=3.35.0",
+    "sqlalchemy>=2.0.41",
+    "trafilatura>=2.0.0",
     "twilio>=9.6.1",
+    "werkzeug>=3.1.3",
 ]
