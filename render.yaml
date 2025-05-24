@@ -1,0 +1,10 @@
+services:
+  - type: cron
+    name: product-marketing-automation
+    env: python
+    schedule: "0 */3 * * *"  # Runs every 3 hours
+    buildCommand: "pip install requests python-dotenv"
+    startCommand: "python main.py"
+    envVars:
+      - key: WEBHOOK_URL
+        sync: false  # You'll set this in Render dashboard
