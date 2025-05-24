@@ -1,0 +1,50 @@
+[
+  {
+    "title": "LED Smart Light Strip",
+    "description": "Transform your room with this color-changing LED strip. Features millions of colors, app control, and music sync functionality.",
+    "url": "https://mystore.com/product1",
+    "image": "https://mystore.com/images/product1.jpg"
+  },
+  {
+    "title": "Wireless Bluetooth Earbuds",
+    "description": "High quality sound with noise cancellation. Perfect for workouts, commuting, and everyday listening with 8-hour battery life.",
+    "url": "https://mystore.com/product2",
+    "image": "https://mystore.com/images/product2.jpg"
+  },
+  {
+    "title": "Portable Phone Charger",
+    "description": "Never run out of battery on the go. 10,000mAh capacity with fast charging support for all devices.",
+    "url": "https://mystore.com/product3",
+    "image": "https://mystore.com/images/product3.jpg"
+  },
+  {
+    "title": "Smart Fitness Tracker",
+    "description": "Monitor your health and fitness goals with heart rate tracking, sleep analysis, and 50+ workout modes.",
+    "url": "https://mystore.com/product4",
+    "image": "https://mystore.com/images/product4.jpg"
+  },
+  {
+    "title": "Wireless Charging Pad",
+    "description": "Effortless charging for your devices. Compatible with all Qi-enabled smartphones and accessories.",
+    "url": "https://mystore.com/product5",
+    "image": "https://mystore.com/images/product5.jpg"
+  },
+  {
+    "title": "Bluetooth Speaker",
+    "description": "Premium sound quality in a compact design. Waterproof with 12-hour battery life for any adventure.",
+    "url": "https://mystore.com/product6",
+    "image": "https://mystore.com/images/product6.jpg"
+  },
+  {
+    "title": "Smart Home Hub",
+    "description": "Control all your smart devices from one central hub. Compatible with Alexa, Google Home, and Apple HomeKit.",
+    "url": "https://mystore.com/product7",
+    "image": "https://mystore.com/images/product7.jpg"
+  },
+  {
+    "title": "USB-C Multi-Port Adapter",
+    "description": "Expand your connectivity with HDMI, USB 3.0, SD card reader, and fast charging in one compact adapter.",
+    "url": "https://mystore.com/product8",
+    "image": "https://mystore.com/images/product8.jpg"
+  }
+]
