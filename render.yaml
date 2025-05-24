@@ -7,4 +7,4 @@ services:
     startCommand: "python main.py"
     envVars:
       - key: WEBHOOK_URL
-        sync: false  # You'll set this in Render dashboard
+        value: ""  # You'll set this in Render dashboard
