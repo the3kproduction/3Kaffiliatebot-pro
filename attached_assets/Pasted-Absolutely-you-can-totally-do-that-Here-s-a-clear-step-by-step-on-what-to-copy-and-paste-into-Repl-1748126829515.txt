@@ -1,0 +1,116 @@
+Absolutely, you can totally do that! Here’s a clear step-by-step on what to copy and paste into Replit so it works with the Render scheduled job setup:
+
+⸻
+
+What you need to do in Replit:
+ 1. Create three files:
+
+ • products.json (your product list)
+ • main.py (the single-run script)
+ • .env (your webhook URL)
+
+⸻
+
+1. products.json
+
+Paste this in:
+
+[
+  {
+    "title": "LED Smart Light Strip",
+    "description": "Transform your room with this color-changing LED strip.",
+    "url": "https://mystore.com/product1",
+    "image": "https://mystore.com/images/product1.jpg"
+  },
+  {
+    "title": "Wireless Bluetooth Earbuds",
+    "description": "High quality sound with noise cancellation.",
+    "url": "https://mystore.com/product2",
+    "image": "https://mystore.com/images/product2.jpg"
+  },
+  {
+    "title": "Portable Phone Charger",
+    "description": "Never run out of battery on the go.",
+    "url": "https://mystore.com/product3",
+    "image": "https://mystore.com/images/product3.jpg"
+  }
+]
+
+
+⸻
+
+2. main.py
+
+Paste this script:
+
+import requests
+import json
+import random
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+
+if not WEBHOOK_URL:
+    print("ERROR: Please set your WEBHOOK_URL in the .env file.")
+    exit(1)
+
+def load_products():
+    with open("products.json", "r") as f:
+        return json.load(f)
+
+def post_product(product):
+    payload = {
+        "title": product["title"],
+        "description": product["description"],
+        "url": product["url"],
+        "image": product["image"]
+    }
+    try:
+        response = requests.post(WEBHOOK_URL, json=payload)
+        if response.status_code in (200, 201):
+            print(f"Posted: {product['title']}")
+        else:
+            print(f"Failed to post: {product['title']} | Status: {response.status_code}")
+    except Exception as e:
+        print(f"Error posting product: {e}")
+
+def main():
+    products = load_products()
+    product = random.choice(products)
+    post_product(product)
+
+if __name__ == "__main__":
+    main()
+
+
+⸻
+
+3. .env
+
+Create this file and add your webhook URL:
+
+WEBHOOK_URL=https://hooks.zapier.com/hooks/catch/your-id/your-token
+
+
+⸻
+
+Bonus: Install dependencies on Replit
+
+In the Replit shell or poetry file, make sure to have:
+
+pip install requests python-dotenv
+
+
+⸻
+
+Next steps after that:
+ • Push your Replit project to GitHub
+ • Link it to Render (Render can pull directly from your GitHub repo)
+ • Set up a Scheduled Job on Render to run python main.py every 1-3 hours
+
+⸻
+
+If you want, I can help you with the GitHub and Render setup too. Just ask!
