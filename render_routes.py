@@ -304,7 +304,7 @@ def api_auto_promote():
             'success': False
         }), 500
 
-@app.route('/setup')
+@app.route('/setup', methods=['GET', 'POST'])
 def setup():
     """Setup page for affiliate link and platform configuration"""
     user_id = session.get('user_id')
@@ -312,6 +312,26 @@ def setup():
     
     if not user:
         return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        try:
+            # Update user's affiliate and platform settings
+            user.amazon_affiliate_id = request.form.get('affiliate_id', '')
+            user.discord_webhook_url = request.form.get('discord_webhook', '')
+            user.telegram_bot_token = request.form.get('telegram_bot_token', '')
+            user.telegram_chat_id = request.form.get('telegram_chat_id', '')
+            user.slack_bot_token = request.form.get('slack_bot_token', '')
+            user.slack_channel_id = request.form.get('slack_channel_id', '')
+            user.sendgrid_api_key = request.form.get('sendgrid_api_key', '')
+            user.email_from = request.form.get('email_from', '')
+            user.email_to = request.form.get('email_to', '')
+            
+            db.session.commit()
+            
+            return render_template('setup.html', user=user, success_message="Settings saved successfully!")
+        except Exception as e:
+            logger.error(f"Setup save error: {e}")
+            return render_template('setup.html', user=user, error_message="Error saving settings")
     
     return render_template('setup.html', user=user)
 
