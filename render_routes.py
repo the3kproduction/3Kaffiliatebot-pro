@@ -363,6 +363,108 @@ def products():
         logger.error(f"Products error: {e}")
         return render_template('products.html', user=user, products=[])
 
+@app.route('/admin/product-catalog')
+def admin_product_catalog():
+    """Admin product catalog management"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user:
+        return redirect(url_for('index'))
+    
+    # Only allow admin access for your email
+    if user.email != 'drfe8694@gmail.com':
+        return redirect(url_for('dashboard'))
+    
+    try:
+        # Get all products from inventory
+        all_products = ProductInventory.query.order_by(ProductInventory.updated_at.desc()).all()
+        
+        # Get statistics
+        total_products = ProductInventory.query.count()
+        active_products = ProductInventory.query.filter_by(is_active=True).count()
+        trending_products = ProductInventory.query.filter_by(is_trending=True).count()
+        
+        # Get top promoted products
+        top_promoted = ProductInventory.query.order_by(ProductInventory.times_promoted.desc()).limit(10).all()
+        
+        return render_template('admin_product_catalog.html',
+                             user=user,
+                             products=all_products,
+                             total_products=total_products,
+                             active_products=active_products,
+                             trending_products=trending_products,
+                             top_promoted=top_promoted)
+    except Exception as e:
+        logger.error(f"Admin product catalog error: {e}")
+        return render_template('admin_product_catalog.html',
+                             user=user,
+                             products=[],
+                             total_products=0,
+                             active_products=0,
+                             trending_products=0,
+                             top_promoted=[])
+
+@app.route('/admin/product-catalog/toggle-active/<asin>', methods=['POST'])
+def toggle_product_active(asin):
+    """Toggle product active status"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user or user.email != 'drfe8694@gmail.com':
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    try:
+        product = ProductInventory.query.filter_by(asin=asin).first()
+        if product:
+            product.is_active = not product.is_active
+            db.session.commit()
+            return jsonify({'success': True, 'is_active': product.is_active})
+        return jsonify({'error': 'Product not found'}), 404
+    except Exception as e:
+        logger.error(f"Toggle product active error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/admin/product-catalog/toggle-trending/<asin>', methods=['POST'])
+def toggle_product_trending(asin):
+    """Toggle product trending status"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user or user.email != 'drfe8694@gmail.com':
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    try:
+        product = ProductInventory.query.filter_by(asin=asin).first()
+        if product:
+            product.is_trending = not product.is_trending
+            db.session.commit()
+            return jsonify({'success': True, 'is_trending': product.is_trending})
+        return jsonify({'error': 'Product not found'}), 404
+    except Exception as e:
+        logger.error(f"Toggle product trending error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/admin/product-catalog/delete/<asin>', methods=['POST'])
+def delete_product(asin):
+    """Delete product from catalog"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user or user.email != 'drfe8694@gmail.com':
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    try:
+        product = ProductInventory.query.filter_by(asin=asin).first()
+        if product:
+            db.session.delete(product)
+            db.session.commit()
+            return jsonify({'success': True})
+        return jsonify({'error': 'Product not found'}), 404
+    except Exception as e:
+        logger.error(f"Delete product error: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/logout')
 def logout():
     """Simple logout"""
