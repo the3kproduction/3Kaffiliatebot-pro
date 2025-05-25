@@ -607,10 +607,13 @@ def api_save_platform():
         return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/api/test-connections', methods=['POST'])
-@require_login
 def api_test_connections():
     """Test platform connections for user"""
     try:
+        # Check if user is logged in
+        if not current_user or not current_user.is_authenticated:
+            return jsonify({'success': False, 'error': 'Not authenticated'})
+        
         user = current_user
         
         results = {
