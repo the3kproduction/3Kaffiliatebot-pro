@@ -60,7 +60,14 @@ class UserSessionStorage(BaseStorage):
 
 def make_replit_blueprint():
     try:
-        repl_id = os.environ['REPL_ID']
+        repl_id = os.environ.get('REPL_ID')
+        if not repl_id:
+            # For Render deployment, use a default client ID or disable Replit auth
+            if os.environ.get('RENDER'):
+                # Skip Replit auth on Render - we'll use a simple auth system instead
+                return None
+            else:
+                raise SystemExit("the REPL_ID environment variable must be set")
     except KeyError:
         raise SystemExit("the REPL_ID environment variable must be set")
 

@@ -9,8 +9,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Register authentication blueprint
-app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
+# Register authentication blueprint (only if available)
+replit_bp = make_replit_blueprint()
+if replit_bp:
+    app.register_blueprint(replit_bp, url_prefix="/auth")
 
 # Make session permanent
 @app.before_request
