@@ -512,6 +512,7 @@ def refresh_products():
 def browse_products():
     """Browse all available products"""
     from inventory_manager import InventoryManager
+    from models import ProductInventory
     
     inventory = InventoryManager()
     # Get sample products for browsing
