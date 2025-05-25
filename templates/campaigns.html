@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaigns - AffiliateBot Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .back-btn { position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 25px; border: none; border-radius: 25px; text-decoration: none; }
+        .campaigns-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .campaign-card { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 25px; backdrop-filter: blur(10px); }
+        .campaign-status { padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; margin-bottom: 15px; display: inline-block; }
+        .active { background: #4CAF50; }
+        .inactive { background: #9E9E9E; }
+        .btn { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 10px 20px; border: none; border-radius: 20px; cursor: pointer; text-decoration: none; display: inline-block; margin: 5px; }
+    </style>
+</head>
+<body>
+    <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Marketing Campaigns</h1>
+            <p>Manage your affiliate marketing campaigns</p>
+        </div>
+
+        <div class="campaigns-grid">
+            {% for campaign in campaigns %}
+            <div class="campaign-card">
+                <span class="campaign-status {{ 'active' if campaign.is_active else 'inactive' }}">
+                    {{ 'Active' if campaign.is_active else 'Inactive' }}
+                </span>
+                <h3>{{ campaign.name }}</h3>
+                <p>{{ campaign.description or 'No description' }}</p>
+                <p><strong>Category:</strong> {{ campaign.category or 'General' }}</p>
+                <p><strong>Created:</strong> {{ campaign.created_at.strftime('%Y-%m-%d') if campaign.created_at else 'N/A' }}</p>
+                <div style="margin-top: 15px;">
+                    <a href="#" class="btn">Edit Campaign</a>
+                    <a href="#" class="btn">View Posts</a>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if not campaigns %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; background: rgba(255,255,255,0.1); border-radius: 15px;">
+                <h3>No Campaigns Yet</h3>
+                <p>Create your first marketing campaign to get started!</p>
+                <a href="#" class="btn" style="margin-top: 20px;">+ Create Campaign</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

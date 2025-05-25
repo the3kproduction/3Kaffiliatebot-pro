@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - AffiliateBot Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .back-btn { position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 25px; border: none; border-radius: 25px; text-decoration: none; }
+        .users-table { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; backdrop-filter: blur(10px); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        th { background: rgba(255,255,255,0.1); font-weight: bold; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .subscription-badge { padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; }
+        .free { background: #9E9E9E; }
+        .premium { background: #FF9800; }
+        .pro { background: #4CAF50; }
+    </style>
+</head>
+<body>
+    <a href="/admin" class="back-btn">← Back to Admin</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>👥 User Management</h1>
+            <p>All registered users on the platform</p>
+        </div>
+
+        <div class="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subscription</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>
+                            <img src="{{ user.profile_image_url or '/static/default-avatar.png' }}" 
+                                 alt="Avatar" class="user-avatar">
+                        </td>
+                        <td>{{ user.first_name or 'N/A' }} {{ user.last_name or '' }}</td>
+                        <td>{{ user.email or 'No email' }}</td>
+                        <td>
+                            <span class="subscription-badge {{ user.subscription_tier or 'free' }}">
+                                {{ (user.subscription_tier or 'free').title() }}
+                            </span>
+                        </td>
+                        <td>{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else 'N/A' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            {% if not users %}
+            <div style="text-align: center; padding: 40px;">
+                <h3>No users found</h3>
+                <p>No users have registered yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
