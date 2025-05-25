@@ -6,6 +6,7 @@ from replit_auth import require_login, make_replit_blueprint
 from amazon_scraper import AmazonProductScraper
 from marketing_automation import MultiPlatformPoster
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,22 @@ logger = logging.getLogger(__name__)
 replit_bp = make_replit_blueprint()
 if replit_bp:
     app.register_blueprint(replit_bp, url_prefix="/auth")
+
+# Simple auth bypass for Render deployment
+def create_demo_user():
+    """Create a demo user for Render deployment"""
+    demo_user = User.query.filter_by(id='demo-user').first()
+    if not demo_user:
+        demo_user = User(
+            id='demo-user',
+            email='demo@affiliatebot.com',
+            first_name='Demo',
+            last_name='User',
+            is_admin=True
+        )
+        db.session.add(demo_user)
+        db.session.commit()
+    return demo_user
 
 # Make session permanent
 @app.before_request
@@ -22,6 +39,13 @@ def make_session_permanent():
 @app.route('/')
 def index():
     """Landing page - shows login for guests, dashboard for logged-in users"""
+    # For Render deployment without Replit auth, auto-login demo user
+    if os.environ.get('RENDER') and not current_user.is_authenticated:
+        from flask_login import login_user
+        demo_user = create_demo_user()
+        login_user(demo_user)
+        return redirect(url_for('dashboard'))
+    
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
     
