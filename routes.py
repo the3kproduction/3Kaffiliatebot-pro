@@ -587,7 +587,8 @@ def spotify_auth_url():
     spotify_client_id = os.environ.get('SPOTIFY_CLIENT_ID')
     
     if spotify_client_id:
-        redirect_uri = request.url_root.rstrip('/') + '/spotify-callback'
+        # Use exact redirect URI that matches Spotify app settings
+        redirect_uri = 'https://codecraft-drfe8694.repl.co/spotify-callback'
         scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state'
         
         auth_url = f"https://accounts.spotify.com/authorize?" \
