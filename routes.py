@@ -600,9 +600,11 @@ def api_test_connections():
     return jsonify(results)
 
 @app.route('/api/promote-products', methods=['POST'])
-@require_login
 def api_promote_products():
     """Promote multiple products using existing platform configurations"""
+    if not current_user.is_authenticated:
+        return jsonify({'success': False, 'error': 'Please log in'})
+    
     user = current_user
     data = request.get_json()
     num_products = data.get('count', 1)
