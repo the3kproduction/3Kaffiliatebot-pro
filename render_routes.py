@@ -16,15 +16,17 @@ logger = logging.getLogger(__name__)
 def create_admin_user():
     """Create admin user for Render deployment"""
     try:
-        admin_user = User.query.filter_by(email='drfe8694@gmail.com').first()
+        admin_user = User.query.filter_by(email='the3kproduction@gmail.com').first()
         if not admin_user:
             admin_user = User()
-            admin_user.id = 'admin-user'
-            admin_user.email = 'drfe8694@gmail.com'
-            admin_user.first_name = 'Admin'
-            admin_user.last_name = 'User'
+            admin_user.id = 'admin-3kloudz'
+            admin_user.email = 'the3kproduction@gmail.com'
+            admin_user.username = '3Kloudz'
+            admin_user.first_name = '3K'
+            admin_user.last_name = 'Production'
             admin_user.is_admin = True
-            admin_user.subscription_tier = 'pro'
+            admin_user.subscription_tier = 'lifetime'
+            admin_user.amazon_affiliate_id = 'luxoraconnect-20'
             db.session.add(admin_user)
             db.session.commit()
         return admin_user
@@ -33,12 +35,13 @@ def create_admin_user():
         # Return a mock user if database fails
         class MockUser:
             def __init__(self):
-                self.id = 'admin-user'
-                self.email = 'drfe8694@gmail.com'
-                self.first_name = 'Admin'
-                self.last_name = 'User'
+                self.id = 'admin-3kloudz'
+                self.email = 'the3kproduction@gmail.com'
+                self.username = '3Kloudz'
+                self.first_name = '3K'
+                self.last_name = 'Production'
                 self.is_admin = True
-                self.subscription_tier = 'pro'
+                self.subscription_tier = 'lifetime'
         return MockUser()
 
 # DISABLED: No auto-login for security
