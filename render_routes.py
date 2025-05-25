@@ -60,7 +60,10 @@ def dashboard():
         ai_selector = AutoProductSelector(user)
         recommended_products = ai_selector.get_ai_recommended_products(limit=6)
         
-        # Convert to display format
+        # Get trending products from inventory
+        trending_products = inventory.get_best_performing_products(limit=6)
+        
+        # Convert recommended products to display format
         products_display = []
         for product in recommended_products:
             products_display.append({
@@ -72,6 +75,32 @@ def dashboard():
                 'category': product.category or 'General'
             })
         
+        # Convert trending products to display format
+        trending_display = []
+        for product in trending_products:
+            trending_display.append({
+                'asin': product.asin,
+                'title': product.product_title,
+                'price': product.price or 'N/A',
+                'rating': product.rating or 0,
+                'image_url': product.image_url or '/static/placeholder.jpg',
+                'category': product.category or 'General'
+            })
+        
+        # Create analytics object for template
+        analytics = {
+            'total_posts': total_posts,
+            'total_clicks': total_clicks,
+            'estimated_revenue': total_clicks * 0.05,  # Estimate 5% conversion rate
+            'conversion_rate': 0.05 if total_clicks > 0 else 0,
+            'platform_stats': {
+                'discord': {'posts': 0, 'clicks': 0},
+                'telegram': {'posts': 0, 'clicks': 0}, 
+                'slack': {'posts': 0, 'clicks': 0},
+                'email': {'posts': 0, 'clicks': 0}
+            }
+        }
+        
         return render_template('dashboard_enhanced.html',
                              user=user,
                              campaigns=campaigns,
@@ -79,10 +108,25 @@ def dashboard():
                              total_posts=total_posts,
                              total_clicks=total_clicks,
                              recommended_products=products_display,
+                             trending_products=trending_display,
+                             analytics=analytics,
                              page_title="AffiliateBot Pro Dashboard")
     
     except Exception as e:
         logger.error(f"Dashboard error: {e}")
+        # Create default analytics for error case
+        analytics = {
+            'total_posts': 0,
+            'total_clicks': 0,
+            'estimated_revenue': 0,
+            'conversion_rate': 0,
+            'platform_stats': {
+                'discord': {'posts': 0, 'clicks': 0},
+                'telegram': {'posts': 0, 'clicks': 0}, 
+                'slack': {'posts': 0, 'clicks': 0},
+                'email': {'posts': 0, 'clicks': 0}
+            }
+        }
         return render_template('dashboard_enhanced.html',
                              user=user,
                              campaigns=[],
@@ -90,6 +134,8 @@ def dashboard():
                              total_posts=0,
                              total_clicks=0,
                              recommended_products=[],
+                             trending_products=[],
+                             analytics=analytics,
                              error_message="Dashboard loading...",
                              page_title="AffiliateBot Pro Dashboard")
 
