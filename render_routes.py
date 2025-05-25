@@ -257,10 +257,14 @@ def dashboard():
 def api_search_products():
     """Search Amazon for products and add to inventory"""
     user_id = session.get('user_id')
-    user = load_user(user_id)
+    user = User.query.get(user_id)
     
     if not user:
         return jsonify({'error': 'Authentication required'}), 401
+    
+    # Tier restriction: Amazon search only for Premium/Pro users
+    if user.subscription_tier == 'free':
+        return jsonify({'error': 'Amazon search is available for Premium and Pro members only. Upgrade to unlock this feature!'}), 403
     
     try:
         data = request.get_json()
@@ -302,10 +306,14 @@ def api_search_products():
 def api_auto_promote():
     """AI automatically selects and promotes top products"""
     user_id = session.get('user_id')
-    user = load_user(user_id)
+    user = User.query.get(user_id)
     
     if not user:
         return jsonify({'error': 'Authentication required'}), 401
+    
+    # Tier restriction: AI auto-promotion only for Pro users
+    if user.subscription_tier in ['free', 'premium']:
+        return jsonify({'error': 'AI auto-promotion is available for Pro members only. Upgrade to unlock advanced automation!'}), 403
     
     try:
         # Get AI-recommended products (avoiding recent duplicates)
@@ -469,12 +477,17 @@ def analytics():
 
 @app.route('/products')
 def products():
-    """Browse products"""
+    """Browse products - Premium/Pro feature"""
     user_id = session.get('user_id')
-    user = load_user(user_id)
+    user = User.query.get(user_id)
     
     if not user:
         return redirect(url_for('index'))
+    
+    # Tier restriction: Product browsing only for Premium/Pro users
+    if user.subscription_tier == 'free':
+        flash('Product browsing is available for Premium and Pro members only. Upgrade to access thousands of products!', 'warning')
+        return redirect(url_for('dashboard'))
     
     try:
         inventory = InventoryManager()
