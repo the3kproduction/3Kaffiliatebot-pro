@@ -73,6 +73,22 @@
             </div>
         </div>
 
+        <!-- Affiliate Setup Alert -->
+        {% if not current_user.amazon_affiliate_id %}
+        <div class="card" style="border: 3px solid #ffc107; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);">
+            <h3>⚠️ Complete Your Setup to Start Earning!</h3>
+            <p style="margin: 15px 0; font-size: 1.1em;">You need to add your Amazon Associate ID to earn commissions from product promotions.</p>
+            <div style="background: rgba(255,255,255,0.8); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                <strong>Don't have an Amazon Associates account yet?</strong><br>
+                1. Go to <a href="https://affiliate-program.amazon.com" target="_blank" style="color: #667eea;">affiliate-program.amazon.com</a><br>
+                2. Sign up for free<br>
+                3. Get your Associate ID (looks like "yourname-20")<br>
+                4. Come back and enter it below
+            </div>
+            <a href="/setup" class="btn btn-warning" style="font-size: 1.2em; padding: 15px 30px;">💰 Complete Affiliate Setup Now</a>
+        </div>
+        {% endif %}
+
         <!-- Analytics Overview -->
         <div class="dashboard-grid">
             <div class="card stats-card">
