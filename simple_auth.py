@@ -9,11 +9,8 @@ from functools import wraps
 from app import app, db
 from models import User
 
-# Initialize Flask-Login
-login_manager = LoginManager(app)
-login_manager.login_view = 'index'
-
-@login_manager.user_loader
+# Flask-Login will be initialized by replit_auth or app.py
+# Just define the user loader function
 def load_user(user_id):
     return User.query.get(user_id)
 
