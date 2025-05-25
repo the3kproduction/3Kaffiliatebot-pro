@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - AffiliateBot Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 20px; 
+            padding: 2rem; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 3rem; 
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: -2rem -2rem 3rem -2rem;
+        }
+        .section { 
+            margin-bottom: 2rem; 
+        }
+        .section h2 { 
+            color: #667eea; 
+            margin-bottom: 1rem; 
+            font-size: 1.5rem; 
+        }
+        .section h3 { 
+            color: #333; 
+            margin-bottom: 0.5rem; 
+            font-size: 1.2rem; 
+        }
+        .section p, .section li { 
+            line-height: 1.6; 
+            margin-bottom: 0.5rem; 
+        }
+        .back-btn { 
+            background: #667eea; 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 25px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            text-decoration: none; 
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        .back-btn:hover { 
+            background: #5a6fd8; 
+        }
+        ul { 
+            margin-left: 1.5rem; 
+        }
+        .highlight { 
+            background: #f8f9fc; 
+            padding: 1rem; 
+            border-radius: 8px; 
+            border-left: 4px solid #667eea; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>📋 Terms of Service</h1>
+            <p>Legal terms and conditions for using AffiliateBot Pro</p>
+            <p><small>Last updated: {{ current_date or "May 25, 2025" }}</small></p>
+        </div>
+
+        <div class="section">
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing or using AffiliateBot Pro ("the Service"), you agree to be bound by these Terms of Service ("Terms"). If you disagree with any part of these terms, you may not access the Service.</p>
+        </div>
+
+        <div class="section">
+            <h2>2. Description of Service</h2>
+            <p>AffiliateBot Pro is an affiliate marketing automation platform that:</p>
+            <ul>
+                <li>Automates product promotion across multiple social media platforms</li>
+                <li>Integrates with Amazon Associates affiliate program</li>
+                <li>Provides analytics and performance tracking</li>
+                <li>Manages affiliate link generation and distribution</li>
+                <li>Offers subscription-based access to premium features</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>3. User Accounts and Eligibility</h2>
+            <h3>Account Requirements</h3>
+            <ul>
+                <li>You must be at least 18 years old to use this service</li>
+                <li>You must provide accurate and complete registration information</li>
+                <li>You are responsible for maintaining account security</li>
+                <li>One account per person/entity</li>
+            </ul>
+            
+            <h3>Amazon Associates Compliance</h3>
+            <ul>
+                <li>You must have a valid Amazon Associates account</li>
+                <li>You must comply with Amazon Associates Operating Agreement</li>
+                <li>You are responsible for all affiliate link compliance</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>4. Subscription Plans and Billing</h2>
+            <div class="highlight">
+                <h3>Available Plans</h3>
+                <ul>
+                    <li><strong>Free:</strong> 2 posts per day, basic features</li>
+                    <li><strong>Premium ($29/month):</strong> 8 posts per day, advanced features</li>
+                    <li><strong>Pro ($79/month):</strong> 24 posts per day, all features</li>
+                </ul>
+            </div>
+            
+            <h3>Billing Terms</h3>
+            <ul>
+                <li>Subscriptions are billed monthly in advance</li>
+                <li>7-day free trial available for Premium and Pro plans</li>
+                <li>Automatic renewal unless cancelled</li>
+                <li>Refunds may be available within first 7 days of new subscription</li>
+                <li>Plan changes take effect at next billing cycle</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>5. Acceptable Use Policy</h2>
+            <h3>You May:</h3>
+            <ul>
+                <li>Post legitimate product recommendations</li>
+                <li>Use provided affiliate links for Amazon products</li>
+                <li>Connect your own social media accounts</li>
+                <li>Track and analyze your performance</li>
+            </ul>
+            
+            <h3>You May Not:</h3>
+            <ul>
+                <li>Post spam, misleading, or fraudulent content</li>
+                <li>Violate any platform's terms of service</li>
+                <li>Share account credentials with others</li>
+                <li>Attempt to hack or compromise the service</li>
+                <li>Post prohibited or illegal content</li>
+                <li>Manipulate affiliate systems dishonestly</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6. Platform Integration Responsibilities</h2>
+            <p>When connecting social media platforms:</p>
+            <ul>
+                <li>You must own or have permission to post to connected accounts</li>
+                <li>You remain responsible for all posted content</li>
+                <li>You must comply with each platform's terms of service</li>
+                <li>We are not liable for platform policy violations</li>
+                <li>Account suspensions by platforms are not grounds for refunds</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>7. Intellectual Property</h2>
+            <h3>Our Rights</h3>
+            <ul>
+                <li>We own all rights to the AffiliateBot Pro platform and technology</li>
+                <li>Our trademarks and logos are protected</li>
+                <li>User feedback may be used to improve the service</li>
+            </ul>
+            
+            <h3>Your Rights</h3>
+            <ul>
+                <li>You retain ownership of your content and data</li>
+                <li>You grant us license to use your content to provide the service</li>
+                <li>You can export your data at any time</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>8. Affiliate Marketing Compliance</h2>
+            <div class="highlight">
+                <p><strong>Important:</strong> You are solely responsible for:</p>
+                <ul>
+                    <li>Complying with FTC disclosure requirements</li>
+                    <li>Following Amazon Associates program rules</li>
+                    <li>Ensuring proper affiliate link attribution</li>
+                    <li>Meeting tax reporting obligations</li>
+                    <li>Maintaining ethical marketing practices</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>9. Service Availability and Support</h2>
+            <ul>
+                <li>We strive for 99.9% uptime but cannot guarantee uninterrupted service</li>
+                <li>Scheduled maintenance will be communicated in advance</li>
+                <li>Support is provided via dashboard problem reporting system</li>
+                <li>Response times vary by subscription tier</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>10. Data and Privacy</h2>
+            <p>Your privacy is governed by our Privacy Policy. Key points:</p>
+            <ul>
+                <li>We collect data necessary to provide the service</li>
+                <li>Platform credentials are securely encrypted</li>
+                <li>Performance data is used for analytics</li>
+                <li>You can request data deletion at any time</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>11. Limitation of Liability</h2>
+            <div class="highlight">
+                <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW:</p>
+                <ul>
+                    <li>We are not liable for lost profits or affiliate commissions</li>
+                    <li>Our liability is limited to the amount you paid for the service</li>
+                    <li>We are not responsible for third-party platform actions</li>
+                    <li>Service is provided "as is" without warranties</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>12. Termination</h2>
+            <h3>You May:</h3>
+            <ul>
+                <li>Cancel your subscription at any time</li>
+                <li>Delete your account and data</li>
+                <li>Download your data before termination</li>
+            </ul>
+            
+            <h3>We May Terminate For:</h3>
+            <ul>
+                <li>Violation of these terms</li>
+                <li>Fraudulent or abusive behavior</li>
+                <li>Non-payment of subscription fees</li>
+                <li>Legal or regulatory requirements</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>13. Dispute Resolution</h2>
+            <p>Any disputes will be resolved through:</p>
+            <ul>
+                <li>Initial good faith negotiation</li>
+                <li>Binding arbitration if negotiation fails</li>
+                <li>Governing law: [Your jurisdiction]</li>
+                <li>Class action waivers apply</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>14. Changes to Terms</h2>
+            <p>We may update these terms periodically. We will:</p>
+            <ul>
+                <li>Notify users of significant changes via email</li>
+                <li>Post updates with effective dates</li>
+                <li>Allow 30 days notice for material changes</li>
+                <li>Consider continued use as acceptance of new terms</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>15. Contact Information</h2>
+            <p>For questions about these terms:</p>
+            <ul>
+                <li><strong>Email:</strong> legal@luxoraconnect.com</li>
+                <li><strong>Support:</strong> Through dashboard problem reporting</li>
+                <li><strong>Business Address:</strong> Available upon request</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>16. Affiliate Marketing Disclosure</h2>
+            <p>This platform facilitates affiliate marketing. Users may earn commissions from purchases made through their affiliate links. All affiliate relationships are disclosed to end users as required by law.</p>
+        </div>
+    </div>
+</body>
+</html>

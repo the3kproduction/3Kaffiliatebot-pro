@@ -80,6 +80,16 @@ def help_page():
     """Built-in help and setup guide"""
     return render_template('help.html', user=current_user)
 
+@app.route('/privacy')
+def privacy_policy():
+    """Privacy policy page"""
+    return render_template('privacy.html')
+
+@app.route('/terms')
+def terms_of_service():
+    """Terms of service page"""
+    return render_template('terms.html')
+
 @app.route('/dashboard')
 @require_login
 def dashboard():

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - AffiliateBot Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 20px; 
+            padding: 2rem; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 3rem; 
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: -2rem -2rem 3rem -2rem;
+        }
+        .section { 
+            margin-bottom: 2rem; 
+        }
+        .section h2 { 
+            color: #667eea; 
+            margin-bottom: 1rem; 
+            font-size: 1.5rem; 
+        }
+        .section h3 { 
+            color: #333; 
+            margin-bottom: 0.5rem; 
+            font-size: 1.2rem; 
+        }
+        .section p, .section li { 
+            line-height: 1.6; 
+            margin-bottom: 0.5rem; 
+        }
+        .back-btn { 
+            background: #667eea; 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 25px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            text-decoration: none; 
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        .back-btn:hover { 
+            background: #5a6fd8; 
+        }
+        ul { 
+            margin-left: 1.5rem; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>🔒 Privacy Policy</h1>
+            <p>Your privacy and data security are our top priorities</p>
+            <p><small>Last updated: {{ current_date or "May 25, 2025" }}</small></p>
+        </div>
+
+        <div class="section">
+            <h2>1. Information We Collect</h2>
+            <h3>Account Information</h3>
+            <ul>
+                <li>Email address and profile information</li>
+                <li>Platform connection credentials (Discord webhooks, Telegram tokens, etc.)</li>
+                <li>Amazon Associate ID for affiliate tracking</li>
+                <li>Subscription and billing information</li>
+            </ul>
+            
+            <h3>Usage Data</h3>
+            <ul>
+                <li>Product promotion statistics and performance metrics</li>
+                <li>Platform posting history and engagement data</li>
+                <li>Dashboard usage and feature interactions</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2. How We Use Your Information</h2>
+            <ul>
+                <li><strong>Service Provision:</strong> To operate your affiliate marketing automation</li>
+                <li><strong>Platform Integration:</strong> To connect and post to your social media accounts</li>
+                <li><strong>Analytics:</strong> To provide performance insights and optimization recommendations</li>
+                <li><strong>Communication:</strong> To send service updates and promotional materials</li>
+                <li><strong>Support:</strong> To provide customer service and technical assistance</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>3. Information Sharing</h2>
+            <p>We do not sell, trade, or rent your personal information to third parties. We may share information only in these limited circumstances:</p>
+            <ul>
+                <li><strong>Platform APIs:</strong> With social media platforms (Discord, Telegram, etc.) to post content on your behalf</li>
+                <li><strong>Amazon Associates:</strong> Your Associate ID is used to generate affiliate links</li>
+                <li><strong>Payment Processors:</strong> Billing information with Stripe for subscription processing</li>
+                <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>4. Data Security</h2>
+            <p>We implement industry-standard security measures:</p>
+            <ul>
+                <li>Encrypted data transmission (HTTPS/TLS)</li>
+                <li>Secure database storage with access controls</li>
+                <li>Regular security audits and updates</li>
+                <li>Limited employee access on a need-to-know basis</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>5. Your Rights</h2>
+            <p>You have the right to:</p>
+            <ul>
+                <li><strong>Access:</strong> Request a copy of your personal data</li>
+                <li><strong>Correction:</strong> Update or correct inaccurate information</li>
+                <li><strong>Deletion:</strong> Request deletion of your account and data</li>
+                <li><strong>Portability:</strong> Export your data in a portable format</li>
+                <li><strong>Withdrawal:</strong> Withdraw consent for data processing</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6. Data Retention</h2>
+            <p>We retain your information:</p>
+            <ul>
+                <li>Account data: Until you delete your account</li>
+                <li>Usage analytics: Up to 2 years for service improvement</li>
+                <li>Billing records: As required by law (typically 7 years)</li>
+                <li>Support communications: Up to 3 years</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>7. Cookies and Tracking</h2>
+            <p>We use cookies and similar technologies for:</p>
+            <ul>
+                <li>Authentication and session management</li>
+                <li>Remembering your preferences and settings</li>
+                <li>Analytics to improve our service</li>
+                <li>Security and fraud prevention</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>8. Third-Party Services</h2>
+            <p>Our service integrates with:</p>
+            <ul>
+                <li><strong>Amazon Associates:</strong> For affiliate link generation</li>
+                <li><strong>Social Media Platforms:</strong> Discord, Telegram, Slack, Pinterest, Reddit</li>
+                <li><strong>Payment Processing:</strong> Stripe for secure billing</li>
+                <li><strong>Analytics:</strong> For service improvement and user insights</li>
+            </ul>
+            <p>Each third-party service has its own privacy policy governing their data practices.</p>
+        </div>
+
+        <div class="section">
+            <h2>9. Children's Privacy</h2>
+            <p>Our service is not intended for children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal information, please contact us immediately.</p>
+        </div>
+
+        <div class="section">
+            <h2>10. International Data Transfers</h2>
+            <p>Your information may be processed in countries other than your own. We ensure appropriate safeguards are in place to protect your privacy rights in accordance with applicable data protection laws.</p>
+        </div>
+
+        <div class="section">
+            <h2>11. Changes to This Policy</h2>
+            <p>We may update this privacy policy periodically. We will notify you of significant changes via email or through our service. Your continued use constitutes acceptance of the updated policy.</p>
+        </div>
+
+        <div class="section">
+            <h2>12. Contact Information</h2>
+            <p>For privacy-related questions or requests, contact us:</p>
+            <ul>
+                <li><strong>Email:</strong> privacy@luxoraconnect.com</li>
+                <li><strong>Support:</strong> Through the problem reporting system in your dashboard</li>
+                <li><strong>Address:</strong> Available upon request for legal compliance</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>13. Affiliate Marketing Disclosure</h2>
+            <p>This platform facilitates affiliate marketing activities. Users earn commissions from Amazon purchases made through their affiliate links. All affiliate relationships and potential earnings are clearly disclosed to end users.</p>
+        </div>
+    </div>
+</body>
+</html>
