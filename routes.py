@@ -545,6 +545,34 @@ def api_update_frequency():
     
     return jsonify({'success': True})
 
+@app.route('/api/save-platform', methods=['POST'])
+@require_login
+def api_save_platform():
+    """Save platform configuration for user"""
+    user = current_user
+    data = request.get_json()
+    
+    try:
+        platform = data.get('platform')
+        
+        if platform == 'discord':
+            user.discord_webhook_url = data.get('webhook_url')
+        elif platform == 'telegram':
+            user.telegram_bot_token = data.get('bot_token')
+            user.telegram_chat_id = data.get('chat_id')
+        elif platform == 'slack':
+            user.slack_bot_token = data.get('bot_token')
+            user.slack_channel_id = data.get('channel_id')
+        else:
+            return jsonify({'success': False, 'error': 'Invalid platform'})
+        
+        db.session.commit()
+        return jsonify({'success': True, 'message': f'{platform.title()} configured successfully'})
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.route('/api/toggle-auto-posts', methods=['POST'])
 @require_login
 def api_toggle_auto_posts():
