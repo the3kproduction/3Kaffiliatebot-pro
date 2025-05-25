@@ -367,6 +367,25 @@
                         <input type="text" id="slack_channel_id_setup" placeholder="Channel ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.slack_channel_id or '' }}">
                         <button onclick="saveSlackSetup()" style="background: #4a154b; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Slack</button>
                     </div>
+                    
+                    <!-- Pinterest Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>📌 Pinterest</h4>
+                        <input type="text" id="pinterest_access_token_setup" placeholder="Access Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.pinterest_access_token or '' }}">
+                        <input type="text" id="pinterest_board_id_setup" placeholder="Board ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.pinterest_board_id or '' }}">
+                        <button onclick="savePinterestSetup()" style="background: #bd081c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Pinterest</button>
+                    </div>
+                    
+                    <!-- Reddit Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>🔴 Reddit</h4>
+                        <input type="text" id="reddit_client_id_setup" placeholder="Client ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.reddit_client_id or '' }}">
+                        <input type="text" id="reddit_client_secret_setup" placeholder="Client Secret" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.reddit_client_secret or '' }}">
+                        <input type="text" id="reddit_username_setup" placeholder="Username" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.reddit_username or '' }}">
+                        <input type="password" id="reddit_password_setup" placeholder="Password" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;">
+                        <input type="text" id="reddit_subreddit_setup" placeholder="Subreddit (e.g., deals)" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.reddit_subreddit or '' }}">
+                        <button onclick="saveRedditSetup()" style="background: #ff4500; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Reddit</button>
+                    </div>
                 </div>
             </div>
         </div>
