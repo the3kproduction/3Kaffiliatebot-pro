@@ -251,25 +251,52 @@
         <!-- Performance Analytics (moved under admin) -->
         <div class="card" style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white;">
             <h3>📊 Performance Analytics</h3>
+            {% if user.subscription_tier == 'free' %}
+            <p>Track clicks, conversions, and revenue <span style="background: rgba(255,193,7,0.9); color: #000; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px;">PREMIUM+</span></p>
+            <div style="display: flex; justify-content: center; margin-top: 15px;">
+                <button onclick="alert('Analytics are available for Premium and Pro members only. Upgrade to unlock detailed performance tracking!')" class="btn" style="background: rgba(255,255,255,0.3); color: white; text-decoration: none; text-align: center; padding: 12px 24px; border: none; cursor: pointer; opacity: 0.7;">🔒 View Analytics</button>
+            </div>
+            {% else %}
             <p>Track clicks, conversions, and revenue</p>
             <div style="display: flex; justify-content: center; margin-top: 15px;">
                 <a href="/analytics" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; text-align: center; padding: 12px 24px;">View Analytics</a>
             </div>
+            {% endif %}
         </div>
 
         <!-- Quick Actions -->
         <div class="card">
             <h3>⚡ Quick Actions</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <a href="/products/browse" class="btn btn-primary" style="text-decoration: none;">Browse Products</a>
+                {% if user.subscription_tier == 'free' %}
+                <button onclick="alert('Product browsing is available for Premium and Pro members only. Upgrade to access thousands of products!')" class="btn" style="background: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; opacity: 0.7; text-decoration: none;">🔒 Browse Products</button>
+                {% else %}
+                <a href="/products" class="btn btn-primary" style="text-decoration: none;">Browse Products</a>
+                {% endif %}
                 <a href="/campaigns" class="btn btn-success" style="text-decoration: none;">Manage Campaigns</a>
-                <a href="/setup-webhooks" class="btn btn-warning" style="text-decoration: none;">Setup Webhooks</a>
+                <a href="/setup" class="btn btn-warning" style="text-decoration: none;">Setup Webhooks</a>
             </div>
         </div>
 
         <!-- AI Auto-Promotion -->
         <div class="card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
             <h3>🤖 AI Auto-Promotion</h3>
+            {% if user.subscription_tier in ['free', 'premium'] %}
+            <p style="margin-bottom: 20px; opacity: 0.9;">Let AI automatically select and promote your top products <span style="background: rgba(255,193,7,0.9); color: #000; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px;">PRO ONLY</span></p>
+            
+            <button onclick="alert('AI auto-promotion is available for Pro members only. Upgrade to unlock advanced automation features!')" style="width: 100%; background: rgba(255,255,255,0.3); color: white; font-weight: bold; padding: 15px 25px; border-radius: 10px; border: none; cursor: pointer; margin-bottom: 15px; font-size: 16px; opacity: 0.7;">
+                🔒 Auto-Promote Top 3 Products
+            </button>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button onclick="alert('AI auto-promotion is available for Pro members only!')" style="background: rgba(255,255,255,0.3); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; opacity: 0.7;">
+                    🔒 Promote 1
+                </button>
+                <button onclick="alert('AI auto-promotion is available for Pro members only!')" style="background: rgba(255,255,255,0.3); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; opacity: 0.7;">
+                    🔒 Promote 5
+                </button>
+            </div>
+            {% else %}
             <p style="margin-bottom: 20px; opacity: 0.9;">Let AI automatically select and promote your top products</p>
             
             <button onclick="autoPromoteProducts(3)" style="width: 100%; background: linear-gradient(135deg, #ff6b6b, #feca57); color: white; font-weight: bold; padding: 15px 25px; border-radius: 10px; border: none; cursor: pointer; margin-bottom: 15px; font-size: 16px;">
@@ -284,6 +311,7 @@
                     Promote 5
                 </button>
             </div>
+            {% endif %}
             
             <div id="auto-promote-result" style="margin-top: 15px; padding: 10px; border-radius: 8px; display: none;"></div>
         </div>
@@ -291,6 +319,15 @@
         <!-- Amazon Product Search -->
         <div class="card" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;">
             <h3>🔍 Amazon Product Search</h3>
+            {% if user.subscription_tier == 'free' %}
+            <p style="margin-bottom: 20px; opacity: 0.9;">Search Amazon directly and add products to your inventory <span style="background: rgba(255,193,7,0.9); color: #000; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px;">PREMIUM+</span></p>
+            
+            <input type="text" placeholder="Search any product..." style="width: 100%; padding: 15px; border: none; border-radius: 10px; font-size: 16px; margin-bottom: 15px; color: #333; opacity: 0.7;" disabled>
+            
+            <button onclick="alert('Amazon product search is available for Premium and Pro members only. Upgrade to unlock thousands of products!')" style="width: 100%; background: rgba(255,255,255,0.3); color: white; font-weight: bold; padding: 15px 25px; border-radius: 10px; border: none; cursor: pointer; margin-bottom: 15px; font-size: 16px; opacity: 0.7;">
+                🔒 Search & Add to Inventory
+            </button>
+            {% else %}
             <p style="margin-bottom: 20px; opacity: 0.9;">Search Amazon directly and add products to your inventory</p>
             
             <input type="text" id="product-search-input" placeholder="Search any product..." style="width: 100%; padding: 15px; border: none; border-radius: 10px; font-size: 16px; margin-bottom: 15px; color: #333;">
@@ -298,6 +335,7 @@
             <button onclick="searchProducts()" style="width: 100%; background: linear-gradient(135deg, #ff6b6b, #feca57); color: white; font-weight: bold; padding: 15px 25px; border-radius: 10px; border: none; cursor: pointer; margin-bottom: 15px; font-size: 16px;">
                 Search & Add to Inventory
             </button>
+            {% endif %}
             
             {% if trending_searches %}
             <div style="margin-top: 15px;">
@@ -380,6 +418,44 @@
                 </div>
             </div>
         </div>
+
+        <!-- Upgrade Promotion for Free Users -->
+        {% if user.subscription_tier == 'free' %}
+        <div class="card" style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: white; border: 3px solid #ffd700;">
+            <h3>🚀 Upgrade to Unlock Premium Features!</h3>
+            <p style="opacity: 0.9; margin-bottom: 20px;">You're currently on the Free plan (2 posts/day). Upgrade to access powerful features:</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                    <h4 style="margin: 0 0 10px 0;">💎 Premium - $29/month</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>8 posts per day</li>
+                        <li>Amazon product search</li>
+                        <li>Advanced analytics</li>
+                        <li>Priority support</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                    <h4 style="margin: 0 0 10px 0;">🔥 Pro - $79/month</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>24 posts per day</li>
+                        <li>AI auto-promotion</li>
+                        <li>All Premium features</li>
+                        <li>White-label access</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button onclick="alert('Coming soon! Stripe payment integration will be available shortly.')" style="background: #28a745; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    Try Premium Free for 7 Days
+                </button>
+                <button onclick="alert('Coming soon! Stripe payment integration will be available shortly.')" style="background: #007bff; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    Try Pro Free for 7 Days
+                </button>
+            </div>
+        </div>
+        {% endif %}
 
         <!-- Mini Analytics Dashboard -->
         <div class="card">

@@ -453,12 +453,17 @@ def campaigns():
 
 @app.route('/analytics')
 def analytics():
-    """View analytics"""
+    """View analytics - Premium/Pro feature"""
     user_id = session.get('user_id')
-    user = load_user(user_id)
+    user = User.query.get(user_id)
     
     if not user:
         return redirect(url_for('index'))
+    
+    # Tier restriction: Advanced analytics only for Premium/Pro users
+    if user.subscription_tier == 'free':
+        flash('Advanced analytics are available for Premium and Pro members only. Upgrade to track your performance!', 'warning')
+        return redirect(url_for('dashboard'))
     
     try:
         # Get analytics data
