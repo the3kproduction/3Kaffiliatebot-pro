@@ -211,6 +211,11 @@ def products():
     
     products_raw = query.order_by(ProductInventory.times_promoted.desc()).limit(50).all()
     
+    print(f"DEBUG: Found {len(products_raw)} products in database")
+    if products_raw:
+        print(f"DEBUG: First product title: {products_raw[0].product_title}")
+        print(f"DEBUG: First product ASIN: {products_raw[0].asin}")
+    
     # Convert to template format - keep original field names for template
     products = []
     for product in products_raw:
