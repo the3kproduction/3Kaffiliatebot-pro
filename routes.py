@@ -82,13 +82,19 @@ def help_page():
 
 @app.route('/privacy')
 def privacy_policy():
-    """Privacy policy page"""
-    return render_template('privacy.html')
+    """Privacy policy page - public access"""
+    try:
+        return render_template('privacy.html')
+    except Exception as e:
+        return f"Privacy Policy page loading... Please try again in a moment."
 
 @app.route('/terms')
 def terms_of_service():
-    """Terms of service page"""
-    return render_template('terms.html')
+    """Terms of service page - public access"""
+    try:
+        return render_template('terms.html')
+    except Exception as e:
+        return f"Terms of Service page loading... Please try again in a moment."
 
 @app.route('/dashboard')
 @require_login
