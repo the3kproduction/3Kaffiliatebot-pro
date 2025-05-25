@@ -195,44 +195,41 @@ def setup():
     return render_template('setup.html', user=user)
 
 @app.route('/products')
-@require_login
+@require_login  
 def products():
     """Browse and manage products"""
     from models import ProductInventory
     
     user = current_user
-    category = request.args.get('category', 'all')
     
-    # Get only products with proper names (not "Unknown Product")
-    products_raw = ProductInventory.query.filter(
-        ProductInventory.is_active == True,
-        ProductInventory.product_title != 'Unknown Product',
-        ProductInventory.product_title != None
-    ).order_by(ProductInventory.times_promoted.desc()).all()
+    # Get your real products directly from database
+    try:
+        products_raw = db.session.execute(
+            "SELECT asin, product_title, price, rating, category, image_url FROM product_inventory WHERE product_title IS NOT NULL AND product_title != 'Unknown Product' LIMIT 30"
+        ).fetchall()
+        
+        products = []
+        for row in products_raw:
+            products.append({
+                'asin': row[0],
+                'product_title': row[1],
+                'title': row[1],  # Also add as 'title' for template compatibility
+                'price': row[2] or 'N/A',
+                'rating': row[3] or 4.5,
+                'category': row[4] or 'Electronics',
+                'image_url': row[5] or 'https://via.placeholder.com/200x200?text=Product'
+            })
+            
+    except Exception as e:
+        print(f"Error loading products: {e}")
+        products = []
     
-    # Convert database objects to dictionaries for template
-    products = []
-    for product in products_raw:
-        print(f"DEBUG: Processing product - ASIN: {product.asin}, Title: {product.product_title}")
-        products.append({
-            'asin': product.asin,
-            'product_title': product.product_title,
-            'price': product.price or 'N/A',
-            'rating': product.rating or 4.5,
-            'category': product.category or 'Electronics',
-            'image_url': product.image_url or 'https://via.placeholder.com/200x200?text=Product'
-        })
-    
-    print(f"DEBUG: Total products being sent to template: {len(products)}")
-    
-    # Get available categories from your inventory
-    categories_raw = db.session.query(ProductInventory.category).distinct().all()
-    categories = ['all'] + [cat[0] for cat in categories_raw if cat[0]]
+    categories = ['Electronics', 'Kitchen', 'Health', 'Sports', 'Books']
     
     return render_template('products.html', 
                          products=products, 
                          categories=categories,
-                         current_category=category)
+                         current_category='all')
 
 @app.route('/post-product', methods=['POST'])
 @require_login
