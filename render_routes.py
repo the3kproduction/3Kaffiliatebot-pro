@@ -9,6 +9,7 @@ from simple_auth import load_user
 from inventory_manager import InventoryManager
 from auto_product_selector import AutoProductSelector
 from amazon_search import AmazonSearcher
+from affiliate_referral_system import AffiliateReferralSystem
 import logging
 
 logger = logging.getLogger(__name__)
@@ -591,6 +592,51 @@ def delete_product(asin):
     except Exception as e:
         logger.error(f"Delete product error: {e}")
         return jsonify({'error': str(e)}), 500
+
+@app.route('/affiliate')
+def affiliate_dashboard():
+    """Affiliate referral dashboard"""
+    if not session.get('user_id'):
+        return redirect(url_for('login_page'))
+    
+    user = load_user(session['user_id'])
+    if not user:
+        return redirect(url_for('login_page'))
+    
+    affiliate_system = AffiliateReferralSystem()
+    
+    # Enable affiliate for user if not already enabled
+    if not user.affiliate_enabled:
+        user.affiliate_enabled = True
+        db.session.commit()
+    
+    dashboard_data = affiliate_system.get_affiliate_dashboard_data(user.id)
+    
+    return render_template('affiliate_dashboard.html', 
+                         user=user, 
+                         data=dashboard_data)
+
+@app.route('/api/generate-affiliate-link')
+def generate_affiliate_link():
+    """Generate affiliate link for user"""
+    if not session.get('user_id'):
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    affiliate_system = AffiliateReferralSystem()
+    link = affiliate_system.generate_affiliate_link(session['user_id'])
+    
+    return jsonify({'affiliate_link': link})
+
+@app.route('/admin/affiliate-analytics')
+def admin_affiliate_analytics():
+    """Admin view of affiliate system analytics"""
+    if not session.get('user_id') or session.get('user_id') != 'drfe8694@gmail.com':
+        return redirect(url_for('login_page'))
+    
+    affiliate_system = AffiliateReferralSystem()
+    analytics = affiliate_system.get_admin_referral_analytics()
+    
+    return render_template('admin_affiliate_analytics.html', analytics=analytics)
 
 @app.route('/logout')
 def logout():

@@ -33,8 +33,19 @@ class User(UserMixin, db.Model):
     
     # Admin and subscription fields
     is_admin = db.Column(db.Boolean, default=False)
-    subscription_tier = db.Column(db.String(20), default='free')  # free, premium, pro
+    subscription_tier = db.Column(db.String(20), default='free')  # free, premium, pro, lifetime
     email_notifications = db.Column(db.Boolean, default=True)
+    
+    # Affiliate referral system fields
+    affiliate_code = db.Column(db.String(20), unique=True, nullable=True)
+    affiliate_enabled = db.Column(db.Boolean, default=False)
+    referred_by = db.Column(db.String, db.ForeignKey('users.id'), nullable=True)
+    total_referrals = db.Column(db.Integer, default=0)
+    total_referral_revenue = db.Column(db.Float, default=0.0)
+    total_commission_earned = db.Column(db.Float, default=0.0)
+    pending_commission = db.Column(db.Float, default=0.0)
+    lifetime_access = db.Column(db.Boolean, default=False)
+    subscription_start_date = db.Column(db.DateTime, nullable=True)
     
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
