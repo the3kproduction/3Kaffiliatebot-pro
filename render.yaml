@@ -1,24 +1,13 @@
 services:
-  - type: cron
-    name: product-marketing-automation
+  - type: web
+    name: affiliatebot-pro-platform
     env: python
-    schedule: "0 */3 * * *"  # Runs every 3 hours
-    buildCommand: "pip install requests python-dotenv sendgrid slack-sdk"
-    startCommand: "python main.py"
+    buildCommand: "pip install flask flask-sqlalchemy flask-login flask-dance beautifulsoup4 lxml psycopg2-binary requests python-dotenv sendgrid slack-sdk"
+    startCommand: "python run.py"
     envVars:
-      - key: DISCORD_WEBHOOK_URL
-        value: ""
-      - key: TELEGRAM_BOT_TOKEN
-        value: ""
-      - key: TELEGRAM_CHAT_ID
-        value: ""
-      - key: SLACK_BOT_TOKEN
-        value: ""
-      - key: SLACK_CHANNEL_ID
-        value: ""
+      - key: SESSION_SECRET
+        generateValue: true
       - key: SENDGRID_API_KEY
         value: ""
       - key: EMAIL_FROM
-        value: ""
-      - key: EMAIL_TO
-        value: ""
+        value: "noreply@affiliatebot-pro.com"
