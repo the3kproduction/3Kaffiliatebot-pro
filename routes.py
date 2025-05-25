@@ -583,6 +583,7 @@ def api_get_ai_recommendations():
 @require_login
 def spotify_auth_url():
     """Get Spotify authorization URL"""
+    import os
     spotify_client_id = os.environ.get('SPOTIFY_CLIENT_ID')
     
     if spotify_client_id:
