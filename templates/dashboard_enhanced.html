@@ -933,8 +933,14 @@
 
         // Initialize stations when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            initializePlayer();
-            setTimeout(initializeStations, 100); // Initialize stations for filtering
+            // Initialize radio audio element
+            radioAudio = document.getElementById('radioAudio');
+            if (radioAudio) {
+                setVolume();
+            }
+            
+            // Initialize stations for genre filtering
+            setTimeout(initializeStations, 100);
         });
     </script>
 </body>
