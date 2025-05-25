@@ -41,35 +41,42 @@ def create_admin_user():
                 self.subscription_tier = 'pro'
         return MockUser()
 
-# Auto-login admin user for Render
-@app.before_request
-def auto_login_admin_user():
-    """Auto-login admin user for Render deployment"""
-    if 'user_id' not in session:
-        admin_user = create_admin_user()
-        session['user_id'] = admin_user.id
-        session.permanent = True
+# DISABLED: No auto-login for security
+# Only you can access admin functions with proper authentication
 
 @app.route('/')
 def index():
-    """Landing page - auto-login for Render"""
-    user_id = session.get('user_id')
-    user = load_user(user_id) if user_id else None
+    """Secure landing page"""
+    return render_template('secure_login.html')
+
+@app.route('/admin-login', methods=['POST'])
+def admin_login():
+    """Secure admin login"""
+    email = request.form.get('email')
+    password = request.form.get('password')
     
-    if user:
+    # Only allow your specific email and a secure password
+    if email == 'drfe8694@gmail.com' and password == 'AffiliateBot2025!':
+        admin_user = create_admin_user()
+        session['user_id'] = admin_user.id
+        session['is_authenticated'] = True
+        session.permanent = True
         return redirect(url_for('dashboard'))
     else:
-        return render_template('dashboard_enhanced.html', 
-                             page_title="AffiliateBot Pro - Live on Render!",
-                             show_landing=True)
+        return render_template('secure_login.html', error='Invalid credentials')
 
 @app.route('/dashboard')
 def dashboard():
-    """Enhanced dashboard with analytics and smart features"""
+    """Enhanced dashboard with analytics and smart features - SECURE"""
+    # Security check - only authenticated admin users
+    if not session.get('is_authenticated') or not session.get('user_id'):
+        return redirect(url_for('index'))
+    
     user_id = session.get('user_id')
     user = load_user(user_id)
     
-    if not user:
+    if not user or user.email != 'drfe8694@gmail.com':
+        session.clear()
         return redirect(url_for('index'))
     
     try:
