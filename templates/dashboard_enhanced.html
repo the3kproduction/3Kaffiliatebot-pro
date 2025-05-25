@@ -151,11 +151,32 @@
             </a>
         </div>
 
-        <!-- Affiliate Setup Alert -->
+        <!-- Smart Setup Notification -->
+        {% set missing_items = [] %}
         {% if not current_user.amazon_affiliate_id %}
-        <div class="card" style="border: 3px solid #ffc107; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);">
+            {% set _ = missing_items.append('Amazon Associate ID') %}
+        {% endif %}
+        {% if not current_user.discord_webhook_url %}
+            {% set _ = missing_items.append('Discord webhook') %}
+        {% endif %}
+        {% if not current_user.telegram_bot_token %}
+            {% set _ = missing_items.append('Telegram bot') %}
+        {% endif %}
+        {% if not current_user.slack_bot_token %}
+            {% set _ = missing_items.append('Slack bot') %}
+        {% endif %}
+        {% if not current_user.sendgrid_api_key %}
+            {% set _ = missing_items.append('Email service') %}
+        {% endif %}
+
+        {% if missing_items and not current_user.setup_notification_dismissed %}
+        <div id="setup-notification" class="card" style="border: 3px solid #ffc107; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); position: relative;">
+            <button onclick="dismissNotification()" style="position: absolute; top: 10px; right: 15px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; color: #666;">×</button>
+            
             <h3>⚠️ Complete Your Setup to Start Earning!</h3>
-            <p style="margin: 15px 0; font-size: 1.1em;">You need to add your Amazon Associate ID to earn commissions from product promotions.</p>
+            <p style="margin: 15px 0; font-size: 1.1em;">You're missing setup for: <strong>{{ missing_items|join(', ') }}</strong></p>
+            
+            {% if not current_user.amazon_affiliate_id %}
             <div style="background: rgba(255,255,255,0.8); padding: 15px; border-radius: 10px; margin: 15px 0;">
                 <strong>Don't have an Amazon Associates account yet?</strong><br>
                 1. Go to <a href="https://affiliate-program.amazon.com" target="_blank" style="color: #667eea;">affiliate-program.amazon.com</a><br>
@@ -163,8 +184,30 @@
                 3. Get your Associate ID (looks like "yourname-20")<br>
                 4. Come back and enter it below
             </div>
-            <a href="/setup" class="btn btn-warning" style="font-size: 1.2em; padding: 15px 30px;">💰 Complete Affiliate Setup Now</a>
+            {% endif %}
+            
+            <a href="/setup" class="btn btn-warning" style="font-size: 1.2em; padding: 15px 30px;">💰 Complete Setup Now</a>
         </div>
+
+        <script>
+        function dismissNotification() {
+            fetch('/dismiss-setup-notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('setup-notification').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error dismissing notification:', error);
+            });
+        }
+        </script>
         {% endif %}
 
         <!-- Analytics Overview -->

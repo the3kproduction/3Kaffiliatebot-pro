@@ -618,6 +618,20 @@ def logout():
     session.clear()
     return render_template('logout.html')
 
+@app.route('/dismiss-setup-notification', methods=['POST'])
+def dismiss_setup_notification():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+    
+    user = User.query.get(session['user_id'])
+    if user:
+        user.setup_notification_dismissed = True
+        user.setup_notification_dismissed_at = datetime.now()
+        db.session.commit()
+        return jsonify({'success': True})
+    
+    return jsonify({'error': 'User not found'}), 404
+
 # Error handlers
 @app.errorhandler(500)
 def handle_500(e):

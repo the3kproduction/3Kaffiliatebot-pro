@@ -46,6 +46,10 @@ class User(UserMixin, db.Model):
     contest_winner = db.Column(db.Boolean, default=False)  # For contest lifetime access
     subscription_start_date = db.Column(db.DateTime, nullable=True)
     
+    # Notification dismissal tracking
+    setup_notification_dismissed = db.Column(db.Boolean, default=False)
+    setup_notification_dismissed_at = db.Column(db.DateTime, nullable=True)
+    
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
     
