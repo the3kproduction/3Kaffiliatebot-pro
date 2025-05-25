@@ -88,15 +88,28 @@ class Post(db.Model):
     rating = db.Column(db.Float)
     category = db.Column(db.String(50))
     
-    # Platform posting status
-    posted_to_discord = db.Column(db.Boolean, default=False)
-    posted_to_telegram = db.Column(db.Boolean, default=False)
-    posted_to_slack = db.Column(db.Boolean, default=False)
-    posted_to_email = db.Column(db.Boolean, default=False)
+    # Product tracking
+    asin = db.Column(db.String(20))  # For duplicate tracking
     
-    # Analytics
+    # Platform posting status with timestamps
+    posted_to_discord = db.Column(db.Boolean, default=False)
+    discord_posted_at = db.Column(db.DateTime, nullable=True)
+    posted_to_telegram = db.Column(db.Boolean, default=False)
+    telegram_posted_at = db.Column(db.DateTime, nullable=True)
+    posted_to_slack = db.Column(db.Boolean, default=False)
+    slack_posted_at = db.Column(db.DateTime, nullable=True)
+    posted_to_email = db.Column(db.Boolean, default=False)
+    email_posted_at = db.Column(db.DateTime, nullable=True)
+    
+    # Enhanced Analytics
     clicks = db.Column(db.Integer, default=0)
     impressions = db.Column(db.Integer, default=0)
+    conversion_rate = db.Column(db.Float, default=0.0)
+    revenue_estimated = db.Column(db.Float, default=0.0)
+    
+    # Scheduling
+    scheduled_for = db.Column(db.DateTime, nullable=True)
+    is_scheduled = db.Column(db.Boolean, default=False)
     
     created_at = db.Column(db.DateTime, default=datetime.now)
     
@@ -123,3 +136,48 @@ class EmailBlast(db.Model):
     
     def __repr__(self):
         return f'<EmailBlast {self.subject}>'
+
+# Product inventory tracking
+class ProductInventory(db.Model):
+    __tablename__ = 'product_inventory'
+    id = db.Column(db.Integer, primary_key=True)
+    asin = db.Column(db.String(20), unique=True, nullable=False)
+    product_title = db.Column(db.String(200), nullable=False)
+    category = db.Column(db.String(50))
+    price = db.Column(db.String(20))
+    rating = db.Column(db.Float)
+    image_url = db.Column(db.String(500))
+    
+    # Tracking stats
+    times_promoted = db.Column(db.Integer, default=0)
+    last_promoted = db.Column(db.DateTime, nullable=True)
+    total_clicks = db.Column(db.Integer, default=0)
+    conversion_rate = db.Column(db.Float, default=0.0)
+    
+    # Status
+    is_active = db.Column(db.Boolean, default=True)
+    is_trending = db.Column(db.Boolean, default=False)
+    
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+# Multiple webhook destinations
+class WebhookDestination(db.Model):
+    __tablename__ = 'webhook_destinations'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
+    
+    name = db.Column(db.String(100), nullable=False)  # "Discord Sales Channel"
+    platform = db.Column(db.String(20), nullable=False)  # discord, telegram, slack
+    webhook_url = db.Column(db.String(500), nullable=False)
+    
+    # Configuration
+    is_active = db.Column(db.Boolean, default=True)
+    post_frequency_hours = db.Column(db.Integer, default=3)
+    last_post_time = db.Column(db.DateTime, nullable=True)
+    
+    # Testing
+    last_test_time = db.Column(db.DateTime, nullable=True)
+    last_test_success = db.Column(db.Boolean, default=False)
+    
+    created_at = db.Column(db.DateTime, default=datetime.now)
