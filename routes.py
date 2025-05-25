@@ -50,28 +50,18 @@ def make_session_permanent():
 
 @app.route('/')
 def index():
-    """Landing page - simple HTML for Render deployment"""
-    return '''
-    <html>
-    <head><title>AffiliateBot Pro</title></head>
-    <body style="font-family: Arial; margin: 40px; background: #f5f5f5;">
-        <div style="max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h1 style="color: #2563eb; margin-bottom: 20px;">🚀 AffiliateBot Pro - Live on Render!</h1>
-            <p style="font-size: 18px; color: #16a34a; margin-bottom: 30px;">✅ Successfully deployed and running!</p>
-            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="color: #334155; margin-top: 0;">🎯 Platform Features Ready:</h3>
-                <ul style="color: #64748b; line-height: 1.6;">
-                    <li>✅ Database connected and tables created</li>
-                    <li>✅ Professional hosting on Render</li>
-                    <li>✅ Free hosting tier</li>
-                    <li>✅ Ready for full feature restoration</li>
-                </ul>
-            </div>
-            <p style="color: #64748b;">Your AffiliateBot Pro platform is now professionally hosted and ready for users!</p>
-        </div>
-    </body>
-    </html>
-    '''
+    """Landing page - shows login for guests, dashboard for logged-in users"""
+    # For Render deployment without Replit auth, auto-login demo user
+    if os.environ.get('RENDER') and not current_user.is_authenticated:
+        from flask_login import login_user
+        demo_user = create_demo_user()
+        login_user(demo_user)
+        return redirect(url_for('dashboard'))
+    
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    
+    return render_template('landing.html')
 
 @app.route('/dashboard')
 @require_login
