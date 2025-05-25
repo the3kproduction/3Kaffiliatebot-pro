@@ -338,10 +338,15 @@ def analytics_export():
 
 # ADMIN ROUTES - Money-making features for platform owner
 @app.route('/admin')
-@require_login
 def admin_dashboard():
     """Admin dashboard - view all users and send email blasts"""
-    if not current_user.is_admin:
+    # Check admin access using session
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('dashboard'))
+    
+    user = User.query.get(user_id)
+    if not user or not user.is_admin:
         flash('Access denied. Admin only.', 'error')
         return redirect(url_for('dashboard'))
     
@@ -366,10 +371,15 @@ def admin_dashboard():
                          recent_blasts=recent_blasts)
 
 @app.route('/admin/users')
-@require_login
 def admin_users():
     """View all user emails for marketing"""
-    if not current_user.is_admin:
+    # Check admin access using session
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('dashboard'))
+    
+    user = User.query.get(user_id)
+    if not user or not user.is_admin:
         flash('Access denied. Admin only.', 'error')
         return redirect(url_for('dashboard'))
     
