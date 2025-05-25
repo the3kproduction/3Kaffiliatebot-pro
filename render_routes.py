@@ -117,7 +117,8 @@ def dashboard():
         return redirect(url_for('index'))
     
     user_id = session.get('user_id')
-    user = load_user(user_id)
+    # Get fresh user data from database to show current setup status
+    user = User.query.get(user_id)
     
     if not user or user.email != 'the3kproduction@gmail.com':
         session.clear()
