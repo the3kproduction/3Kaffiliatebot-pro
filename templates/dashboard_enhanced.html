@@ -988,13 +988,22 @@
         }
 
         function testConnections() {
+            // Show immediate feedback
+            const testButton = event.target;
+            const originalText = testButton.innerHTML;
+            testButton.innerHTML = '🔄 Testing Connections...';
+            testButton.disabled = true;
+            
             fetch('/api/test-connections', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'}
             }).then(response => response.json())
               .then(data => {
+                  testButton.innerHTML = originalText;
+                  testButton.disabled = false;
+                  
                   if (data.success) {
-                      let message = 'Connection Test Results:\n\n';
+                      let message = '🔍 Connection Test Results:\n\n';
                       if (data.discord) message += '✅ Discord: Connected\n';
                       else message += '❌ Discord: Not configured\n';
                       if (data.telegram) message += '✅ Telegram: Connected\n';
@@ -1007,8 +1016,12 @@
                       else message += '❌ Reddit: Not configured\n';
                       alert(message);
                   } else {
-                      alert('Test failed: ' + data.error);
+                      alert('❌ Test failed: ' + data.error);
                   }
+              }).catch(error => {
+                  testButton.innerHTML = originalText;
+                  testButton.disabled = false;
+                  alert('❌ Connection test failed. Please try again.');
               });
         }
 
