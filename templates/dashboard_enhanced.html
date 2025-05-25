@@ -819,6 +819,50 @@
                 updateNowPlaying('Connect Spotify account first');
             }
         }
+
+        // Genre filtering functionality
+        let allStations = [];
+
+        function initializeStations() {
+            const selector = document.getElementById('stationSelector');
+            allStations = Array.from(selector.options).filter(option => option.value !== '');
+        }
+
+        function filterByGenre(genre) {
+            // Update tab appearance
+            document.querySelectorAll('.genre-tab').forEach(tab => {
+                tab.style.background = 'rgba(255,255,255,0.1)';
+            });
+            document.getElementById(genre + 'Tab').style.background = 'rgba(255,255,255,0.3)';
+            
+            const selector = document.getElementById('stationSelector');
+            const currentValue = selector.value; // Remember current selection
+            
+            // Clear current options
+            selector.innerHTML = '<option value="">🎵 Select a Radio Station</option>';
+            
+            // Filter and add stations
+            allStations.forEach(station => {
+                if (genre === 'all' || station.dataset.genre === genre) {
+                    const option = document.createElement('option');
+                    option.value = station.value;
+                    option.textContent = station.textContent;
+                    option.dataset.genre = station.dataset.genre;
+                    selector.appendChild(option);
+                }
+            });
+            
+            // Restore selection if it's still available
+            if (currentValue && selector.querySelector(`option[value="${currentValue}"]`)) {
+                selector.value = currentValue;
+            }
+        }
+
+        // Initialize stations when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePlayer();
+            setTimeout(initializeStations, 100); // Initialize stations for filtering
+        });
     </script>
 </body>
 </html>
