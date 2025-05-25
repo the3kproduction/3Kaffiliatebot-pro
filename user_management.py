@@ -36,6 +36,36 @@ class UserManager:
         
         return f"✅ Granted {trial_tier} trial to {user.email} for {days} days (until {trial_end.strftime('%Y-%m-%d')})"
     
+    def grant_purchase_trial(self, user_email, trial_tier='premium'):
+        """Grant 7-day trial before charging for paid tiers"""
+        user = User.query.filter_by(email=user_email).first()
+        if not user:
+            return f"User with email {user_email} not found"
+        
+        # Check if user already had a purchase trial for this tier
+        if hasattr(user, f'{trial_tier}_trial_used') and getattr(user, f'{trial_tier}_trial_used'):
+            return f"User {user.email} already used their {trial_tier} trial"
+        
+        # Set 7-day trial before payment
+        trial_start = datetime.now()
+        trial_end = trial_start + timedelta(days=7)
+        
+        user.trial_start_date = trial_start
+        user.trial_end_date = trial_end
+        user.trial_tier = trial_tier
+        user.is_trial_active = True
+        user.subscription_tier = 'trial'
+        
+        # Set posting frequency
+        if trial_tier == 'premium':
+            user.post_frequency_hours = 3  # 8 posts per day
+        elif trial_tier == 'pro':
+            user.post_frequency_hours = 1  # 24 posts per day
+        
+        db.session.commit()
+        
+        return f"🎯 Started 7-day {trial_tier} trial for {user.email} - payment will be processed on {trial_end.strftime('%Y-%m-%d')}"
+    
     def grant_contest_lifetime(self, user_email, tier='pro'):
         """Grant lifetime access to a contest winner"""
         user = User.query.filter_by(email=user_email).first()

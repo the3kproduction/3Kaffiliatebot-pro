@@ -41,6 +41,8 @@ class User(UserMixin, db.Model):
     trial_end_date = db.Column(db.DateTime, nullable=True)
     trial_tier = db.Column(db.String(20), nullable=True)  # premium, pro
     is_trial_active = db.Column(db.Boolean, default=False)
+    premium_trial_used = db.Column(db.Boolean, default=False)  # Track if used 7-day trial
+    pro_trial_used = db.Column(db.Boolean, default=False)  # Track if used 7-day trial
     contest_winner = db.Column(db.Boolean, default=False)  # For contest lifetime access
     subscription_start_date = db.Column(db.DateTime, nullable=True)
     
