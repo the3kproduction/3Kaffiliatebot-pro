@@ -1,13 +1,9 @@
-services:
-  - type: web
-    name: affiliatebot-pro-platform
-    env: python
-    buildCommand: "pip install flask flask-sqlalchemy flask-login flask-dance beautifulsoup4 lxml psycopg2-binary requests python-dotenv sendgrid slack-sdk"
-    startCommand: "python run.py"
-    envVars:
-      - key: SESSION_SECRET
-        generateValue: true
-      - key: SENDGRID_API_KEY
-        value: ""
-      - key: EMAIL_FROM
-        value: "noreply@affiliatebot-pro.com"
+# Render deployment configuration
+# Use this for reference when setting up manually on Render
+
+# Build Command: pip install flask flask-sqlalchemy flask-login flask-dance beautifulsoup4 lxml psycopg2-binary requests python-dotenv sendgrid slack-sdk
+# Start Command: python run.py
+# Environment Variables:
+# - SESSION_SECRET (auto-generate)
+# - SENDGRID_API_KEY (optional)
+# - EMAIL_FROM (optional)
