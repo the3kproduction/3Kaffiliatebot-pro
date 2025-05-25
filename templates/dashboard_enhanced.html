@@ -613,28 +613,39 @@
                     resultDiv.className = 'alert alert-success';
                     let productsHtml = '';
                     if (data.products && data.products.length > 0) {
-                        productsHtml = '<div style="margin-top: 15px;"><h4>Found Products:</h4>';
-                        data.products.slice(0, 5).forEach(product => {
+                        productsHtml = `
+                            <div style="margin-top: 20px; border-top: 2px solid #667eea; padding-top: 15px;">
+                                <h4 style="color: #333; margin-bottom: 15px;">🎯 Found Products (${data.products.length})</h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; max-height: 400px; overflow-y: auto; padding: 10px;">
+                        `;
+                        data.products.forEach(product => {
                             productsHtml += `
-                                <div style="border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 8px; background: white;">
-                                    <strong>${product.title.substring(0, 60)}${product.title.length > 60 ? '...' : ''}</strong><br>
-                                    <small>ASIN: ${product.asin} | Price: ${product.price}</small><br>
-                                    <button onclick="promoteProduct('${product.asin}')" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 5px;">
-                                        Promote This Product
+                                <div style="border: 2px solid #e9ecef; padding: 15px; border-radius: 12px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s ease;" onmouseover="this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#e9ecef'; this.style.transform='translateY(0)'">
+                                    <div style="height: 60px; overflow: hidden; margin-bottom: 10px;">
+                                        <strong style="color: #333; font-size: 14px; line-height: 1.3;">${product.title.substring(0, 70)}${product.title.length > 70 ? '...' : ''}</strong>
+                                    </div>
+                                    <div style="margin: 8px 0; font-size: 12px; color: #666;">
+                                        <span style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">ASIN: ${product.asin}</span>
+                                    </div>
+                                    <div style="color: #e74c3c; font-weight: bold; margin: 8px 0;">${product.price}</div>
+                                    <button onclick="promoteProduct('${product.asin}')" style="background: linear-gradient(135deg, #28a745, #20c997); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                        🚀 Promote Now
                                     </button>
                                 </div>
                             `;
                         });
-                        productsHtml += '</div>';
+                        productsHtml += '</div></div>';
                     }
                     
                     resultDiv.innerHTML = `
-                        <strong>✅ ${data.message}</strong><br>
-                        Found ${data.total_found} products, added ${data.products_added} new ones to your inventory
+                        <strong>✅ Success!</strong> Found ${data.total_found} products, added ${data.products_added} new ones to your inventory
                         ${productsHtml}
-                        <br><a href="/products/browse" style="color: #007bff;">View all products in Browse Products →</a>
+                        <div style="margin-top: 10px;">
+                            <a href="/products/browse" style="color: #007bff; text-decoration: none;">View all ${data.total_found} products in Browse Products →</a>
+                        </div>
                     `;
                     document.getElementById('product-search-input').value = '';
+                    // Don't reload the page anymore - keep results visible
                 } else {
                     resultDiv.className = 'alert alert-danger';
                     resultDiv.innerHTML = `❌ ${data.message}`;
