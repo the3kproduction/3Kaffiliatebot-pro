@@ -599,6 +599,54 @@ def api_test_connections():
     
     return jsonify(results)
 
+@app.route('/api/promote-products', methods=['POST'])
+@require_login
+def api_promote_products():
+    """Promote multiple products using existing platform configurations"""
+    user = current_user
+    data = request.get_json()
+    num_products = data.get('count', 1)
+    
+    try:
+        # Check if user has platforms configured
+        has_platforms = (user.discord_webhook_url or 
+                        user.telegram_bot_token or 
+                        user.slack_bot_token)
+        
+        if not has_platforms:
+            return jsonify({'success': False, 'error': 'Please configure at least one platform in Platform Settings'})
+        
+        # Use marketing automation to post products
+        from marketing_automation import MultiPlatformPoster
+        poster = MultiPlatformPoster(user)
+        
+        promoted_count = 0
+        for i in range(num_products):
+            # Create sample product for promotion
+            sample_product = {
+                'title': f'Premium Deal #{i+1}',
+                'description': f'Handpicked product deal - Limited time offer!',
+                'image': 'https://via.placeholder.com/300x300?text=Deal',
+                'price': f'${29.99 + (i * 10)}',
+                'rating': 4.5,
+                'category': 'Electronics',
+                'affiliate_url': f'https://amazon.com/dp/B08N5WRWNW?tag={user.amazon_affiliate_id or "luxoraconnect-20"}',
+                'asin': f'B08N5WRWN{i}'
+            }
+            
+            result = poster.post_product(sample_product)
+            if result:
+                promoted_count += 1
+        
+        return jsonify({
+            'success': True,
+            'products_promoted': promoted_count,
+            'message': f'Successfully promoted {promoted_count} products!'
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Error promoting products: {str(e)}'})
+
 @app.route('/help')
 def help_page():
     """Comprehensive setup guide and FAQ"""

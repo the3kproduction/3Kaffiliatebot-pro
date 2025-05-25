@@ -461,10 +461,10 @@
             </button>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button onclick="autoPromoteProducts(1)" style="background: rgba(255,255,255,0.2); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                <button onclick="promoteProducts(1)" style="background: rgba(255,255,255,0.2); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                     Promote 1
                 </button>
-                <button onclick="autoPromoteProducts(5)" style="background: rgba(255,255,255,0.2); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                <button onclick="promoteProducts(5)" style="background: rgba(255,255,255,0.2); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                     Promote 5
                 </button>
             </div>
@@ -910,6 +910,22 @@
                       alert(message);
                   } else {
                       alert('Test failed: ' + data.error);
+                  }
+              });
+        }
+
+        function promoteProducts(count) {
+            fetch('/api/promote-products', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({count: count})
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('✅ Success! Promoted ' + data.products_promoted + ' products to your platforms!');
+                      location.reload();
+                  } else {
+                      alert('❌ Error: ' + data.error);
                   }
               });
         }
