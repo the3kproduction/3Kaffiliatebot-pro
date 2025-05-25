@@ -373,53 +373,67 @@
             <button class="minimize-btn" onclick="togglePlayer()">−</button>
         </div>
         <div class="player-content">
-            <!-- Music Source Tabs -->
-            <div style="display: flex; margin-bottom: 10px;">
-                <button class="source-tab active" onclick="switchSource('radio')" id="radioTab" style="flex: 1; padding: 8px; background: rgba(255,255,255,0.3); border: none; color: white; border-radius: 8px 0 0 8px; cursor: pointer;">
-                    📻 Radio
+            <!-- Genre Filter Tabs -->
+            <div style="display: flex; margin-bottom: 10px; flex-wrap: wrap; gap: 4px;">
+                <button class="genre-tab active" onclick="filterByGenre('all')" id="allTab" style="padding: 4px 8px; background: rgba(255,255,255,0.3); border: none; color: white; border-radius: 12px; cursor: pointer; font-size: 10px;">
+                    All
                 </button>
-                <button class="source-tab" onclick="switchSource('spotify')" id="spotifyTab" style="flex: 1; padding: 8px; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 0 8px 8px 0; cursor: pointer;">
-                    🎵 Spotify
+                <button class="genre-tab" onclick="filterByGenre('chill')" id="chillTab" style="padding: 4px 8px; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 12px; cursor: pointer; font-size: 10px;">
+                    Chill
+                </button>
+                <button class="genre-tab" onclick="filterByGenre('electronic')" id="electronicTab" style="padding: 4px 8px; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 12px; cursor: pointer; font-size: 10px;">
+                    Electronic
+                </button>
+                <button class="genre-tab" onclick="filterByGenre('jazz')" id="jazzTab" style="padding: 4px 8px; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 12px; cursor: pointer; font-size: 10px;">
+                    Jazz
+                </button>
+                <button class="genre-tab" onclick="filterByGenre('ambient')" id="ambientTab" style="padding: 4px 8px; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 12px; cursor: pointer; font-size: 10px;">
+                    Ambient
+                </button>
+                <button class="genre-tab" onclick="filterByGenre('rock')" id="rockTab" style="padding: 4px 8px; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 12px; cursor: pointer; font-size: 10px;">
+                    Rock
                 </button>
             </div>
             
-            <!-- Radio Section -->
-            <div id="radioSection">
-                <select class="station-selector" id="stationSelector" onchange="changeStation()" size="1">
-                    <option value="">Select a Station</option>
-                    <option value="http://ice1.somafm.com/groovesalad-256-mp3">🎵 Groove Salad (Chill)</option>
-                    <option value="http://ice1.somafm.com/deepspaceone-128-mp3">🚀 Deep Space One (Ambient)</option>
-                    <option value="http://ice1.somafm.com/dronezone-256-mp3">🎧 Drone Zone (Meditation)</option>
-                    <option value="http://ice1.somafm.com/lush-128-mp3">🌿 Lush (Sensual Trips)</option>
-                    <option value="http://ice1.somafm.com/secretagent-128-mp3">🕶️ Secret Agent (Downtempo)</option>
-                    <option value="http://ice1.somafm.com/defcon-256-mp3">⚡ DEF CON Radio (Electronic)</option>
-                    <option value="http://ice1.somafm.com/beatblender-128-mp3">🎛️ Beat Blender (Electronic)</option>
-                    <option value="http://ice1.somafm.com/bagel-128-mp3">🥯 BAGeL Radio (Alternative)</option>
-                    <option value="http://ice1.somafm.com/indiepop-128-mp3">🎸 Indie Pop Rocks</option>
-                    <option value="http://ice1.somafm.com/spacestation-128-mp3">🛸 Space Station Soma</option>
-                    <option value="http://ice1.somafm.com/thetrip-128-mp3">🌈 The Trip (Progressive)</option>
-                    <option value="http://ice1.somafm.com/digitalis-128-mp3">💊 Digitalis (Downtempo)</option>
-                    <option value="http://ice1.somafm.com/folkfwd-128-mp3">🪕 Folk Forward</option>
-                    <option value="http://ice1.somafm.com/suburbsofgoa-128-mp3">🏖️ Suburbs of Goa (Trance)</option>
-                    <option value="http://ice1.somafm.com/sonicuniverse-256-mp3">🌌 Sonic Universe</option>
-                </select>
-            </div>
-            
-            <!-- Spotify Section -->
-            <div id="spotifySection" style="display: none;">
-                <div id="spotifyAuth" style="text-align: center; padding: 15px;">
-                    <button onclick="connectSpotify()" style="background: #1DB954; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold;">
-                        Connect Spotify Account
-                    </button>
-                    <p style="font-size: 11px; margin-top: 8px; opacity: 0.8;">Connect your Spotify Premium account to control your music</p>
-                </div>
-                <div id="spotifyPlayer" style="display: none;">
-                    <div style="text-align: center; margin-bottom: 10px;">
-                        <img id="spotifyAlbumArt" src="" alt="Album Art" style="width: 60px; height: 60px; border-radius: 8px; display: none;">
-                        <div id="spotifyTrackInfo" style="font-size: 12px; margin-top: 5px;">Ready to play</div>
-                    </div>
-                </div>
-            </div>
+            <!-- Radio Station Selector -->
+            <select class="station-selector" id="stationSelector" onchange="changeStation()" size="1">
+                <option value="">🎵 Select a Radio Station</option>
+                
+                <!-- CHILL -->
+                <option value="http://ice1.somafm.com/groovesalad-256-mp3" data-genre="chill">🍃 Groove Salad - Downtempo Chill</option>
+                <option value="http://ice1.somafm.com/lush-128-mp3" data-genre="chill">🌿 Lush - Sensual & Luxurious</option>
+                <option value="http://ice1.somafm.com/secretagent-128-mp3" data-genre="chill">🕶️ Secret Agent - Lounge Vibes</option>
+                <option value="http://ice1.somafm.com/digitalis-128-mp3" data-genre="chill">💊 Digitalis - Indie Downtempo</option>
+                <option value="http://ice1.somafm.com/illstreet-128-mp3" data-genre="chill">🎯 Illinois Street Lounge</option>
+                
+                <!-- ELECTRONIC -->
+                <option value="http://ice1.somafm.com/defcon-256-mp3" data-genre="electronic">⚡ DEF CON Radio - Hacker Tunes</option>
+                <option value="http://ice1.somafm.com/beatblender-128-mp3" data-genre="electronic">🎛️ Beat Blender - Electronic Mix</option>
+                <option value="http://ice1.somafm.com/suburbsofgoa-128-mp3" data-genre="electronic">🏖️ Suburbs of Goa - Trance</option>
+                <option value="http://ice1.somafm.com/thetrip-128-mp3" data-genre="electronic">🌈 The Trip - Progressive House</option>
+                <option value="http://ice1.somafm.com/cliqhop-256-mp3" data-genre="electronic">🔊 cliqhop idm - Glitch Beats</option>
+                <option value="http://ice1.somafm.com/poptron-128-mp3" data-genre="electronic">📺 PopTron - Electro-Pop</option>
+                
+                <!-- JAZZ & SOUL -->
+                <option value="http://ice1.somafm.com/seventy-128-mp3" data-genre="jazz">🎷 Seven Inch Soul - Vintage R&B</option>
+                <option value="http://ice1.somafm.com/sf1033-128-mp3" data-genre="jazz">📻 SF 10-33 - Emergency Jazz</option>
+                <option value="http://ice1.somafm.com/fluid-128-mp3" data-genre="jazz">💫 Fluid - Dub & Downtempo</option>
+                
+                <!-- AMBIENT -->
+                <option value="http://ice1.somafm.com/deepspaceone-128-mp3" data-genre="ambient">🚀 Deep Space One - Space Music</option>
+                <option value="http://ice1.somafm.com/dronezone-256-mp3" data-genre="ambient">🎧 Drone Zone - Meditation</option>
+                <option value="http://ice1.somafm.com/spacestation-128-mp3" data-genre="ambient">🛸 Space Station Soma</option>
+                <option value="http://ice1.somafm.com/sonicuniverse-256-mp3" data-genre="ambient">🌌 Sonic Universe - Cosmic</option>
+                <option value="http://ice1.somafm.com/missioncontrol-128-mp3" data-genre="ambient">🛰️ Mission Control - Space</option>
+                
+                <!-- ROCK & ALTERNATIVE -->
+                <option value="http://ice1.somafm.com/bagel-128-mp3" data-genre="rock">🥯 BAGeL Radio - Alternative</option>
+                <option value="http://ice1.somafm.com/indiepop-128-mp3" data-genre="rock">🎸 Indie Pop Rocks</option>
+                <option value="http://ice1.somafm.com/folkfwd-128-mp3" data-genre="rock">🪕 Folk Forward - Indie Folk</option>
+                <option value="http://ice1.somafm.com/covers-128-mp3" data-genre="rock">🎤 Covers - Cover Songs</option>
+                <option value="http://ice1.somafm.com/underground80s-128-mp3" data-genre="rock">📼 Underground 80s</option>
+                <option value="http://ice1.somafm.com/rusty-128-mp3" data-genre="rock">🔧 Rusty - Garage Rock</option>
+            </select>
             
             <div class="player-controls">
                 <button class="control-btn" onclick="togglePlayPause()" id="playPauseBtn">▶</button>
@@ -770,14 +784,12 @@
                         updateNowPlaying('Connecting to Spotify...');
                         window.location.href = data.auth_url;
                     } else {
-                        // Show inline message instead of popup
+                        // Show Spotify coming soon message
                         document.getElementById('spotifyAuth').innerHTML = `
                             <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-                                <p style="margin-bottom: 10px;">🎵 Spotify integration available!</p>
-                                <p style="font-size: 11px; opacity: 0.8;">Contact admin to enable Spotify for your account</p>
-                                <button onclick="requestSpotifyAccess()" style="background: #1DB954; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; margin-top: 8px;">
-                                    Request Access
-                                </button>
+                                <p style="margin-bottom: 10px;">🎵 Spotify Integration</p>
+                                <p style="font-size: 11px; opacity: 0.8;">Coming soon! Enjoy the radio stations for now.</p>
+                                <p style="font-size: 10px; opacity: 0.6; margin-top: 8px;">15+ premium radio channels available</p>
                             </div>
                         `;
                         updateNowPlaying('Spotify setup needed');
