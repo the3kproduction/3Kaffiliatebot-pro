@@ -588,6 +588,11 @@ def api_test_connections():
     
     return jsonify(results)
 
+@app.route('/help')
+def help_page():
+    """Comprehensive setup guide and FAQ"""
+    return render_template('help.html')
+
 @app.route('/api/toggle-auto-posts', methods=['POST'])
 @require_login
 def api_toggle_auto_posts():
