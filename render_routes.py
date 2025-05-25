@@ -61,7 +61,7 @@ def admin_login():
     password = request.form.get('password')
     
     # Only allow your specific email and a secure password
-    if email == 'drfe8694@gmail.com' and password == 'AffiliateBot2025!':
+    if email == 'the3kproduction@gmail.com' and password == 'Password123':
         admin_user = create_admin_user()
         session.clear()  # Clear any existing session data
         session['user_id'] = admin_user.id
@@ -81,10 +81,10 @@ def forgot_password():
 def reset_password():
     """Reset password functionality"""
     email = request.form.get('email')
-    if email == 'drfe8694@gmail.com':
+    if email == 'the3kproduction@gmail.com':
         # In a real app, you'd send an email. For now, show the password.
         return render_template('password_reset.html', 
-                             message="Your admin password is: AffiliateBot2025!")
+                             message="Your admin password is: Password123")
     else:
         return render_template('forgot_password.html', 
                              error='Email not found in admin records')
@@ -99,7 +99,7 @@ def dashboard():
     user_id = session.get('user_id')
     user = load_user(user_id)
     
-    if not user or user.email != 'drfe8694@gmail.com':
+    if not user or user.email != 'the3kproduction@gmail.com':
         session.clear()
         return redirect(url_for('index'))
     
