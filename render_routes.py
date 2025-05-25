@@ -10,6 +10,7 @@ from inventory_manager import InventoryManager
 from auto_product_selector import AutoProductSelector
 from amazon_search import AmazonSearcher
 from affiliate_referral_system import AffiliateReferralSystem
+from stripe_payments import StripePaymentProcessor
 import logging
 
 logger = logging.getLogger(__name__)
@@ -676,6 +677,72 @@ def admin_affiliate_analytics():
     analytics = affiliate_system.get_admin_referral_analytics()
     
     return render_template('admin_affiliate_analytics.html', analytics=analytics)
+
+@app.route('/upgrade/<plan_type>')
+def upgrade_subscription(plan_type):
+    """Start Stripe checkout for subscription upgrade"""
+    if not session.get('user_id'):
+        return redirect(url_for('login_page'))
+    
+    user = load_user(session['user_id'])
+    if not user:
+        return redirect(url_for('login_page'))
+    
+    # Get affiliate code from session if user came via referral
+    affiliate_code = session.get('affiliate_code')
+    
+    try:
+        stripe_processor = StripePaymentProcessor()
+        result = stripe_processor.create_checkout_session(
+            user.id, plan_type, affiliate_code
+        )
+        
+        if 'error' in result:
+            flash(f"Payment error: {result['error']}", 'error')
+            return redirect(url_for('dashboard'))
+        
+        return redirect(result['checkout_url'])
+        
+    except Exception as e:
+        logger.error(f"Upgrade error: {e}")
+        flash("Payment system temporarily unavailable", 'error')
+        return redirect(url_for('dashboard'))
+
+@app.route('/payment-success')
+def payment_success():
+    """Handle successful Stripe payment"""
+    session_id = request.args.get('session_id')
+    if not session_id:
+        flash("Payment verification failed", 'error')
+        return redirect(url_for('dashboard'))
+    
+    try:
+        stripe_processor = StripePaymentProcessor()
+        result = stripe_processor.handle_successful_payment(session_id)
+        
+        if result.get('success'):
+            plan_type = result['plan_type'].title()
+            flash(f"🎉 Welcome to AffiliateBot Pro {plan_type}! Your subscription is now active.", 'success')
+            
+            # Show commission info if applicable
+            if result.get('commission_info'):
+                commission_info = result['commission_info']
+                if commission_info.get('lifetime_unlocked'):
+                    flash("🏆 Congratulations! You've unlocked lifetime access!", 'success')
+        else:
+            flash(f"Payment processing error: {result.get('error', 'Unknown error')}", 'error')
+            
+    except Exception as e:
+        logger.error(f"Payment success handler error: {e}")
+        flash("Payment verification failed", 'error')
+    
+    return redirect(url_for('dashboard'))
+
+@app.route('/payment-cancelled')
+def payment_cancelled():
+    """Handle cancelled Stripe payment"""
+    flash("Payment was cancelled. You can try again anytime!", 'info')
+    return redirect(url_for('dashboard'))
 
 @app.route('/logout')
 def logout():
