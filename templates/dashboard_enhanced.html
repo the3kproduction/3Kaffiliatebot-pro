@@ -49,6 +49,23 @@
         .chart-bar { height: 30px; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 15px; margin: 10px 0; position: relative; }
         .chart-label { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold; }
         
+        /* Floating Radio Player Styles */
+        .radio-player { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 15px; padding: 15px; width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 1000; transition: all 0.3s ease; }
+        .radio-player.minimized { width: 60px; height: 60px; padding: 10px; }
+        .radio-player.minimized .player-content { display: none; }
+        .radio-player.minimized .minimize-btn { transform: rotate(180deg); }
+        .player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .player-title { font-weight: bold; font-size: 14px; }
+        .minimize-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 25px; height: 25px; border-radius: 50%; cursor: pointer; font-size: 12px; }
+        .station-selector { width: 100%; background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px; border-radius: 8px; margin-bottom: 10px; }
+        .station-selector option { background: #333; color: white; }
+        .player-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+        .control-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: all 0.3s ease; }
+        .control-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+        .volume-control { display: flex; align-items: center; gap: 10px; }
+        .volume-slider { width: 100%; }
+        .now-playing { font-size: 12px; opacity: 0.8; text-align: center; margin-top: 5px; }
+        
         .webhook-item { background: #f8f9fa; border-radius: 10px; padding: 15px; margin: 10px 0; border-left: 5px solid #667eea; }
         .webhook-status { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 10px; }
         .status-green { background: #28a745; }
@@ -288,6 +305,72 @@
         </div>
     </div>
 
+    <!-- Floating Radio Player -->
+    <div class="radio-player" id="radioPlayer">
+        <div class="player-header">
+            <span class="player-title">🎵 Member Radio</span>
+            <button class="minimize-btn" onclick="togglePlayer()">−</button>
+        </div>
+        <div class="player-content">
+            <!-- Music Source Tabs -->
+            <div style="display: flex; margin-bottom: 10px;">
+                <button class="source-tab active" onclick="switchSource('radio')" id="radioTab" style="flex: 1; padding: 8px; background: rgba(255,255,255,0.3); border: none; color: white; border-radius: 8px 0 0 8px; cursor: pointer;">
+                    📻 Radio
+                </button>
+                <button class="source-tab" onclick="switchSource('spotify')" id="spotifyTab" style="flex: 1; padding: 8px; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 0 8px 8px 0; cursor: pointer;">
+                    🎵 Spotify
+                </button>
+            </div>
+            
+            <!-- Radio Section -->
+            <div id="radioSection">
+                <select class="station-selector" id="stationSelector" onchange="changeStation()">
+                    <option value="">Select a Station</option>
+                    <option value="http://ice1.somafm.com/groovesalad-256-mp3">Groove Salad (Chill)</option>
+                    <option value="http://ice1.somafm.com/deepspaceone-128-mp3">Deep Space One (Ambient)</option>
+                    <option value="http://ice1.somafm.com/dronezone-256-mp3">Drone Zone (Ambient)</option>
+                    <option value="http://ice1.somafm.com/lush-128-mp3">Lush (Chillout)</option>
+                    <option value="http://ice1.somafm.com/secretagent-128-mp3">Secret Agent (Downtempo)</option>
+                    <option value="http://ice1.somafm.com/defcon-256-mp3">DEF CON Radio (Electronic)</option>
+                    <option value="http://ice1.somafm.com/beatblender-128-mp3">Beat Blender (Electronic)</option>
+                    <option value="http://ice1.somafm.com/bagel-128-mp3">BAGeL Radio (Alternative)</option>
+                </select>
+            </div>
+            
+            <!-- Spotify Section -->
+            <div id="spotifySection" style="display: none;">
+                <div id="spotifyAuth" style="text-align: center; padding: 15px;">
+                    <button onclick="connectSpotify()" style="background: #1DB954; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold;">
+                        Connect Spotify Account
+                    </button>
+                    <p style="font-size: 11px; margin-top: 8px; opacity: 0.8;">Connect your Spotify Premium account to control your music</p>
+                </div>
+                <div id="spotifyPlayer" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <img id="spotifyAlbumArt" src="" alt="Album Art" style="width: 60px; height: 60px; border-radius: 8px; display: none;">
+                        <div id="spotifyTrackInfo" style="font-size: 12px; margin-top: 5px;">Ready to play</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="player-controls">
+                <button class="control-btn" onclick="togglePlayPause()" id="playPauseBtn">▶</button>
+                <button class="control-btn" onclick="stopRadio()">⏹</button>
+                <button class="control-btn" onclick="muteToggle()" id="muteBtn">🔊</button>
+            </div>
+            
+            <div class="volume-control">
+                <span style="font-size: 12px;">🔉</span>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50" onchange="setVolume()">
+                <span style="font-size: 12px;">🔊</span>
+            </div>
+            
+            <div class="now-playing" id="nowPlaying">Select a station to start listening</div>
+        </div>
+    </div>
+
+    <audio id="radioAudio" preload="none"></audio>
+
     <script>
         function selectProduct(asin) {
             if (confirm('Promote this product to all your connected platforms?')) {
@@ -454,6 +537,145 @@
                 });
             }
         });
+        
+        // Radio Player Variables
+        let radioAudio = null;
+        let isPlaying = false;
+        let currentSource = 'radio';
+        let spotifyPlayer = null;
+        let spotifyDeviceId = null;
+        
+        // Initialize player
+        document.addEventListener('DOMContentLoaded', function() {
+            radioAudio = document.getElementById('radioAudio');
+            setVolume();
+        });
+        
+        // Switch between Radio and Spotify
+        function switchSource(source) {
+            currentSource = source;
+            
+            // Update tab appearance
+            document.getElementById('radioTab').style.background = source === 'radio' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)';
+            document.getElementById('spotifyTab').style.background = source === 'spotify' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)';
+            
+            // Show/hide sections
+            document.getElementById('radioSection').style.display = source === 'radio' ? 'block' : 'none';
+            document.getElementById('spotifySection').style.display = source === 'spotify' ? 'block' : 'none';
+            
+            // Stop current playback
+            if (source === 'spotify' && radioAudio) {
+                stopRadio();
+            }
+            
+            updateNowPlaying(source === 'radio' ? 'Radio mode selected' : 'Spotify mode selected');
+        }
+        
+        // Radio Functions
+        function changeStation() {
+            const stationUrl = document.getElementById('stationSelector').value;
+            if (stationUrl) {
+                radioAudio.src = stationUrl;
+                updateNowPlaying('Station loaded. Click play to start.');
+            }
+        }
+        
+        function togglePlayPause() {
+            if (currentSource === 'radio') {
+                toggleRadio();
+            } else {
+                toggleSpotify();
+            }
+        }
+        
+        function toggleRadio() {
+            if (!radioAudio.src) {
+                alert('Please select a radio station first');
+                return;
+            }
+            
+            if (isPlaying) {
+                radioAudio.pause();
+                document.getElementById('playPauseBtn').innerHTML = '▶';
+                isPlaying = false;
+                updateNowPlaying('Paused');
+            } else {
+                radioAudio.play().then(() => {
+                    document.getElementById('playPauseBtn').innerHTML = '⏸';
+                    isPlaying = true;
+                    const stationName = document.getElementById('stationSelector').selectedOptions[0].text;
+                    updateNowPlaying('Playing: ' + stationName);
+                }).catch(error => {
+                    console.error('Error playing radio:', error);
+                    updateNowPlaying('Error playing station');
+                });
+            }
+        }
+        
+        function stopRadio() {
+            if (radioAudio) {
+                radioAudio.pause();
+                radioAudio.currentTime = 0;
+                document.getElementById('playPauseBtn').innerHTML = '▶';
+                isPlaying = false;
+                updateNowPlaying('Stopped');
+            }
+        }
+        
+        function setVolume() {
+            const volume = document.getElementById('volumeSlider').value / 100;
+            if (radioAudio) {
+                radioAudio.volume = volume;
+            }
+            if (spotifyPlayer) {
+                spotifyPlayer.setVolume(volume);
+            }
+        }
+        
+        function muteToggle() {
+            const muteBtn = document.getElementById('muteBtn');
+            if (radioAudio && currentSource === 'radio') {
+                radioAudio.muted = !radioAudio.muted;
+                muteBtn.innerHTML = radioAudio.muted ? '🔇' : '🔊';
+            }
+        }
+        
+        function togglePlayer() {
+            const player = document.getElementById('radioPlayer');
+            player.classList.toggle('minimized');
+        }
+        
+        function updateNowPlaying(text) {
+            document.getElementById('nowPlaying').textContent = text;
+        }
+        
+        // Spotify Integration Functions
+        function connectSpotify() {
+            // Redirect to Spotify authorization
+            const clientId = 'YOUR_SPOTIFY_CLIENT_ID'; // You'll need to set this up
+            const redirectUri = window.location.origin + '/spotify-callback';
+            const scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
+            
+            const authUrl = 'https://accounts.spotify.com/authorize?' +
+                'response_type=code' +
+                '&client_id=' + clientId +
+                '&scope=' + encodeURIComponent(scopes) +
+                '&redirect_uri=' + encodeURIComponent(redirectUri);
+            
+            // For now, show info message
+            alert('Spotify integration requires setup of Spotify API credentials. Contact admin to enable this feature for your account.');
+            updateNowPlaying('Spotify connection requires API setup');
+        }
+        
+        function toggleSpotify() {
+            if (spotifyPlayer) {
+                spotifyPlayer.togglePlay().then(() => {
+                    console.log('Toggled playback');
+                });
+            } else {
+                updateNowPlaying('Connect Spotify account first');
+            }
+        }
     </script>
 </body>
 </html>
