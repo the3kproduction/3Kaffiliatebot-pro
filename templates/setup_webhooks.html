@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Webhooks - AffiliateBot Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { background: rgba(255,255,255,0.95); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .card { background: rgba(255,255,255,0.95); border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; }
+        .form-group input:focus, .form-group select:focus { border-color: #667eea; outline: none; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5a6fd8; transform: translateY(-2px); }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .platform-info { background: #f8f9fa; border-radius: 8px; padding: 15px; margin: 10px 0; }
+        .help-text { color: #666; font-size: 0.9em; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Setup Webhook Destinations</h1>
+            <p>Connect your platforms to automatically post products and earn commissions!</p>
+        </div>
+
+        <div class="card">
+            <h3>Add New Webhook Destination</h3>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="webhook_name">Destination Name</label>
+                    <input type="text" id="webhook_name" name="webhook_name" placeholder="e.g., Discord Sales Channel" required>
+                    <div class="help-text">Give your webhook a memorable name</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="platform">Platform Type</label>
+                    <select id="platform" name="platform" required onchange="showPlatformInfo(this.value)">
+                        <option value="">Select Platform</option>
+                        <option value="discord">Discord</option>
+                        <option value="slack">Slack</option>
+                        <option value="generic">Generic Webhook</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="webhook_url">Webhook URL</label>
+                    <input type="url" id="webhook_url" name="webhook_url" placeholder="https://..." required>
+                    <div class="help-text">Paste your webhook URL from your platform</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="frequency">Posting Frequency</label>
+                    <select id="frequency" name="frequency">
+                        <option value="1">Every Hour (Pro only)</option>
+                        <option value="3" selected>Every 3 Hours (Premium)</option>
+                        <option value="12">Every 12 Hours (Free)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">✅ Add Webhook Destination</button>
+                <a href="/dashboard" class="btn btn-secondary">← Back to Dashboard</a>
+            </form>
+        </div>
+
+        <!-- Platform Setup Instructions -->
+        <div id="discord-info" class="card platform-info" style="display: none;">
+            <h4>🎮 Discord Setup Instructions</h4>
+            <ol>
+                <li>Go to your Discord server</li>
+                <li>Click "Edit Channel" on your desired channel</li>
+                <li>Go to "Integrations" → "Webhooks"</li>
+                <li>Click "New Webhook"</li>
+                <li>Copy the Webhook URL and paste it above</li>
+            </ol>
+        </div>
+
+        <div id="slack-info" class="card platform-info" style="display: none;">
+            <h4>💼 Slack Setup Instructions</h4>
+            <ol>
+                <li>Go to your Slack workspace</li>
+                <li>Click "Apps" in the sidebar</li>
+                <li>Search for "Incoming Webhooks"</li>
+                <li>Add to Slack and choose your channel</li>
+                <li>Copy the Webhook URL and paste it above</li>
+            </ol>
+        </div>
+
+        <div id="generic-info" class="card platform-info" style="display: none;">
+            <h4>🔗 Generic Webhook Instructions</h4>
+            <p>Use any webhook URL that accepts JSON POST requests. Your webhook will receive product data in this format:</p>
+            <pre style="background: #f1f3f4; padding: 10px; border-radius: 5px; margin: 10px 0;">
+{
+    "message": "Product promotion text",
+    "product": {
+        "title": "Product Name",
+        "price": "$29.99",
+        "rating": 4.5,
+        "affiliate_url": "https://amazon.com/..."
+    }
+}
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        function showPlatformInfo(platform) {
+            // Hide all platform info
+            document.getElementById('discord-info').style.display = 'none';
+            document.getElementById('slack-info').style.display = 'none';
+            document.getElementById('generic-info').style.display = 'none';
+            
+            // Show selected platform info
+            if (platform) {
+                const infoDiv = document.getElementById(platform + '-info');
+                if (infoDiv) {
+                    infoDiv.style.display = 'block';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
