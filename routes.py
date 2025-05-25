@@ -55,11 +55,23 @@ def dashboard():
     else:
         next_post_time = None
     
+    # Get AI recommendations
+    from auto_product_selector import AutoProductSelector
+    selector = AutoProductSelector(current_user)
+    ai_recommendations = selector.get_ai_recommended_products(limit=5)
+    
+    # Get trending search suggestions
+    from amazon_search import AmazonSearcher
+    searcher = AmazonSearcher()
+    trending_searches = searcher.get_trending_searches()[:8]
+    
     return render_template('dashboard_enhanced.html', 
                          analytics=analytics,
                          trending_products=trending_products,
                          user_webhooks=user_webhooks,
-                         next_post_time=next_post_time)
+                         next_post_time=next_post_time,
+                         ai_recommendations=ai_recommendations,
+                         trending_searches=trending_searches)
 
 @app.route('/setup', methods=['GET', 'POST'])
 @require_login
@@ -507,6 +519,65 @@ def refresh_products():
     
     flash(f'Refreshed {count} trending products!', 'success')
     return redirect(url_for('dashboard'))
+
+@app.route('/api/auto-promote', methods=['POST'])
+@require_login
+def api_auto_promote():
+    """AI automatically selects and promotes top products"""
+    from auto_product_selector import AutoProductSelector
+    
+    data = request.get_json() or {}
+    num_products = data.get('num_products', 3)
+    
+    selector = AutoProductSelector(current_user)
+    result = selector.auto_promote_products(num_products)
+    
+    return jsonify(result)
+
+@app.route('/api/search-products', methods=['POST'])
+@require_login
+def api_search_products():
+    """Search Amazon for products and add to inventory"""
+    from amazon_search import AmazonSearcher
+    
+    data = request.get_json()
+    query = data.get('query', '')
+    limit = data.get('limit', 20)
+    
+    if not query:
+        return jsonify({'success': False, 'error': 'Search query required'})
+    
+    searcher = AmazonSearcher()
+    result = searcher.search_and_add_to_inventory(query, limit)
+    
+    return jsonify(result)
+
+@app.route('/api/get-ai-recommendations', methods=['GET'])
+@require_login
+def api_get_ai_recommendations():
+    """Get AI-recommended products for user"""
+    from auto_product_selector import AutoProductSelector
+    
+    selector = AutoProductSelector(current_user)
+    recommendations = selector.get_ai_recommended_products(limit=10)
+    
+    # Convert to JSON-serializable format
+    products_data = []
+    for product in recommendations:
+        products_data.append({
+            'asin': product.asin,
+            'title': product.product_title,
+            'price': product.price,
+            'rating': product.rating,
+            'category': product.category,
+            'image_url': product.image_url,
+            'times_promoted': product.times_promoted
+        })
+    
+    return jsonify({
+        'success': True,
+        'recommendations': products_data
+    })
 
 @app.route('/products/browse')
 @require_login
