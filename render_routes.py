@@ -5,7 +5,7 @@ Bypasses all authentication complexities
 from flask import render_template, request, redirect, url_for, flash, jsonify, session
 from app import app, db
 from models import User, Campaign, Post, EmailBlast, ProductInventory, UserProductPromotion
-from simple_auth import create_demo_user, load_user
+from simple_auth import load_user
 from inventory_manager import InventoryManager
 from auto_product_selector import AutoProductSelector
 from amazon_search import AmazonSearcher
@@ -13,13 +13,41 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Auto-login demo user for Render
+def create_admin_user():
+    """Create admin user for Render deployment"""
+    try:
+        admin_user = User.query.filter_by(email='drfe8694@gmail.com').first()
+        if not admin_user:
+            admin_user = User()
+            admin_user.id = 'admin-user'
+            admin_user.email = 'drfe8694@gmail.com'
+            admin_user.first_name = 'Admin'
+            admin_user.last_name = 'User'
+            admin_user.is_admin = True
+            admin_user.subscription_tier = 'pro'
+            db.session.add(admin_user)
+            db.session.commit()
+        return admin_user
+    except Exception as e:
+        logger.error(f"Error creating admin user: {e}")
+        # Return a mock user if database fails
+        class MockUser:
+            def __init__(self):
+                self.id = 'admin-user'
+                self.email = 'drfe8694@gmail.com'
+                self.first_name = 'Admin'
+                self.last_name = 'User'
+                self.is_admin = True
+                self.subscription_tier = 'pro'
+        return MockUser()
+
+# Auto-login admin user for Render
 @app.before_request
-def auto_login_demo_user():
-    """Auto-login demo user for Render deployment"""
+def auto_login_admin_user():
+    """Auto-login admin user for Render deployment"""
     if 'user_id' not in session:
-        demo_user = create_demo_user()
-        session['user_id'] = demo_user.id
+        admin_user = create_admin_user()
+        session['user_id'] = admin_user.id
         session.permanent = True
 
 @app.route('/')
@@ -467,9 +495,9 @@ def delete_product(asin):
 
 @app.route('/logout')
 def logout():
-    """Simple logout"""
+    """Clear session and show logout message"""
     session.clear()
-    return redirect(url_for('index'))
+    return render_template('logout.html')
 
 # Error handlers
 @app.errorhandler(500)
