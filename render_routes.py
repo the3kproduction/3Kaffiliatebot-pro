@@ -92,6 +92,21 @@ def admin_login():
     else:
         return render_template('secure_login.html', error='Invalid credentials')
 
+@app.route('/privacy')
+def privacy_policy():
+    """Privacy policy page - public access"""
+    return render_template('privacy.html')
+
+@app.route('/terms')
+def terms_of_service():
+    """Terms of service page - public access"""
+    return render_template('terms.html')
+
+@app.route('/help')
+def help_page():
+    """Help and setup guide - public access"""
+    return render_template('help.html')
+
 @app.route('/forgot-password')
 def forgot_password():
     """Forgot password page"""
