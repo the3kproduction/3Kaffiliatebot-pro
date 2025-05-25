@@ -292,14 +292,48 @@ def api_auto_promote():
         data = request.get_json() if request.is_json else {}
         num_products = int(data.get('num_products', 3))
         
-        # Get AI-recommended products
-        ai_selector = AutoProductSelector(user)
-        result = ai_selector.auto_promote_products(num_products=num_products)
+        # Simple approach: Get products from inventory and post them
+        inventory = InventoryManager()
+        products_to_promote = inventory.get_products_to_promote(user, limit=num_products)
+        
+        if not products_to_promote:
+            return jsonify({
+                'success': False,
+                'error': 'No products available for promotion. Try searching for products first!'
+            }), 400
+        
+        # Post each product using your existing multi-platform system
+        from marketing_automation import MultiPlatformPoster
+        poster = MultiPlatformPoster(user)
+        
+        promoted_count = 0
+        for product in products_to_promote:
+            try:
+                # Convert inventory product to posting format
+                product_data = {
+                    'title': product.product_title,
+                    'price': product.price or '$29.99',
+                    'rating': product.rating or 4.5,
+                    'affiliate_url': f'https://amazon.com/dp/{product.asin}?tag={user.amazon_affiliate_id}',
+                    'image_url': product.image_url,
+                    'category': product.category or 'Electronics'
+                }
+                
+                # Post to all platforms
+                poster.post_product(product_data)
+                promoted_count += 1
+                
+                # Mark as promoted
+                inventory.mark_product_promoted(product.asin, user.id)
+                
+            except Exception as e:
+                logger.error(f"Error promoting product {product.asin}: {e}")
+                continue
         
         return jsonify({
             'success': True,
-            'products_promoted': num_products,
-            'message': f'Successfully promoted {num_products} products across your platforms!'
+            'products_promoted': promoted_count,
+            'message': f'Successfully promoted {promoted_count} products across your platforms!'
         })
     
     except Exception as e:
