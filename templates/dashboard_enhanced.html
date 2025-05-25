@@ -188,6 +188,17 @@
             }
         </style>
 
+        <!-- Quick Access Section - Moved below problem reporting -->
+        <div class="card" style="background: linear-gradient(135deg, #00b894, #00cec9); color: white; margin-bottom: 25px;">
+            <h3>📚 Quick Access</h3>
+            <p>Essential resources and helpful guides</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                <a href="/help" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">📖 Complete Setup Guide & FAQ</a>
+                <button onclick="togglePlatformSetup()" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 12px 20px; cursor: pointer;">⚙️ Platform Settings</button>
+                <a href="/analytics" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">📊 View Analytics</a>
+            </div>
+        </div>
+
         <!-- Smart Setup Notification -->
         {% set missing_items = [] %}
         {% if not user.amazon_affiliate_id or user.amazon_affiliate_id == '' %}
@@ -340,16 +351,7 @@
             </div>
         </div>
 
-        <!-- Help & Quick Actions -->
-        <div class="card" style="background: linear-gradient(135deg, #00b894, #00cec9); color: white; margin-bottom: 25px;">
-            <h3>📚 Quick Access</h3>
-            <p>Essential resources and helpful guides</p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-                <a href="/help" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">📖 Complete Setup Guide & FAQ</a>
-                <button onclick="togglePlatformSetup()" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 12px 20px; cursor: pointer;">⚙️ Platform Settings</button>
-                <a href="/analytics" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">📊 View Analytics</a>
-            </div>
-        </div>
+
 
         <!-- Admin Panel (moved to top) -->
         {% if user.is_admin %}
