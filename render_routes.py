@@ -231,6 +231,10 @@ def admin_dashboard():
     if not user:
         return redirect(url_for('index'))
     
+    # Only allow admin access for your email
+    if user.email != 'drfe8694@gmail.com':
+        return redirect(url_for('dashboard'))
+    
     try:
         # Get platform stats
         total_users = User.query.count()
@@ -259,6 +263,10 @@ def admin_users():
     if not user:
         return redirect(url_for('index'))
     
+    # Only allow admin access for your email
+    if user.email != 'drfe8694@gmail.com':
+        return redirect(url_for('dashboard'))
+    
     try:
         users = User.query.all()
         return render_template('admin_users.html', user=user, users=users)
@@ -274,6 +282,10 @@ def admin_email_blast():
     
     if not user:
         return redirect(url_for('index'))
+    
+    # Only allow admin access for your email
+    if user.email != 'drfe8694@gmail.com':
+        return redirect(url_for('dashboard'))
     
     try:
         return render_template('admin_email_blast.html', user=user)
