@@ -643,6 +643,8 @@ def api_report_problem():
         user_agent = data.get('user_agent', '')
         url = data.get('url', '')
         
+        from datetime import datetime
+        
         # Create a detailed problem report
         report = {
             'user_id': user.id,

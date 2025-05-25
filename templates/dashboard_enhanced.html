@@ -151,6 +151,43 @@
             </a>
         </div>
 
+        <!-- PROMINENT Problem Reporting Section -->
+        <div style="background: linear-gradient(45deg, #ff4757, #ff3838); border: 3px solid #ff6b6b; border-radius: 15px; padding: 20px; margin: 20px 0; box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3); animation: pulse 2s infinite;">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <h2 style="color: white; margin: 0; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">🚨 HAVING ISSUES? GET HELP NOW! 🚨</h2>
+                <p style="color: rgba(255,255,255,0.9); margin: 10px 0; font-size: 16px;">Something not working? Report it instantly and we'll fix it fast!</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px; align-items: end;">
+                <select id="problemType" style="width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 14px; font-weight: bold;">
+                    <option value="">Select Problem Type</option>
+                    <option value="posting_failed">❌ Posting Failed</option>
+                    <option value="ai_promotion_error">🤖 AI Auto-Promotion Error</option>
+                    <option value="platform_connection">🔗 Platform Connection Issues</option>
+                    <option value="affiliate_links">💰 Affiliate Links Not Working</option>
+                    <option value="dashboard_bug">🐛 Dashboard Bug/Error</option>
+                    <option value="payment_billing">💳 Payment/Billing Issue</option>
+                    <option value="other">❓ Other Issue</option>
+                </select>
+                
+                <textarea id="problemDescription" placeholder="Describe what's broken or not working..." style="width: 100%; height: 60px; padding: 12px; border: none; border-radius: 10px; resize: none; font-family: inherit; font-size: 14px;"></textarea>
+                
+                <button onclick="reportProblem()" style="width: 100%; background: white; color: #ff4757; font-weight: bold; padding: 15px 20px; border-radius: 10px; border: none; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s;">
+                    📧 SEND REPORT
+                </button>
+            </div>
+            
+            <div id="problemReportResult" style="margin-top: 15px; display: none; text-align: center;"></div>
+        </div>
+        
+        <style>
+            @keyframes pulse {
+                0% { box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3); }
+                50% { box-shadow: 0 8px 35px rgba(255, 71, 87, 0.5); }
+                100% { box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3); }
+            }
+        </style>
+
         <!-- Smart Setup Notification -->
         {% set missing_items = [] %}
         {% if not user.amazon_affiliate_id or user.amazon_affiliate_id == '' %}
@@ -473,32 +510,7 @@
             <div id="auto-promote-result" style="margin-top: 15px; padding: 10px; border-radius: 8px; display: none;"></div>
         </div>
 
-        <!-- Report a Problem -->
-        <div class="card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a52); color: white;">
-            <h3>🚨 Report a Problem</h3>
-            <p style="margin-bottom: 20px; opacity: 0.9;">Having issues? Let us know so we can fix it quickly!</p>
-            
-            <div style="margin-bottom: 15px;">
-                <select id="problemType" style="width: 100%; padding: 10px; border: none; border-radius: 8px; margin-bottom: 10px;">
-                    <option value="">Select Problem Type</option>
-                    <option value="posting_failed">Posting to platforms failed</option>
-                    <option value="ai_promotion_error">AI Auto-Promotion not working</option>
-                    <option value="platform_connection">Platform connection issues</option>
-                    <option value="affiliate_links">Affiliate links not working</option>
-                    <option value="dashboard_bug">Dashboard bug/error</option>
-                    <option value="payment_billing">Payment/Billing issue</option>
-                    <option value="other">Other issue</option>
-                </select>
-                
-                <textarea id="problemDescription" placeholder="Describe the problem in detail..." style="width: 100%; height: 80px; padding: 10px; border: none; border-radius: 8px; resize: vertical; font-family: inherit;"></textarea>
-            </div>
-            
-            <button onclick="reportProblem()" style="width: 100%; background: rgba(255,255,255,0.9); color: #ee5a52; font-weight: bold; padding: 12px 20px; border-radius: 8px; border: none; cursor: pointer;">
-                📧 Send Problem Report
-            </button>
-            
-            <div id="problemReportResult" style="margin-top: 15px; display: none;"></div>
-        </div>
+
 
         <!-- Amazon Product Search -->
         <div class="card" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;">
