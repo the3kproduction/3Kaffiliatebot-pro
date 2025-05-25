@@ -84,12 +84,18 @@
         <div id="slack-info" class="card platform-info" style="display: none;">
             <h4>💼 Slack Setup Instructions</h4>
             <ol>
-                <li>Go to your Slack workspace</li>
-                <li>Click "Apps" in the sidebar</li>
-                <li>Search for "Incoming Webhooks"</li>
-                <li>Add to Slack and choose your channel</li>
+                <li>Go to <strong>api.slack.com/apps</strong> in your browser</li>
+                <li>Click "Create New App" → "From scratch"</li>
+                <li>Name your app (e.g., "AffiliateBot") and select your workspace</li>
+                <li>In your app settings, click "Incoming Webhooks" from the left menu</li>
+                <li>Toggle "Activate Incoming Webhooks" to ON</li>
+                <li>Click "Add New Webhook to Workspace"</li>
+                <li>Choose the channel where you want posts to appear</li>
                 <li>Copy the Webhook URL and paste it above</li>
             </ol>
+            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                <strong>Note:</strong> Don't use the Slack app directory. Go directly to api.slack.com/apps to create your webhook!
+            </div>
         </div>
 
         <div id="generic-info" class="card platform-info" style="display: none;">
