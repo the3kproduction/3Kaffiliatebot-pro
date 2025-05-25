@@ -203,33 +203,22 @@ def products():
     user = current_user
     category = request.args.get('category', 'all')
     
-    # Get products from your inventory (not live scraping)
-    query = ProductInventory.query.filter_by(is_active=True)
+    # Get all products directly from your inventory
+    products_raw = ProductInventory.query.filter_by(is_active=True).order_by(ProductInventory.asin).all()
     
-    if category != 'all':
-        query = query.filter(ProductInventory.category == category)
+    if not products_raw:
+        products_raw = ProductInventory.query.all()  # Show all if none are active
     
-    products_raw = query.order_by(ProductInventory.times_promoted.desc()).limit(50).all()
-    
-    print(f"DEBUG: Found {len(products_raw)} products in database")
-    if products_raw:
-        print(f"DEBUG: First product title: {products_raw[0].product_title}")
-        print(f"DEBUG: First product ASIN: {products_raw[0].asin}")
-    
-    # Convert to template format - keep original field names for template
+    # Convert database objects to dictionaries for template
     products = []
     for product in products_raw:
-        affiliate_url = f"https://amazon.com/dp/{product.asin}?tag={user.amazon_affiliate_id or 'luxoraconnect-20'}"
-        
         products.append({
             'asin': product.asin,
-            'product_title': product.product_title,  # Keep original field name
-            'price': product.price,
+            'product_title': product.product_title,
+            'price': product.price or 'N/A',
             'rating': product.rating or 4.5,
             'category': product.category or 'Electronics',
-            'image_url': product.image_url or 'https://via.placeholder.com/200x200?text=Product',
-            'affiliate_url': affiliate_url,
-            'amazon_url': f"https://amazon.com/dp/{product.asin}"
+            'image_url': product.image_url or 'https://via.placeholder.com/200x200?text=Product'
         })
     
     # Get available categories from your inventory
