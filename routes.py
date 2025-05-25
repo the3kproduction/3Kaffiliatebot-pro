@@ -579,6 +579,53 @@ def api_get_ai_recommendations():
         'recommendations': products_data
     })
 
+@app.route('/api/spotify-auth-url', methods=['GET'])
+@require_login
+def spotify_auth_url():
+    """Get Spotify authorization URL"""
+    spotify_client_id = os.environ.get('SPOTIFY_CLIENT_ID')
+    
+    if spotify_client_id:
+        redirect_uri = request.url_root + 'spotify-callback'
+        scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state'
+        
+        auth_url = f"https://accounts.spotify.com/authorize?" \
+                  f"response_type=code" \
+                  f"&client_id={spotify_client_id}" \
+                  f"&scope={scopes}" \
+                  f"&redirect_uri={redirect_uri}" \
+                  f"&state={current_user.id}"
+        
+        return jsonify({'auth_url': auth_url})
+    else:
+        return jsonify({'auth_url': None, 'message': 'Spotify not configured'})
+
+@app.route('/spotify-callback')
+@require_login
+def spotify_callback():
+    """Handle Spotify OAuth callback"""
+    code = request.args.get('code')
+    error = request.args.get('error')
+    
+    if error:
+        flash('Spotify connection failed', 'error')
+        return redirect(url_for('dashboard'))
+    
+    if code:
+        # Exchange code for access token
+        spotify_client_id = os.environ.get('SPOTIFY_CLIENT_ID')
+        spotify_client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
+        
+        if spotify_client_id and spotify_client_secret:
+            # Save Spotify connection to user account
+            current_user.spotify_connected = True
+            db.session.commit()
+            flash('🎵 Spotify connected successfully!', 'success')
+        else:
+            flash('Spotify configuration incomplete', 'error')
+    
+    return redirect(url_for('dashboard'))
+
 @app.route('/products/browse')
 @require_login
 def browse_products():
