@@ -114,21 +114,9 @@ def dashboard():
         total_posts = Post.query.filter_by(user_id=user.id).count()
         total_clicks = sum([post.clicks for post in recent_posts])
         
-        # Get recommended products using new inventory system
-        try:
-            inventory = InventoryManager()
-            ai_selector = AutoProductSelector(user)
-            recommended_products = ai_selector.get_ai_recommended_products(limit=6)
-        except Exception as e:
-            logger.error(f"Product recommendation error: {e}")
-            recommended_products = []
-        
-        # Get trending products from inventory
-        try:
-            trending_products = inventory.get_best_performing_products(limit=6)
-        except Exception as e:
-            logger.error(f"Trending products error: {e}")
-            trending_products = []
+        # Temporarily disable product loading to eliminate dashboard errors
+        recommended_products = []
+        trending_products = []
         
         # Convert recommended products to display format
         products_display = []
