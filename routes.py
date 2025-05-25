@@ -2,11 +2,18 @@ from flask import render_template, request, redirect, url_for, flash, jsonify, s
 from flask_login import current_user, login_required
 from app import app, db
 from models import User, Campaign, Post, EmailBlast
-from replit_auth import require_login, make_replit_blueprint
+import os
+
+# Import authentication based on environment
+if os.environ.get('REPL_ID'):
+    from replit_auth import require_login, make_replit_blueprint
+else:
+    from simple_auth import simple_require_login as require_login
+    make_replit_blueprint = lambda: None
+
 from amazon_scraper import AmazonProductScraper
 from marketing_automation import MultiPlatformPoster
 import logging
-import os
 
 logger = logging.getLogger(__name__)
 
