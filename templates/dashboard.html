@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - AffiliateBot Pro{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Welcome back, {{ user.first_name or 'User' }}!</h1>
+            <p class="text-muted mb-0">
+                <span class="badge bg-{{ 'success' if user.subscription_tier == 'pro' else 'info' if user.subscription_tier == 'premium' else 'secondary' }}">
+                    {{ user.subscription_tier.title() }} Plan
+                </span>
+                {% if not user.affiliate_link_base %}
+                    <span class="badge bg-warning ms-2">Setup Required</span>
+                {% endif %}
+            </p>
+        </div>
+        <div>
+            {% if not user.affiliate_link_base %}
+                <a href="{{ url_for('setup') }}" class="btn btn-primary">
+                    <i class="bi bi-gear"></i> Complete Setup
+                </a>
+            {% else %}
+                <a href="{{ url_for('products') }}" class="btn btn-success">
+                    <i class="bi bi-box-seam"></i> Browse Products
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-6 text-primary mb-2">{{ total_posts }}</div>
+                    <h6 class="card-title text-muted">Products Posted</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-6 text-success mb-2">{{ total_clicks }}</div>
+                    <h6 class="card-title text-muted">Total Clicks</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-6 text-info mb-2">
+                        {% if total_posts > 0 %}
+                            {{ (total_clicks / total_posts)|round(1) }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </div>
+                    <h6 class="card-title text-muted">Click Rate</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-6 text-warning mb-2">
+                        {% if user.subscription_tier == 'free' %}12h{% elif user.subscription_tier == 'premium' %}3h{% else %}1h{% endif %}
+                    </div>
+                    <h6 class="card-title text-muted">Post Frequency</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Quick Actions -->
+        <div class="col-lg-8">
+            {% if not user.affiliate_link_base %}
+                <div class="card border-warning">
+                    <div class="card-header bg-warning bg-opacity-10">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-exclamation-triangle text-warning"></i> Setup Required
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>You need to configure your Amazon affiliate link to start earning commissions!</p>
+                        <a href="{{ url_for('setup') }}" class="btn btn-warning">
+                            <i class="bi bi-gear"></i> Complete Setup Now
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-lightning-charge"></i> Quick Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <a href="{{ url_for('products') }}" class="btn btn-primary w-100">
+                                    <i class="bi bi-box-seam"></i><br>
+                                    Browse Products
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{{ url_for('analytics') }}" class="btn btn-info w-100">
+                                    <i class="bi bi-graph-up"></i><br>
+                                    View Analytics
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{{ url_for('setup') }}" class="btn btn-outline-secondary w-100">
+                                    <i class="bi bi-gear"></i><br>
+                                    Settings
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Posts -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clock-history"></i> Recent Posts
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_posts %}
+                            {% for post in recent_posts %}
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="flex-shrink-0">
+                                        <img src="{{ post.product_image_url }}" alt="Product" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">{{ post.product_title }}</h6>
+                                        <small class="text-muted">{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                        <div class="mt-1">
+                                            {% if post.posted_to_discord %}<span class="badge bg-primary">Discord</span>{% endif %}
+                                            {% if post.posted_to_telegram %}<span class="badge bg-info">Telegram</span>{% endif %}
+                                            {% if post.posted_to_slack %}<span class="badge bg-success">Slack</span>{% endif %}
+                                            {% if post.posted_to_email %}<span class="badge bg-warning">Email</span>{% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="flex-shrink-0 text-end">
+                                        <div class="fw-bold text-success">{{ post.clicks }} clicks</div>
+                                        <small class="text-muted">{{ post.price }}</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted text-center py-4">
+                                No posts yet. <a href="{{ url_for('products') }}">Start posting products</a> to see them here!
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Upgrade Sidebar -->
+        <div class="col-lg-4">
+            {% if user.subscription_tier == 'free' %}
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="card-title mb-0">🚀 Upgrade to Premium</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Unlock more earning potential:</p>
+                        <ul class="list-unstyled mb-3">
+                            <li><i class="bi bi-check text-success"></i> 8 posts per day (vs 2)</li>
+                            <li><i class="bi bi-check text-success"></i> All 4 platforms</li>
+                            <li><i class="bi bi-check text-success"></i> Advanced analytics</li>
+                        </ul>
+                        <div class="d-grid">
+                            <button class="btn btn-primary">Upgrade Now - $29/mo</button>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Platform Status -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Platform Status</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>Discord</span>
+                        {% if user.discord_webhook_url %}
+                            <span class="badge bg-success">Connected</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Not Setup</span>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>Telegram</span>
+                        {% if user.telegram_bot_token %}
+                            <span class="badge bg-success">Connected</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Not Setup</span>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>Slack</span>
+                        {% if user.slack_bot_token %}
+                            <span class="badge bg-success">Connected</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Not Setup</span>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Email</span>
+                        {% if user.sendgrid_api_key %}
+                            <span class="badge bg-success">Connected</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Not Setup</span>
+                        {% endif %}
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ url_for('setup') }}" class="btn btn-outline-primary btn-sm w-100">
+                            Configure Platforms
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

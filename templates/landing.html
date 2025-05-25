@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}AffiliateBot Pro - Amazon Affiliate Marketing Automation{% endblock %}
+
+{% block content %}
+<section class="hero-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    🚀 Automate Your Amazon Affiliate Marketing
+                </h1>
+                <p class="lead mb-4">
+                    Turn your affiliate links into passive income! Our platform automatically posts top Amazon products 
+                    with YOUR affiliate links across Discord, Telegram, Slack, and Email.
+                </p>
+                <div class="d-flex gap-3 mb-4">
+                    <a href="{{ url_for('replit_auth.login') }}" class="btn btn-light btn-lg px-4">
+                        <i class="bi bi-rocket-takeoff"></i> Start Free Today
+                    </a>
+                    <a href="#features" class="btn btn-outline-light btn-lg">
+                        Learn More
+                    </a>
+                </div>
+                <div class="d-flex align-items-center gap-3 text-light">
+                    <small><i class="bi bi-check-circle-fill text-success"></i> Free Forever Plan</small>
+                    <small><i class="bi bi-check-circle-fill text-success"></i> No Credit Card Required</small>
+                    <small><i class="bi bi-check-circle-fill text-success"></i> Setup in 2 Minutes</small>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="bg-white bg-opacity-10 p-4 rounded-4">
+                    <h3 class="mb-3">💰 Earning Potential</h3>
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="h2 mb-0">24/7</div>
+                            <small>Auto Posting</small>
+                        </div>
+                        <div class="col-4">
+                            <div class="h2 mb-0">4+</div>
+                            <small>Platforms</small>
+                        </div>
+                        <div class="col-4">
+                            <div class="h2 mb-0">∞</div>
+                            <small>Revenue</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Why Choose AffiliateBot Pro?</h2>
+            <p class="lead text-muted">The only platform you need for Amazon affiliate marketing automation</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card feature-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                            <i class="bi bi-robot text-primary fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold">Smart Automation</h5>
+                        <p class="text-muted">Automatically posts TOP Amazon products with your affiliate links. Set it and forget it!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card feature-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                            <i class="bi bi-cash-stack text-success fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold">Multi-Platform Reach</h5>
+                        <p class="text-muted">Discord, Telegram, Slack, Email - reach your audience everywhere they are.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card feature-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="bg-info bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                            <i class="bi bi-graph-up-arrow text-info fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold">Real Analytics</h5>
+                        <p class="text-muted">Track clicks, conversions, and earnings. Know exactly what's working.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card feature-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                            <i class="bi bi-lightning-charge text-warning fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold">Lightning Fast</h5>
+                        <p class="text-muted">Setup in under 2 minutes. Just add your affiliate link and you're earning!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Simple Pricing That Scales</h2>
+            <p class="lead text-muted">Start free, upgrade when you're ready to maximize earnings</p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <h5 class="fw-bold">Free</h5>
+                        <div class="display-4 fw-bold text-primary mb-3">$0</div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> 2 posts per day</li>
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> Discord + Telegram</li>
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> Basic analytics</li>
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> Email support</li>
+                        </ul>
+                        <a href="{{ url_for('replit_auth.login') }}" class="btn btn-outline-primary w-100">Get Started</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card h-100 border-primary">
+                    <div class="card-body text-center p-4">
+                        <div class="badge bg-primary mb-2">Most Popular</div>
+                        <h5 class="fw-bold">Premium</h5>
+                        <div class="display-4 fw-bold text-primary mb-3">$29</div>
+                        <small class="text-muted">per month</small>
+                        <ul class="list-unstyled mb-4 mt-3">
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> 8 posts per day</li>
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> All 4 platforms</li>
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> Advanced analytics</li>
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> Priority support</li>
+                        </ul>
+                        <a href="{{ url_for('replit_auth.login') }}" class="btn btn-primary w-100">Start Premium</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <h5 class="fw-bold">Pro</h5>
+                        <div class="display-4 fw-bold text-primary mb-3">$79</div>
+                        <small class="text-muted">per month</small>
+                        <ul class="list-unstyled mb-4 mt-3">
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> 24 posts per day</li>
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> All platforms + API</li>
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> Custom campaigns</li>
+                            <li class="mb-2"><i class="bi bi-check text-success"></i> White-label option</li>
+                        </ul>
+                        <a href="{{ url_for('replit_auth.login') }}" class="btn btn-outline-primary w-100">Go Pro</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-4">Ready to Start Earning?</h2>
+        <p class="lead mb-4">Join thousands of marketers already earning passive income with AffiliateBot Pro</p>
+        <a href="{{ url_for('replit_auth.login') }}" class="btn btn-primary btn-lg px-5">
+            <i class="bi bi-rocket-takeoff"></i> Start Your Free Account
+        </a>
+        <div class="mt-3">
+            <small class="text-muted">No credit card required • Setup in 2 minutes • Cancel anytime</small>
+        </div>
+    </div>
+</section>
+{% endblock %}
