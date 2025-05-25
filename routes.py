@@ -202,27 +202,35 @@ def products():
     
     user = current_user
     
-    # Get your real products using ORM
+    # Get real products from your database
     try:
         from models import ProductInventory
-        products_raw = ProductInventory.query.filter(
-            ProductInventory.product_title.isnot(None),
-            ProductInventory.product_title != 'Unknown Product'
-        ).limit(30).all()
+        from sqlalchemy import text
+        
+        # Use raw SQL to get your actual products
+        result = db.session.execute(text("""
+            SELECT asin, product_title, price, rating, category, image_url 
+            FROM product_inventory 
+            WHERE product_title IS NOT NULL 
+            AND product_title != 'Unknown Product' 
+            AND product_title != '' 
+            LIMIT 20
+        """))
         
         products = []
-        for product in products_raw:
+        for row in result:
             products.append({
-                'asin': product.asin,
-                'product_title': product.product_title,
-                'title': product.product_title,  # For template compatibility
-                'price': product.price or 'N/A',
-                'rating': product.rating or 4.5,
-                'category': product.category or 'Electronics',
-                'image_url': product.image_url or 'https://via.placeholder.com/200x200?text=Product'
+                'asin': row[0],
+                'product_title': row[1],
+                'title': row[1],  # For template compatibility
+                'price': row[2] or 'N/A',
+                'rating': float(row[3]) if row[3] else 4.5,
+                'category': row[4] or 'Electronics',
+                'image_url': row[5] or f'https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={row[0]}&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=luxoraconnect-20'
             })
-            print(f"Added product: {product.product_title}")
-            
+        
+        print(f"Found {len(products)} real products from database")
+        
     except Exception as e:
         print(f"Error loading products: {e}")
         products = []
