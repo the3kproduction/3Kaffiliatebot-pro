@@ -213,6 +213,7 @@ def products():
     # Convert database objects to dictionaries for template
     products = []
     for product in products_raw:
+        print(f"DEBUG: Processing product - ASIN: {product.asin}, Title: {product.product_title}")
         products.append({
             'asin': product.asin,
             'product_title': product.product_title,
@@ -221,6 +222,8 @@ def products():
             'category': product.category or 'Electronics',
             'image_url': product.image_url or 'https://via.placeholder.com/200x200?text=Product'
         })
+    
+    print(f"DEBUG: Total products being sent to template: {len(products)}")
     
     # Get available categories from your inventory
     categories_raw = db.session.query(ProductInventory.category).distinct().all()
