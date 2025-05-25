@@ -499,29 +499,7 @@
             </div>
         </div>
 
-        <!-- Admin Panel (if admin) -->
-        {% if user.is_admin %}
-        <div class="card" style="border: 3px solid #ffc107;">
-            <h3>👑 Admin Panel</h3>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <a href="/admin" class="btn btn-warning">📊 Admin Dashboard</a>
-                <a href="/admin/users" class="btn btn-primary">👥 View All Users</a>
-                <a href="/admin/email-blast" class="btn btn-success">📧 Send Email Campaign</a>
-                <a href="/admin/product-catalog" class="btn btn-primary">🛍️ Manage Products</a>
-            </div>
-        </div>
-        {% endif %}
 
-        <!-- Quick Actions -->
-        <div class="card">
-            <h3>⚡ Quick Actions</h3>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <button onclick="postRandomProduct()" class="btn btn-primary">🚀 Post Random Product</button>
-                <button onclick="testAllWebhooks()" class="btn btn-warning">🧪 Test All Webhooks</button>
-                <a href="/campaigns/new" class="btn btn-success">📋 Create Campaign</a>
-                <a href="/settings" class="btn btn-primary">⚙️ Settings</a>
-            </div>
-        </div>
     </div>
 
     <!-- Floating Radio Player -->
