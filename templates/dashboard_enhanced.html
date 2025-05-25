@@ -617,6 +617,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             radioAudio = document.getElementById('radioAudio');
             setVolume();
+            
+            // Handle page refresh - if station is already selected, load it
+            const selectedStation = document.getElementById('stationSelector').value;
+            if (selectedStation && radioAudio) {
+                radioAudio.src = selectedStation;
+                radioAudio.load();
+                updateNowPlaying('Station ready - Press play');
+            }
         });
         
         // Switch between Radio and Spotify
