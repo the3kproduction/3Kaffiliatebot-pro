@@ -312,10 +312,11 @@ def api_auto_promote():
                 # Convert inventory product to posting format
                 product_data = {
                     'title': product.product_title,
+                    'description': f"Amazing deal on {product.product_title}! Don't miss out on this fantastic product.",
                     'price': product.price or '$29.99',
                     'rating': product.rating or 4.5,
                     'affiliate_url': f'https://amazon.com/dp/{product.asin}?tag={user.amazon_affiliate_id}',
-                    'image_url': product.image_url,
+                    'image': product.image_url or 'https://via.placeholder.com/400x300/4CAF50/white?text=Product',
                     'category': product.category or 'Electronics'
                 }
                 
