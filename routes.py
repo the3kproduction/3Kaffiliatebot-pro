@@ -618,27 +618,25 @@ def api_promote_products():
         if not has_platforms:
             return jsonify({'success': False, 'error': 'Please configure at least one platform in Platform Settings'})
         
-        # Use marketing automation to post products
-        from marketing_automation import MultiPlatformPoster
-        poster = MultiPlatformPoster(user)
+        # Log platform status for debugging
+        logger.info(f"Platform status - Discord: {bool(user.discord_webhook_url)}, Telegram: {bool(user.telegram_bot_token)}, Slack: {bool(user.slack_bot_token)}")
+        
+        # Direct posting using existing successful method from auto-promote
+        from auto_product_selector import AutoProductSelector
+        selector = AutoProductSelector(user)
         
         promoted_count = 0
         for i in range(num_products):
-            # Create sample product for promotion
-            sample_product = {
-                'title': f'Premium Deal #{i+1}',
-                'description': f'Handpicked product deal - Limited time offer!',
-                'image': 'https://via.placeholder.com/300x300?text=Deal',
-                'price': f'${29.99 + (i * 10)}',
-                'rating': 4.5,
-                'category': 'Electronics',
-                'affiliate_url': f'https://amazon.com/dp/B08N5WRWNW?tag={user.amazon_affiliate_id or "luxoraconnect-20"}',
-                'asin': f'B08N5WRWN{i}'
-            }
-            
-            result = poster.post_product(sample_product)
-            if result:
-                promoted_count += 1
+            try:
+                # Use the same successful auto-promotion logic
+                result = selector.auto_promote_products(1)
+                if result:
+                    promoted_count += 1
+                    logger.info(f"Successfully promoted product {i+1}")
+                else:
+                    logger.error(f"Failed to promote product {i+1}")
+            except Exception as e:
+                logger.error(f"Error promoting product {i+1}: {str(e)}")
         
         return jsonify({
             'success': True,
