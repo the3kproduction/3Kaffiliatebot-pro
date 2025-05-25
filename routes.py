@@ -51,6 +51,13 @@ def make_session_permanent():
 @app.route('/')
 def index():
     """Landing page - shows login for guests, dashboard for logged-in users"""
+    # Check if user is coming from marketing site for free signup
+    signup_type = request.args.get('signup')
+    if signup_type == 'free' and not current_user.is_authenticated:
+        # Show special free tier signup message
+        flash('Welcome! Creating your free tier account with 2 posts per day...', 'info')
+        return render_template('landing.html', free_signup=True)
+    
     # For Render deployment without Replit auth, auto-login demo user
     if os.environ.get('RENDER') and not current_user.is_authenticated:
         from flask_login import login_user
