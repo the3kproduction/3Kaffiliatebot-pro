@@ -80,23 +80,48 @@
         }
 
         function promoteProduct(asin) {
-            if (confirm('Promote this product to all your connected platforms?')) {
-                fetch('/api/promote-product', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({asin: asin})
-                }).then(response => response.json())
-                  .then(data => {
-                      if (data.success) {
-                          alert('Product posted successfully to ' + data.platforms_posted + ' platforms!');
-                          // Optionally reload or update the page
-                      } else {
-                          alert('Error: ' + data.error);
-                      }
-                  }).catch(error => {
-                      alert('Error promoting product: ' + error.message);
-                  });
-            }
+            // Change button to loading state
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '🔄 Promoting...';
+            button.disabled = true;
+            
+            fetch('/api/promote-product', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({asin: asin})
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(data => {
+                if (data.success) {
+                    button.textContent = '✅ Posted to ' + data.platforms_posted + ' platforms!';
+                    button.style.background = '#28a745';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                        button.style.background = '';
+                    }, 3000);
+                } else {
+                    button.textContent = '❌ Error: ' + data.error;
+                    button.style.background = '#dc3545';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                        button.style.background = '';
+                    }, 3000);
+                }
+            }).catch(error => {
+                button.textContent = '❌ Failed to promote';
+                button.style.background = '#dc3545';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    button.style.background = '';
+                }, 3000);
+            });
         }
     </script>
 </body>

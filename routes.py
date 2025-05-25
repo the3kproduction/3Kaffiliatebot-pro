@@ -381,6 +381,7 @@ def api_promote_product():
     """Promote a specific product to all platforms"""
     from webhook_manager import WebhookManager
     from inventory_manager import InventoryManager
+    from models import ProductInventory
     
     data = request.get_json()
     asin = data.get('asin')
