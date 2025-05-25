@@ -2,15 +2,46 @@ from flask import render_template, request, redirect, url_for, flash, jsonify, s
 from flask_login import current_user, login_required
 from app import app, db
 from models import User, Campaign, Post, EmailBlast
-from replit_auth import require_login, make_replit_blueprint
+import os
+
+# Import authentication based on environment
+try:
+    # Only try to import replit_auth if REPL_ID exists
+    if os.environ.get('REPL_ID'):
+        from replit_auth import require_login, make_replit_blueprint
+    else:
+        raise ImportError("REPL_ID not available, using simple auth")
+except (ImportError, SystemExit):
+    # Use simple auth for Render deployment
+    from simple_auth import simple_require_login as require_login
+    make_replit_blueprint = lambda: None
+
 from amazon_scraper import AmazonProductScraper
 from marketing_automation import MultiPlatformPoster
 import logging
 
 logger = logging.getLogger(__name__)
 
-# Register authentication blueprint
-app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
+# Register authentication blueprint (only if available)
+replit_bp = make_replit_blueprint()
+if replit_bp:
+    app.register_blueprint(replit_bp, url_prefix="/auth")
+
+# Simple auth bypass for Render deployment
+def create_demo_user():
+    """Create a demo user for Render deployment"""
+    demo_user = User.query.filter_by(id='demo-user').first()
+    if not demo_user:
+        demo_user = User(
+            id='demo-user',
+            email='demo@affiliatebot.com',
+            first_name='Demo',
+            last_name='User',
+            is_admin=True
+        )
+        db.session.add(demo_user)
+        db.session.commit()
+    return demo_user
 
 # Make session permanent
 @app.before_request
@@ -20,6 +51,13 @@ def make_session_permanent():
 @app.route('/')
 def index():
     """Landing page - shows login for guests, dashboard for logged-in users"""
+    # For Render deployment without Replit auth, auto-login demo user
+    if os.environ.get('RENDER') and not current_user.is_authenticated:
+        from flask_login import login_user
+        demo_user = create_demo_user()
+        login_user(demo_user)
+        return redirect(url_for('dashboard'))
+    
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
     

@@ -59,6 +59,11 @@ class UserSessionStorage(BaseStorage):
         db.session.commit()
 
 def make_replit_blueprint():
+    # Check if we're on Render first, before trying to get REPL_ID
+    if os.environ.get('RENDER') or not os.environ.get('REPL_ID'):
+        # Skip Replit auth on Render or when REPL_ID is not available
+        return None
+    
     try:
         repl_id = os.environ['REPL_ID']
     except KeyError:
