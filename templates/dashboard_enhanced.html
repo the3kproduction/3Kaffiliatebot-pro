@@ -151,6 +151,20 @@
             </a>
         </div>
 
+        <!-- Admin Panel - Top Priority for Admin User -->
+        {% if user.is_admin %}
+        <div class="card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: 3px solid #ff9ff3; margin-bottom: 20px;">
+            <h3>👑 Admin Panel</h3>
+            <p>Manage users and send email campaigns</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                <a href="/admin" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">Admin Dashboard</a>
+                <a href="/admin/users" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">View Users</a>
+                <a href="/admin/email-blast" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">Send Email Blast</a>
+                <a href="/admin/product-catalog" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">🛍️ Product Catalog</a>
+            </div>
+        </div>
+        {% endif %}
+
         <!-- PROMINENT Problem Reporting Section -->
         <div style="background: linear-gradient(45deg, #ff4757, #ff3838); border: 3px solid #ff6b6b; border-radius: 15px; padding: 20px; margin: 20px 0; box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3); animation: pulse 2s infinite;">
             <div style="text-align: center; margin-bottom: 15px;">
@@ -353,19 +367,7 @@
 
 
 
-        <!-- Admin Panel (moved to top) -->
-        {% if user.is_admin %}
-        <div class="card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: 3px solid #ff9ff3;">
-            <h3>👑 Admin Panel</h3>
-            <p>Manage users and send email campaigns</p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-                <a href="/admin" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">Admin Dashboard</a>
-                <a href="/admin/users" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">View Users</a>
-                <a href="/admin/email-blast" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">Send Email Blast</a>
-                <a href="/admin/product-catalog" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">🛍️ Product Catalog</a>
-            </div>
-        </div>
-        {% endif %}
+
 
         <!-- Platform Settings - Always Accessible -->
         <div class="card" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: white; margin-bottom: 25px;">
