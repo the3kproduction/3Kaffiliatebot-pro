@@ -3,230 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics Dashboard - AffiliateBot Pro</title>
+    <title>Analytics - AffiliateBot Pro</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-left: 5px solid #667eea;
-        }
-        
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        .chart-section {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .platform-bar {
-            margin: 15px 0;
-        }
-        
-        .platform-name {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        .bar-container {
-            background: #f0f0f0;
-            border-radius: 10px;
-            height: 25px;
-            overflow: hidden;
-        }
-        
-        .bar-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
-            transition: width 0.3s ease;
-            display: flex;
-            align-items: center;
-            padding-left: 10px;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .recent-posts {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .post-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .post-item:last-child {
-            border-bottom: none;
-        }
-        
-        .post-title {
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .post-stats {
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 25px;
-            text-decoration: none;
-            display: inline-block;
-            margin: 10px 5px;
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .export-btn {
-            background: linear-gradient(135deg, #28a745, #20c997);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .back-btn { position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 25px; border: none; border-radius: 25px; text-decoration: none; }
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; text-align: center; backdrop-filter: blur(10px); }
+        .stat-number { font-size: 2.5em; font-weight: bold; color: #4CAF50; }
+        .stat-label { font-size: 1.1em; margin-top: 10px; opacity: 0.9; }
+        .chart-section { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 30px; backdrop-filter: blur(10px); margin-bottom: 20px; }
+        .performance-indicator { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; margin: 5px; }
+        .good { background: #4CAF50; }
+        .average { background: #FF9800; }
+        .poor { background: #f44336; }
     </style>
 </head>
 <body>
+    <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+    
     <div class="container">
         <div class="header">
-            <h1>📊 Analytics Dashboard</h1>
-            <p>Track your affiliate marketing performance and optimize your earnings</p>
-            <div style="margin-top: 15px;">
-                <a href="/dashboard" class="btn">← Back to Dashboard</a>
-                <a href="/analytics/export" class="btn export-btn">📊 Export Data</a>
-            </div>
+            <h1>📊 Performance Analytics</h1>
+            <p>Track your affiliate marketing success</p>
         </div>
-        
-        <div class="stats-grid">
+
+        <div class="analytics-grid">
             <div class="stat-card">
-                <div class="stat-number">{{ total_posts or 0 }}</div>
+                <div class="stat-number">{{ analytics.total_posts }}</div>
                 <div class="stat-label">Total Posts</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">{{ total_clicks or 0 }}</div>
+                <div class="stat-number">{{ analytics.total_clicks }}</div>
                 <div class="stat-label">Total Clicks</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">{{ total_impressions or 0 }}</div>
-                <div class="stat-label">Total Impressions</div>
+                <div class="stat-number">${{ "%.2f"|format(analytics.estimated_revenue) }}</div>
+                <div class="stat-label">Estimated Revenue</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">{{ "%.1f"|format((total_clicks / (total_posts or 1)) if total_posts else 0) }}</div>
-                <div class="stat-label">Avg. Clicks per Post</div>
+                <div class="stat-number">{{ "%.1f"|format(analytics.conversion_rate * 100) }}%</div>
+                <div class="stat-label">Conversion Rate</div>
             </div>
         </div>
-        
-        {% if platform_stats %}
+
         <div class="chart-section">
-            <h2>📈 Platform Performance</h2>
-            <p style="margin-bottom: 20px; color: #666;">See how your content performs across different platforms</p>
+            <h3>📈 Performance Overview</h3>
+            <p>Your affiliate marketing performance metrics</p>
             
-            {% for platform, count in platform_stats.items() %}
-            <div class="platform-bar">
-                <div class="platform-name">
-                    <span>{{ platform|title }}</span>
-                    <span>{{ count }} posts</span>
-                </div>
-                <div class="bar-container">
-                    <div class="bar-fill" style="width: {{ (count / (total_posts or 1) * 100)|round }}%;">
-                        {{ count }} posts
-                    </div>
-                </div>
+            <div style="margin-top: 20px;">
+                <h4>Performance Indicators:</h4>
+                {% if analytics.total_posts > 10 %}
+                    <span class="performance-indicator good">Active Poster</span>
+                {% elif analytics.total_posts > 5 %}
+                    <span class="performance-indicator average">Regular Poster</span>
+                {% else %}
+                    <span class="performance-indicator poor">Getting Started</span>
+                {% endif %}
+                
+                {% if analytics.conversion_rate > 0.03 %}
+                    <span class="performance-indicator good">High Conversion</span>
+                {% elif analytics.conversion_rate > 0.01 %}
+                    <span class="performance-indicator average">Average Conversion</span>
+                {% else %}
+                    <span class="performance-indicator poor">Needs Improvement</span>
+                {% endif %}
             </div>
-            {% endfor %}
         </div>
-        {% endif %}
-        
-        {% if recent_posts %}
-        <div class="recent-posts">
-            <h2>📝 Recent Posts</h2>
-            <p style="margin-bottom: 20px; color: #666;">Your latest affiliate promotions and their performance</p>
-            
-            {% for post in recent_posts %}
-            <div class="post-item">
-                <div>
-                    <div class="post-title">{{ post.product_title[:80] }}{% if post.product_title|length > 80 %}...{% endif %}</div>
-                    <div class="post-stats">{{ post.created_at.strftime('%B %d, %Y') }}</div>
-                </div>
-                <div class="post-stats">
-                    {{ post.clicks }} clicks
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        {% if not recent_posts %}
+
         <div class="chart-section">
-            <h2>🚀 Ready to Start?</h2>
-            <p style="margin-bottom: 20px;">You haven't promoted any products yet! Get started to see your analytics here.</p>
-            <a href="/dashboard" class="btn">Start Promoting Products</a>
+            <h3>💡 Recommendations</h3>
+            {% if analytics.total_posts < 5 %}
+                <p>• Try posting more frequently to increase your reach</p>
+            {% endif %}
+            {% if analytics.conversion_rate < 0.02 %}
+                <p>• Focus on higher-quality products with better ratings</p>
+                <p>• Use the AI Auto-Promote feature for better product selection</p>
+            {% endif %}
+            <p>• Enable automatic posting to maintain consistent presence</p>
+            <p>• Use multiple platforms to maximize exposure</p>
         </div>
-        {% endif %}
     </div>
 </body>
 </html>

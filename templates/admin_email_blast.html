@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Campaign - AffiliateBot Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .back-btn { position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 25px; border: none; border-radius: 25px; text-decoration: none; }
+        .email-form { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 30px; backdrop-filter: blur(10px); }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 12px; border: none; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; font-size: 16px; }
+        input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.7); }
+        textarea { min-height: 150px; resize: vertical; }
+        .btn { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 15px 30px; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; width: 100%; margin-top: 20px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .preview { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <a href="/admin" class="back-btn">← Back to Admin</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📧 Email Campaign</h1>
+            <p>Send marketing emails to your users</p>
+        </div>
+
+        <div class="email-form">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="subject">Email Subject</label>
+                    <input type="text" id="subject" name="subject" placeholder="Enter email subject..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="target_tier">Target Audience</label>
+                    <select id="target_tier" name="target_tier">
+                        <option value="all">All Users</option>
+                        <option value="free">Free Tier Users</option>
+                        <option value="premium">Premium Users</option>
+                        <option value="pro">Pro Users</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Email Content</label>
+                    <textarea id="content" name="content" placeholder="Write your email content here..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn">📨 Send Email Campaign</button>
+            </form>
+            
+            <div class="preview">
+                <h3>📊 Campaign Preview</h3>
+                <p>Your email will be sent to users based on the selected tier.</p>
+                <p><strong>Note:</strong> Email delivery requires proper SendGrid configuration.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
