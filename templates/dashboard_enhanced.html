@@ -140,9 +140,9 @@
             <div>
                 <h1>🚀 AffiliateBot Pro Enhanced Dashboard</h1>
                 <div class="user-info">
-                    Welcome back, {{ current_user.first_name or current_user.email }}! 
+                    Welcome back, {{ user.first_name or user.email }}! 
                     <span style="background: #667eea; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.9em;">
-                        {{ current_user.subscription_tier|title }} Member
+                        {{ user.subscription_tier|title }} Member
                     </span>
                 </div>
             </div>
@@ -153,30 +153,30 @@
 
         <!-- Smart Setup Notification -->
         {% set missing_items = [] %}
-        {% if not current_user.amazon_affiliate_id or current_user.amazon_affiliate_id == '' %}
+        {% if not user.amazon_affiliate_id or user.amazon_affiliate_id == '' %}
             {% set _ = missing_items.append('Amazon Associate ID') %}
         {% endif %}
-        {% if not current_user.discord_webhook_url or current_user.discord_webhook_url == '' %}
+        {% if not user.discord_webhook_url or user.discord_webhook_url == '' %}
             {% set _ = missing_items.append('Discord webhook') %}
         {% endif %}
-        {% if not current_user.telegram_bot_token or current_user.telegram_bot_token == '' %}
+        {% if not user.telegram_bot_token or user.telegram_bot_token == '' %}
             {% set _ = missing_items.append('Telegram bot') %}
         {% endif %}
-        {% if not current_user.slack_bot_token or current_user.slack_bot_token == '' %}
+        {% if not user.slack_bot_token or user.slack_bot_token == '' %}
             {% set _ = missing_items.append('Slack bot') %}
         {% endif %}
-        {% if not current_user.sendgrid_api_key or current_user.sendgrid_api_key == '' %}
+        {% if not user.sendgrid_api_key or user.sendgrid_api_key == '' %}
             {% set _ = missing_items.append('Email service') %}
         {% endif %}
 
-        {% if missing_items and not current_user.setup_notification_dismissed %}
+        {% if missing_items and not user.setup_notification_dismissed %}
         <div id="setup-notification" class="card" style="border: 3px solid #ffc107; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); position: relative;">
             <button onclick="dismissNotification()" style="position: absolute; top: 10px; right: 15px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; color: #666;">×</button>
             
             <h3>⚠️ Complete Your Setup to Start Earning!</h3>
             <p style="margin: 15px 0; font-size: 1.1em;">You're missing setup for: <strong>{{ missing_items|join(', ') }}</strong></p>
             
-            {% if not current_user.amazon_affiliate_id %}
+            {% if not user.amazon_affiliate_id %}
             <div style="background: rgba(255,255,255,0.8); padding: 15px; border-radius: 10px; margin: 15px 0;">
                 <strong>Don't have an Amazon Associates account yet?</strong><br>
                 1. Go to <a href="https://affiliate-program.amazon.com" target="_blank" style="color: #667eea;">affiliate-program.amazon.com</a><br>
@@ -235,7 +235,7 @@
         </div>
 
         <!-- Admin Panel (moved to top) -->
-        {% if current_user.is_admin %}
+        {% if user.is_admin %}
         <div class="card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: 3px solid #ff9ff3;">
             <h3>👑 Admin Panel</h3>
             <p>Manage users and send email campaigns</p>
@@ -362,16 +362,16 @@
                 <div class="frequency-selector">
                     <label>Posting Frequency:</label>
                     <select onchange="updateFrequency(this.value)">
-                        <option value="1" {{ 'selected' if current_user.post_frequency_hours == 1 else '' }}>Every Hour (Pro)</option>
-                        <option value="3" {{ 'selected' if current_user.post_frequency_hours == 3 else '' }}>Every 3 Hours (Premium)</option>
-                        <option value="12" {{ 'selected' if current_user.post_frequency_hours == 12 else '' }}>Every 12 Hours (Free)</option>
+                        <option value="1" {{ 'selected' if user.post_frequency_hours == 1 else '' }}>Every Hour (Pro)</option>
+                        <option value="3" {{ 'selected' if user.post_frequency_hours == 3 else '' }}>Every 3 Hours (Premium)</option>
+                        <option value="12" {{ 'selected' if user.post_frequency_hours == 12 else '' }}>Every 12 Hours (Free)</option>
                     </select>
                 </div>
                 
                 <div style="margin: 15px 0;">
                     <label style="font-weight: bold;">Auto-Posting:</label>
-                    <button onclick="toggleAutoPosts()" class="btn {{ 'btn-success' if current_user.auto_post_enabled else 'btn-warning' }}">
-                        {{ 'ON' if current_user.auto_post_enabled else 'OFF' }}
+                    <button onclick="toggleAutoPosts()" class="btn {{ 'btn-success' if user.auto_post_enabled else 'btn-warning' }}">
+                        {{ 'ON' if user.auto_post_enabled else 'OFF' }}
                     </button>
                 </div>
                 
@@ -407,7 +407,7 @@
         </div>
 
         <!-- Admin Panel (if admin) -->
-        {% if current_user.is_admin %}
+        {% if user.is_admin %}
         <div class="card" style="border: 3px solid #ffc107;">
             <h3>👑 Admin Panel</h3>
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
