@@ -278,30 +278,34 @@ def api_search_products():
             'success': False
         }), 500
 
-@app.route('/api/auto_promote', methods=['POST'])
+@app.route('/api/auto-promote', methods=['POST'])
 def api_auto_promote():
     """AI automatically selects and promotes top products"""
     user_id = session.get('user_id')
     user = load_user(user_id)
     
     if not user:
-        return jsonify({'error': 'Authentication required'}), 401
+        return jsonify({'error': 'Authentication required', 'success': False}), 401
     
     try:
-        # Get AI-recommended products (avoiding recent duplicates)
+        # Get number of products to promote
+        data = request.get_json() if request.is_json else {}
+        num_products = int(data.get('num_products', 3))
+        
+        # Get AI-recommended products
         ai_selector = AutoProductSelector(user)
-        selected_products = ai_selector.auto_promote_products(num_products=3)
+        result = ai_selector.auto_promote_products(num_products=num_products)
         
         return jsonify({
             'success': True,
-            'products_promoted': len(selected_products),
-            'message': f'Successfully promoted {len(selected_products)} products!'
+            'products_promoted': num_products,
+            'message': f'Successfully promoted {num_products} products across your platforms!'
         })
     
     except Exception as e:
         logger.error(f"Auto promote error: {e}")
         return jsonify({
-            'error': 'Auto-promotion temporarily unavailable',
+            'error': f'Auto-promotion error: {str(e)}',
             'success': False
         }), 500
 
