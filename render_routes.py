@@ -302,7 +302,7 @@ def api_search_products():
             'success': False
         }), 500
 
-@app.route('/api/auto_promote', methods=['POST'])
+@app.route('/api/auto-promote', methods=['POST'])
 def api_auto_promote():
     """AI automatically selects and promotes top products"""
     user_id = session.get('user_id')
