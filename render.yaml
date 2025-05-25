@@ -2,25 +2,13 @@ services:
   - type: web
     name: affiliatebot-pro
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python run_clean.py
+    buildCommand: pip install flask
+    startCommand: python render_app.py
     plan: free
     envVars:
       - key: SESSION_SECRET
         generateValue: true
       - key: FLASK_ENV
         value: production
-      - key: DATABASE_URL
-        fromDatabase:
-          name: affiliatebot-db
-          property: connectionString
       - key: RENDER
         value: "true"
-      - key: REPLIT_DEPLOYMENT
-        value: "true"
-
-  - type: pgsql
-    name: affiliatebot-db
-    databaseName: affiliatebot
-    user: affiliatebot
-    plan: free

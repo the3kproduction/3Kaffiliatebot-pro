@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AffiliateBot Pro - Demo Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .demo-badge {
+            background: #ff6b35;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-change {
+            font-size: 0.9rem;
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .features-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #333;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-item {
+            padding: 1.5rem;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .feature-item:hover {
+            border-color: #ff6b35;
+            transform: translateY(-3px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .platform-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .platform-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .platform-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .platform-stat {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .back-button {
+            background: #ff6b35;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            margin-bottom: 2rem;
+        }
+        
+        .back-button:hover {
+            background: #e55a2b;
+            transform: translateY(-2px);
+        }
+        
+        .demo-notice {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">AffiliateBot Pro</div>
+        <div class="demo-badge">LIVE DEMO</div>
+    </div>
+
+    <div class="container">
+        <a href="/" class="back-button">← Back to Landing Page</a>
+        
+        <div class="demo-notice">
+            <h3>🚀 Demo Dashboard</h3>
+            <p>This is a live demonstration of the AffiliateBot Pro dashboard. All data shown represents typical platform performance metrics.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-posts">1,247</div>
+                <div class="stat-label">Total Posts</div>
+                <div class="stat-change">+23% this month</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" id="total-clicks">8,934</div>
+                <div class="stat-label">Total Clicks</div>
+                <div class="stat-change">+18% this month</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" id="conversion-rate">12.8%</div>
+                <div class="stat-label">Conversion Rate</div>
+                <div class="stat-change">+5.2% this month</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" id="revenue">$2,156</div>
+                <div class="stat-label">Revenue Generated</div>
+                <div class="stat-change">+31% this month</div>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2 class="section-title">Platform Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🤖</div>
+                    <h4>AI Product Selection</h4>
+                    <p>Smart algorithms pick the best products</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h4>Real-time Analytics</h4>
+                    <p>Track performance across all platforms</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h4>Automated Posting</h4>
+                    <p>24/7 content automation</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <h4>Multi-Platform</h4>
+                    <p>Post to 8+ platforms simultaneously</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2 class="section-title">Connected Platforms</h2>
+            <div class="platform-status">
+                <div class="platform-card">
+                    <div class="platform-name">📱 Discord</div>
+                    <div class="platform-stat">342 posts this month</div>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-name">✈️ Telegram</div>
+                    <div class="platform-stat">289 posts this month</div>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-name">💬 Slack</div>
+                    <div class="platform-stat">198 posts this month</div>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-name">📧 Email</div>
+                    <div class="platform-stat">156 campaigns sent</div>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-name">🐦 Twitter/X</div>
+                    <div class="platform-stat">423 tweets posted</div>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-name">📘 Facebook</div>
+                    <div class="platform-stat">234 posts shared</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple animation for demo stats
+        function animateNumbers() {
+            fetch('/api/demo-stats')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('total-posts').textContent = data.total_posts.toLocaleString();
+                    document.getElementById('total-clicks').textContent = data.total_clicks.toLocaleString();
+                    document.getElementById('conversion-rate').textContent = data.conversion_rate + '%';
+                    document.getElementById('revenue').textContent = '$' + data.revenue.toLocaleString();
+                })
+                .catch(() => {
+                    // Fallback to demo data if API fails
+                    console.log('Using demo data');
+                });
+        }
+
+        // Load stats when page loads
+        document.addEventListener('DOMContentLoaded', animateNumbers);
+    </script>
+</body>
+</html>
