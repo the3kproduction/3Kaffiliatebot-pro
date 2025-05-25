@@ -33,8 +33,16 @@ class User(UserMixin, db.Model):
     
     # Admin and subscription fields
     is_admin = db.Column(db.Boolean, default=False)
-    subscription_tier = db.Column(db.String(20), default='free')  # free, premium, pro
+    subscription_tier = db.Column(db.String(20), default='free')  # free, premium, pro, lifetime, trial
     email_notifications = db.Column(db.Boolean, default=True)
+    
+    # Trial and lifetime access
+    trial_start_date = db.Column(db.DateTime, nullable=True)
+    trial_end_date = db.Column(db.DateTime, nullable=True)
+    trial_tier = db.Column(db.String(20), nullable=True)  # premium, pro
+    is_trial_active = db.Column(db.Boolean, default=False)
+    contest_winner = db.Column(db.Boolean, default=False)  # For contest lifetime access
+    subscription_start_date = db.Column(db.DateTime, nullable=True)
     
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)

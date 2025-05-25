@@ -18,6 +18,7 @@ except (ImportError, SystemExit):
 
 from amazon_scraper import AmazonProductScraper
 from marketing_automation import MultiPlatformPoster
+from user_management import UserManager, grant_premium_trial, grant_pro_trial, grant_contest_winner
 import logging
 
 logger = logging.getLogger(__name__)
