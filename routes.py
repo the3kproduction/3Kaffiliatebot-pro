@@ -610,17 +610,23 @@ def api_save_platform():
 def api_test_connections():
     """Test platform connections for user"""
     try:
-        # Check if user is logged in
-        if not current_user or not current_user.is_authenticated:
+        # Get user from session instead of current_user to avoid auth issues
+        user_id = session.get('user_id')
+        if not user_id:
             return jsonify({'success': False, 'error': 'Not authenticated'})
         
-        user = current_user
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'success': False, 'error': 'User not found'})
+        
+        # Check environment variables for platform credentials
+        from os import environ
         
         results = {
             'success': True,
-            'discord': bool(getattr(user, 'discord_webhook_url', None)),
-            'telegram': bool(getattr(user, 'telegram_bot_token', None) and getattr(user, 'telegram_chat_id', None)),
-            'slack': bool(getattr(user, 'slack_bot_token', None) and getattr(user, 'slack_channel_id', None)),
+            'discord': bool(environ.get('DISCORD_WEBHOOK_URL') or getattr(user, 'discord_webhook_url', None)),
+            'telegram': bool(environ.get('TELEGRAM_BOT_TOKEN') and environ.get('TELEGRAM_CHAT_ID')),
+            'slack': bool(environ.get('SLACK_BOT_TOKEN') and environ.get('SLACK_CHANNEL_ID')),
             'pinterest': bool(getattr(user, 'pinterest_access_token', None) and getattr(user, 'pinterest_board_id', None)),
             'reddit': bool(getattr(user, 'reddit_client_id', None) and getattr(user, 'reddit_client_secret', None))
         }
