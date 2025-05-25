@@ -573,6 +573,21 @@ def api_save_platform():
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/api/test-connections', methods=['POST'])
+@require_login
+def api_test_connections():
+    """Test platform connections for user"""
+    user = current_user
+    
+    results = {
+        'success': True,
+        'discord': bool(user.discord_webhook_url),
+        'telegram': bool(user.telegram_bot_token and user.telegram_chat_id),
+        'slack': bool(user.slack_bot_token and user.slack_channel_id)
+    }
+    
+    return jsonify(results)
+
 @app.route('/api/toggle-auto-posts', methods=['POST'])
 @require_login
 def api_toggle_auto_posts():

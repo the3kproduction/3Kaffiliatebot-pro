@@ -317,6 +317,49 @@
         </div>
         {% endif %}
 
+        <!-- Platform Settings - Always Accessible -->
+        <div class="card" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: white; margin-bottom: 25px;">
+            <h3>⚙️ Platform Settings</h3>
+            <p>Manage your social media connections and webhook configurations</p>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 15px;">
+                <button onclick="togglePlatformSetup()" id="platform-settings-btn" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    🔧 Configure Platforms
+                </button>
+                <button onclick="testConnections()" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    🧪 Test Connections
+                </button>
+            </div>
+            
+            <!-- Hidden platform setup form -->
+            <div id="platform-setup-form" style="display: none; margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <!-- Discord Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>💬 Discord</h4>
+                        <input type="url" id="discord_webhook_setup" placeholder="Discord Webhook URL" style="width: 100%; padding: 8px; margin: 10px 0; border: none; border-radius: 5px;" value="{{ user.discord_webhook_url or '' }}">
+                        <button onclick="saveDiscordSetup()" style="background: #7289da; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Discord</button>
+                    </div>
+                    
+                    <!-- Telegram Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>📱 Telegram</h4>
+                        <input type="text" id="telegram_bot_token_setup" placeholder="Bot Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.telegram_bot_token or '' }}">
+                        <input type="text" id="telegram_chat_id_setup" placeholder="Chat ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.telegram_chat_id or '' }}">
+                        <button onclick="saveTelegramSetup()" style="background: #0088cc; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Telegram</button>
+                    </div>
+                    
+                    <!-- Slack Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>💼 Slack</h4>
+                        <input type="text" id="slack_bot_token_setup" placeholder="Bot Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.slack_bot_token or '' }}">
+                        <input type="text" id="slack_channel_id_setup" placeholder="Channel ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.slack_channel_id or '' }}">
+                        <button onclick="saveSlackSetup()" style="background: #4a154b; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Slack</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Performance Analytics (moved under admin) -->
         <div class="card" style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white;">
             <h3>📊 Performance Analytics</h3>
@@ -704,6 +747,91 @@
                       alert('Slack configured successfully!');
                   } else {
                       alert('Error: ' + data.error);
+                  }
+              });
+        }
+
+        // Platform Settings Functions
+        function togglePlatformSetup() {
+            const form = document.getElementById('platform-setup-form');
+            const btn = document.getElementById('platform-settings-btn');
+            
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                btn.textContent = '⬆️ Hide Platform Setup';
+            } else {
+                form.style.display = 'none';
+                btn.textContent = '🔧 Configure Platforms';
+            }
+        }
+
+        function saveDiscordSetup() {
+            const webhookUrl = document.getElementById('discord_webhook_setup').value;
+            fetch('/api/save-platform', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({platform: 'discord', webhook_url: webhookUrl})
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Discord configured successfully!');
+                  } else {
+                      alert('Error: ' + data.error);
+                  }
+              });
+        }
+
+        function saveTelegramSetup() {
+            const botToken = document.getElementById('telegram_bot_token_setup').value;
+            const chatId = document.getElementById('telegram_chat_id_setup').value;
+            fetch('/api/save-platform', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({platform: 'telegram', bot_token: botToken, chat_id: chatId})
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Telegram configured successfully!');
+                  } else {
+                      alert('Error: ' + data.error);
+                  }
+              });
+        }
+
+        function saveSlackSetup() {
+            const botToken = document.getElementById('slack_bot_token_setup').value;
+            const channelId = document.getElementById('slack_channel_id_setup').value;
+            fetch('/api/save-platform', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({platform: 'slack', bot_token: botToken, channel_id: channelId})
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Slack configured successfully!');
+                  } else {
+                      alert('Error: ' + data.error);
+                  }
+              });
+        }
+
+        function testConnections() {
+            fetch('/api/test-connections', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      let message = 'Connection Test Results:\n\n';
+                      if (data.discord) message += '✅ Discord: Connected\n';
+                      else message += '❌ Discord: Not configured\n';
+                      if (data.telegram) message += '✅ Telegram: Connected\n';
+                      else message += '❌ Telegram: Not configured\n';
+                      if (data.slack) message += '✅ Slack: Connected\n';
+                      else message += '❌ Slack: Not configured\n';
+                      alert(message);
+                  } else {
+                      alert('Test failed: ' + data.error);
                   }
               });
         }
