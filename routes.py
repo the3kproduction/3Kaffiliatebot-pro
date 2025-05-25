@@ -630,6 +630,65 @@ def api_promote_products():
         logger.error(f"Manual promotion error: {str(e)}")
         return jsonify({'success': False, 'error': f'Error: {str(e)}'})
 
+@app.route('/api/report-problem', methods=['POST'])
+@require_login
+def api_report_problem():
+    """Handle user problem reports"""
+    user = current_user
+    data = request.get_json()
+    
+    try:
+        problem_type = data.get('problem_type', 'unknown')
+        description = data.get('description', '')
+        user_agent = data.get('user_agent', '')
+        url = data.get('url', '')
+        
+        # Create a detailed problem report
+        report = {
+            'user_id': user.id,
+            'user_email': user.email,
+            'problem_type': problem_type,
+            'description': description,
+            'user_agent': user_agent,
+            'url': url,
+            'timestamp': datetime.now().isoformat(),
+            'subscription_tier': user.subscription_tier
+        }
+        
+        # Log the problem for immediate visibility
+        logger.error(f"🚨 USER PROBLEM REPORT: {problem_type} - {description} (User: {user.email})")
+        
+        # Send notification to Discord webhook if available
+        import os
+        discord_webhook = os.environ.get('DISCORD_WEBHOOK_URL')
+        if discord_webhook:
+            try:
+                import requests
+                embed = {
+                    "title": "🚨 User Problem Report",
+                    "color": 15158332,  # Red color
+                    "fields": [
+                        {"name": "User", "value": f"{user.email} ({user.subscription_tier})", "inline": True},
+                        {"name": "Problem Type", "value": problem_type, "inline": True},
+                        {"name": "Description", "value": description[:1000], "inline": False},
+                        {"name": "URL", "value": url, "inline": False}
+                    ],
+                    "timestamp": datetime.now().isoformat()
+                }
+                
+                requests.post(discord_webhook, json={"embeds": [embed]}, timeout=5)
+            except:
+                pass  # Don't fail if notification fails
+        
+        return jsonify({
+            'success': True,
+            'message': 'Problem report submitted successfully'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error handling problem report: {str(e)}")
+        return jsonify({'success': False, 'error': 'Failed to submit report'})
+
 @app.route('/help')
 def help_page():
     """Comprehensive setup guide and FAQ"""

@@ -473,6 +473,33 @@
             <div id="auto-promote-result" style="margin-top: 15px; padding: 10px; border-radius: 8px; display: none;"></div>
         </div>
 
+        <!-- Report a Problem -->
+        <div class="card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a52); color: white;">
+            <h3>🚨 Report a Problem</h3>
+            <p style="margin-bottom: 20px; opacity: 0.9;">Having issues? Let us know so we can fix it quickly!</p>
+            
+            <div style="margin-bottom: 15px;">
+                <select id="problemType" style="width: 100%; padding: 10px; border: none; border-radius: 8px; margin-bottom: 10px;">
+                    <option value="">Select Problem Type</option>
+                    <option value="posting_failed">Posting to platforms failed</option>
+                    <option value="ai_promotion_error">AI Auto-Promotion not working</option>
+                    <option value="platform_connection">Platform connection issues</option>
+                    <option value="affiliate_links">Affiliate links not working</option>
+                    <option value="dashboard_bug">Dashboard bug/error</option>
+                    <option value="payment_billing">Payment/Billing issue</option>
+                    <option value="other">Other issue</option>
+                </select>
+                
+                <textarea id="problemDescription" placeholder="Describe the problem in detail..." style="width: 100%; height: 80px; padding: 10px; border: none; border-radius: 8px; resize: vertical; font-family: inherit;"></textarea>
+            </div>
+            
+            <button onclick="reportProblem()" style="width: 100%; background: rgba(255,255,255,0.9); color: #ee5a52; font-weight: bold; padding: 12px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                📧 Send Problem Report
+            </button>
+            
+            <div id="problemReportResult" style="margin-top: 15px; display: none;"></div>
+        </div>
+
         <!-- Amazon Product Search -->
         <div class="card" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;">
             <h3>🔍 Amazon Product Search</h3>
@@ -927,6 +954,38 @@
                   } else {
                       alert('❌ Error: ' + data.error);
                   }
+              });
+        }
+
+        function reportProblem() {
+            const problemType = document.getElementById('problemType').value;
+            const description = document.getElementById('problemDescription').value;
+            
+            if (!problemType || !description.trim()) {
+                alert('Please select a problem type and provide a description.');
+                return;
+            }
+            
+            fetch('/api/report-problem', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    problem_type: problemType,
+                    description: description.trim(),
+                    user_agent: navigator.userAgent,
+                    url: window.location.href
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  const resultDiv = document.getElementById('problemReportResult');
+                  if (data.success) {
+                      resultDiv.innerHTML = '<div style="background: rgba(255,255,255,0.9); color: #2ecc71; padding: 10px; border-radius: 5px; font-weight: bold;">✅ Problem reported successfully! We\'ll look into it right away.</div>';
+                      document.getElementById('problemType').value = '';
+                      document.getElementById('problemDescription').value = '';
+                  } else {
+                      resultDiv.innerHTML = '<div style="background: rgba(255,255,255,0.9); color: #e74c3c; padding: 10px; border-radius: 5px; font-weight: bold;">❌ Failed to send report. Please try again.</div>';
+                  }
+                  resultDiv.style.display = 'block';
               });
         }
 
