@@ -600,52 +600,35 @@ def api_test_connections():
     return jsonify(results)
 
 @app.route('/api/promote-products', methods=['POST'])
+@require_login
 def api_promote_products():
     """Promote multiple products using existing platform configurations"""
-    if not current_user.is_authenticated:
-        return jsonify({'success': False, 'error': 'Please log in'})
-    
     user = current_user
     data = request.get_json()
-    num_products = data.get('count', 1)
+    count = data.get('count', 1)
     
     try:
-        # Check if user has platforms configured
-        has_platforms = (user.discord_webhook_url or 
-                        user.telegram_bot_token or 
-                        user.slack_bot_token)
-        
-        if not has_platforms:
-            return jsonify({'success': False, 'error': 'Please configure at least one platform in Platform Settings'})
-        
-        # Log platform status for debugging
-        logger.info(f"Platform status - Discord: {bool(user.discord_webhook_url)}, Telegram: {bool(user.telegram_bot_token)}, Slack: {bool(user.slack_bot_token)}")
-        
-        # Direct posting using existing successful method from auto-promote
+        # Use the exact same system as working auto-promote
         from auto_product_selector import AutoProductSelector
-        selector = AutoProductSelector(user)
+        auto_selector = AutoProductSelector(user)
         
-        promoted_count = 0
-        for i in range(num_products):
-            try:
-                # Use the same successful auto-promotion logic
-                result = selector.auto_promote_products(1)
-                if result:
-                    promoted_count += 1
-                    logger.info(f"Successfully promoted product {i+1}")
-                else:
-                    logger.error(f"Failed to promote product {i+1}")
-            except Exception as e:
-                logger.error(f"Error promoting product {i+1}: {str(e)}")
+        # Call auto_promote_products directly like the working button
+        result = auto_selector.auto_promote_products(count)
         
-        return jsonify({
-            'success': True,
-            'products_promoted': promoted_count,
-            'message': f'Successfully promoted {promoted_count} products!'
-        })
-        
+        if result:
+            return jsonify({
+                'success': True,
+                'message': f'Successfully promoted {count} products to your platforms!'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'Failed to promote products. Please check your platform configurations.'
+            })
+            
     except Exception as e:
-        return jsonify({'success': False, 'error': f'Error promoting products: {str(e)}'})
+        logger.error(f"Manual promotion error: {str(e)}")
+        return jsonify({'success': False, 'error': f'Error: {str(e)}'})
 
 @app.route('/help')
 def help_page():
