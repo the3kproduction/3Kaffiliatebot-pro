@@ -207,7 +207,7 @@
             <h3>📚 Quick Access</h3>
             <p>Essential resources and helpful guides</p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-                <button onclick="window.open('https://github.com/the3kproduction/3Kaffiliatebot-pro/blob/main/README.md', '_blank')" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 12px 20px; cursor: pointer;">📖 Complete Setup Guide & FAQ</button>
+                <a href="/help" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">📖 Complete Setup Guide & FAQ</a>
                 <button onclick="togglePlatformSetup()" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 12px 20px; cursor: pointer;">⚙️ Platform Settings</button>
                 <a href="/analytics" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">📊 View Analytics</a>
             </div>
@@ -1064,6 +1064,15 @@
                   resultDiv.innerHTML = '<div style="background: rgba(255,255,255,0.9); color: #e74c3c; padding: 10px; border-radius: 5px; font-weight: bold;">❌ Network error. Please try again.</div>';
                   console.error('Error:', error);
               });
+        }
+
+        function togglePlatformSetup() {
+            const setupSection = document.querySelector('.card[style*="6c5ce7"]');
+            if (setupSection.style.display === 'none') {
+                setupSection.style.display = 'block';
+            } else {
+                setupSection.style.display = 'none';
+            }
         }
 
         function toggleAutoPosts() {

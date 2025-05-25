@@ -74,6 +74,12 @@ def index():
     
     return render_template('landing.html')
 
+@app.route('/help')
+@require_login
+def help_page():
+    """Built-in help and setup guide"""
+    return render_template('help.html', user=current_user)
+
 @app.route('/dashboard')
 @require_login
 def dashboard():

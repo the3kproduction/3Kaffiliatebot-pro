@@ -3,667 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AffiliateBot Pro - Complete Setup Guide & FAQ</title>
+    <title>Setup Guide & FAQ - AffiliateBot Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #ff6b6b, #feca57);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        
-        .nav-tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
-            overflow-x: auto;
-        }
-        
-        .nav-tab {
-            padding: 15px 25px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            color: #666;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-tab.active {
-            background: white;
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
-        }
-        
-        .content {
-            padding: 40px;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .section {
-            margin-bottom: 40px;
-        }
-        
-        .section h2 {
             color: #333;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-        }
-        
-        .section h3 {
-            color: #555;
-            font-size: 1.3em;
-            margin: 25px 0 15px 0;
-        }
-        
-        .step {
-            background: #f8f9fa;
             padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-            border-left: 5px solid #667eea;
         }
-        
-        .step-number {
-            background: #667eea;
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 20px; 
+            padding: 2rem; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 3rem; 
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 15px;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: -2rem -2rem 3rem -2rem;
         }
-        
-        .code-block {
-            background: #2d3748;
-            color: #e2e8f0;
-            padding: 20px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            overflow-x: auto;
-            margin: 15px 0;
+        .section { 
+            margin-bottom: 3rem; 
+            background: #f8f9fc; 
+            padding: 2rem; 
+            border-radius: 15px; 
         }
-        
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+        .section h2 { 
+            color: #667eea; 
+            margin-bottom: 1rem; 
+            font-size: 1.8rem; 
         }
-        
-        .success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+        .step { 
+            background: white; 
+            padding: 1.5rem; 
+            margin: 1rem 0; 
+            border-radius: 10px; 
+            border-left: 4px solid #667eea; 
         }
-        
-        .faq-item {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            overflow: hidden;
+        .step h3 { 
+            color: #333; 
+            margin-bottom: 0.5rem; 
         }
-        
-        .faq-question {
-            background: #f8f9fa;
-            padding: 20px;
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .code { 
+            background: #f1f3f4; 
+            padding: 0.5rem; 
+            border-radius: 5px; 
+            font-family: monospace; 
+            margin: 0.5rem 0; 
         }
-        
-        .faq-answer {
-            padding: 20px;
-            display: none;
-        }
-        
-        .faq-answer.active {
-            display: block;
-        }
-        
-        .back-btn {
-            background: #667eea;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
+        .back-btn { 
+            background: #667eea; 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 25px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            text-decoration: none; 
             display: inline-block;
-            margin-bottom: 20px;
-            transition: background 0.3s ease;
+            margin-bottom: 2rem;
         }
-        
-        .back-btn:hover {
-            background: #5a6fd8;
+        .back-btn:hover { 
+            background: #5a6fd8; 
         }
-        
-        ul {
-            padding-left: 20px;
-            margin: 15px 0;
+        .faq-item { 
+            background: white; 
+            padding: 1.5rem; 
+            margin: 1rem 0; 
+            border-radius: 10px; 
+            border: 1px solid #e1e5e9;
         }
-        
-        li {
-            margin-bottom: 8px;
-        }
-        
-        .platform-card {
-            background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 25px;
-            margin: 20px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .platform-logo {
-            width: 40px;
-            height: 40px;
-            background: #667eea;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            margin-right: 15px;
-            vertical-align: top;
+        .faq-question { 
+            font-weight: 600; 
+            color: #667eea; 
+            margin-bottom: 0.5rem; 
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        
         <div class="header">
-            <h1>🚀 AffiliateBot Pro Complete Guide</h1>
-            <p>Everything you need to master affiliate marketing automation</p>
+            <h1>🚀 AffiliateBot Pro Setup Guide</h1>
+            <p>Complete setup instructions and frequently asked questions</p>
         </div>
-        
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('getting-started')">🏁 Getting Started</button>
-            <button class="nav-tab" onclick="showTab('platforms')">📱 Platform Setup</button>
-            <button class="nav-tab" onclick="showTab('automation')">🤖 Automation</button>
-            <button class="nav-tab" onclick="showTab('troubleshooting')">🔧 Troubleshooting</button>
-            <button class="nav-tab" onclick="showTab('faq')">❓ FAQ</button>
+
+        <div class="section">
+            <h2>🎯 Quick Start Guide</h2>
+            
+            <div class="step">
+                <h3>Step 1: Get Your Amazon Associate ID</h3>
+                <p>1. Visit <strong>affiliate-program.amazon.com</strong></p>
+                <p>2. Sign up for a free Amazon Associates account</p>
+                <p>3. Get your Associate ID (looks like "yourname-20")</p>
+                <p>4. Enter it in your dashboard setup</p>
+            </div>
+            
+            <div class="step">
+                <h3>Step 2: Setup Discord (Recommended)</h3>
+                <p>1. Create a Discord server or use an existing one</p>
+                <p>2. Create a webhook: Server Settings → Integrations → Webhooks</p>
+                <p>3. Copy the webhook URL and paste it in your platform setup</p>
+                <div class="code">Webhook URL format: https://discord.com/api/webhooks/...</div>
+            </div>
+            
+            <div class="step">
+                <h3>Step 3: Setup Telegram (Optional)</h3>
+                <p>1. Create a bot by messaging @BotFather on Telegram</p>
+                <p>2. Use command: /newbot and follow instructions</p>
+                <p>3. Get your bot token and chat ID</p>
+                <p>4. Enter both in your platform setup</p>
+            </div>
+            
+            <div class="step">
+                <h3>Step 4: Setup Slack (Optional)</h3>
+                <p>1. Create a Slack app at api.slack.com</p>
+                <p>2. Add bot token scopes: chat:write, files:write</p>
+                <p>3. Install app to your workspace</p>
+                <p>4. Copy bot token and channel ID to your setup</p>
+            </div>
         </div>
-        
-        <div class="content">
-            <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+        <div class="section">
+            <h2>💰 Subscription Tiers</h2>
             
-            <!-- Getting Started Tab -->
-            <div id="getting-started" class="tab-content active">
-                <div class="section">
-                    <h2>🏁 Getting Started with AffiliateBot Pro</h2>
-                    
-                    <div class="step">
-                        <span class="step-number">1</span>
-                        <strong>Set Up Your Amazon Affiliate Account</strong>
-                        <p>First, you need an active Amazon Associates account. If you don't have one:</p>
-                        <ul>
-                            <li>Go to <code>affiliate-program.amazon.com</code></li>
-                            <li>Sign up for Amazon Associates</li>
-                            <li>Get your affiliate ID (e.g., "yourname-20")</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="step">
-                        <span class="step-number">2</span>
-                        <strong>Configure Your Profile</strong>
-                        <p>In your AffiliateBot Pro dashboard:</p>
-                        <ul>
-                            <li>Go to Platform Settings</li>
-                            <li>Add your Amazon affiliate ID</li>
-                            <li>Set up your posting frequency</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="step">
-                        <span class="step-number">3</span>
-                        <strong>Connect Your First Platform</strong>
-                        <p>Start with one platform to test everything works:</p>
-                        <ul>
-                            <li>Discord is easiest (just need a webhook URL)</li>
-                            <li>Follow the platform-specific guides below</li>
-                            <li>Test your connection before proceeding</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="step">
-                        <span class="step-number">4</span>
-                        <strong>Make Your First Post</strong>
-                        <p>Test the system with a single product:</p>
-                        <ul>
-                            <li>Use the "Promote 1" button</li>
-                            <li>Check that your post appears on your platform</li>
-                            <li>Verify your affiliate link works correctly</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="success">
-                        <strong>Success!</strong> Once you've completed these steps, you're ready to scale up your affiliate marketing automation.
-                    </div>
-                </div>
+            <div class="step">
+                <h3>🆓 Free Tier</h3>
+                <p>• 2 posts per day</p>
+                <p>• Basic analytics</p>
+                <p>• Discord integration</p>
+                <p>• Manual product selection</p>
             </div>
             
-            <!-- Platform Setup Tab -->
-            <div id="platforms" class="tab-content">
-                <div class="section">
-                    <h2>📱 Platform Setup Guides</h2>
-                    
-                    <div class="platform-card">
-                        <div>
-                            <span class="platform-logo">💬</span>
-                            <h3 style="display: inline-block; margin: 0;">Discord Setup</h3>
-                        </div>
-                        <p><strong>Easiest platform to start with!</strong></p>
-                        
-                        <h4>Step 1: Create a Discord Server (if needed)</h4>
-                        <ul>
-                            <li>Open Discord and click "+" to add a server</li>
-                            <li>Choose "Create My Own" → "For me and my friends"</li>
-                            <li>Name it something like "Affiliate Products"</li>
-                        </ul>
-                        
-                        <h4>Step 2: Create a Webhook</h4>
-                        <ul>
-                            <li>Right-click your server name → "Server Settings"</li>
-                            <li>Go to "Integrations" → "Webhooks"</li>
-                            <li>Click "New Webhook"</li>
-                            <li>Choose a channel (create #affiliate-products if needed)</li>
-                            <li>Copy the webhook URL</li>
-                        </ul>
-                        
-                        <div class="code-block">
-Example webhook URL:
-https://discord.com/api/webhooks/123456789/abc123def456
-                        </div>
-                        
-                        <h4>Step 3: Add to AffiliateBot Pro</h4>
-                        <ul>
-                            <li>Go to Platform Settings in your dashboard</li>
-                            <li>Click "Configure Platforms"</li>
-                            <li>Paste your webhook URL in the Discord field</li>
-                            <li>Click "Save Discord"</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="platform-card">
-                        <div>
-                            <span class="platform-logo">📱</span>
-                            <h3 style="display: inline-block; margin: 0;">Telegram Setup</h3>
-                        </div>
-                        <p><strong>Great for personal channels and groups!</strong></p>
-                        
-                        <h4>Step 1: Create a Bot</h4>
-                        <ul>
-                            <li>Message @BotFather on Telegram</li>
-                            <li>Send <code>/newbot</code></li>
-                            <li>Choose a name for your bot</li>
-                            <li>Choose a username (must end in 'bot')</li>
-                            <li>Copy the bot token</li>
-                        </ul>
-                        
-                        <div class="code-block">
-Example bot token:
-123456789:ABCdefGHIjklMNOpqrsTUVwxyz123456789
-                        </div>
-                        
-                        <h4>Step 2: Get Your Chat ID</h4>
-                        <ul>
-                            <li>Start a chat with your bot</li>
-                            <li>Send any message to your bot</li>
-                            <li>Go to: <code>https://api.telegram.org/bot[BOT_TOKEN]/getUpdates</code></li>
-                            <li>Find your chat ID in the response</li>
-                        </ul>
-                        
-                        <div class="warning">
-                            <strong>Note:</strong> For groups, add your bot to the group first, then get the group's chat ID (will be negative).
-                        </div>
-                    </div>
-                    
-                    <div class="platform-card">
-                        <div>
-                            <span class="platform-logo">💼</span>
-                            <h3 style="display: inline-block; margin: 0;">Slack Setup</h3>
-                        </div>
-                        <p><strong>Perfect for team workspaces!</strong></p>
-                        
-                        <h4>Step 1: Create a Slack App</h4>
-                        <ul>
-                            <li>Go to <code>api.slack.com/apps</code></li>
-                            <li>Click "Create New App" → "From scratch"</li>
-                            <li>Name your app and select your workspace</li>
-                        </ul>
-                        
-                        <h4>Step 2: Get Bot Token</h4>
-                        <ul>
-                            <li>Go to "OAuth & Permissions"</li>
-                            <li>Add these scopes: <code>chat:write</code>, <code>files:write</code></li>
-                            <li>Install the app to your workspace</li>
-                            <li>Copy the "Bot User OAuth Token"</li>
-                        </ul>
-                        
-                        <div class="code-block">
-Example bot token format:
-xoxb-YOUR_WORKSPACE_ID-BOT_ID-TOKEN_STRING
-                        </div>
-                        
-                        <h4>Step 3: Get Channel ID</h4>
-                        <ul>
-                            <li>Right-click your channel in Slack</li>
-                            <li>Choose "Copy link"</li>
-                            <li>The channel ID is at the end of the URL</li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="step">
+                <h3>⭐ Premium Tier ($29/month)</h3>
+                <p>• 8 posts per day</p>
+                <p>• Advanced analytics</p>
+                <p>• All platform integrations</p>
+                <p>• AI-powered product selection</p>
+                <p>• Priority support</p>
             </div>
             
-            <!-- Automation Tab -->
-            <div id="automation" class="tab-content">
-                <div class="section">
-                    <h2>🤖 Automation Features</h2>
-                    
-                    <h3>🚀 AI Auto-Promotion</h3>
-                    <p>Let AI select and promote the best products automatically:</p>
-                    <ul>
-                        <li><strong>Free Tier:</strong> 1 AI promotion every 5 hours</li>
-                        <li><strong>Premium/Pro:</strong> Unlimited AI promotions</li>
-                        <li>AI considers product ratings, popularity, and your posting history</li>
-                        <li>Automatically avoids duplicate promotions</li>
-                    </ul>
-                    
-                    <h3>📅 Posting Frequency</h3>
-                    <div class="step">
-                        <span class="step-number">📊</span>
-                        <strong>Tier Limits</strong>
-                        <ul>
-                            <li><strong>Free:</strong> 2 posts per day</li>
-                            <li><strong>Premium ($29/month):</strong> 8 posts per day</li>
-                            <li><strong>Pro ($79/month):</strong> 24 posts per day</li>
-                        </ul>
-                    </div>
-                    
-                    <h3>🔍 Amazon Product Search</h3>
-                    <p>Premium and Pro members can search Amazon directly:</p>
-                    <ul>
-                        <li>Search any product category</li>
-                        <li>Automatically adds products to your inventory</li>
-                        <li>AI scoring for best conversion potential</li>
-                        <li>Bulk promotion options</li>
-                    </ul>
-                    
-                    <h3>📈 Analytics & Tracking</h3>
-                    <p>Monitor your affiliate performance:</p>
-                    <ul>
-                        <li>Track clicks on your affiliate links</li>
-                        <li>Monitor conversion rates</li>
-                        <li>Revenue estimation</li>
-                        <li>Platform performance comparison</li>
-                    </ul>
-                </div>
+            <div class="step">
+                <h3>🚀 Pro Tier ($79/month)</h3>
+                <p>• 24 posts per day</p>
+                <p>• Premium analytics & insights</p>
+                <p>• All features unlocked</p>
+                <p>• Advanced automation</p>
+                <p>• White-label options</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>❓ Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Why aren't my posts showing up?</div>
+                <p>Check that your platform credentials are correctly configured and test your connections in the dashboard.</p>
             </div>
             
-            <!-- Troubleshooting Tab -->
-            <div id="troubleshooting" class="tab-content">
-                <div class="section">
-                    <h2>🔧 Troubleshooting Common Issues</h2>
-                    
-                    <h3>❌ "Please check your webhook settings" Error</h3>
-                    <div class="step">
-                        <span class="step-number">🔍</span>
-                        <strong>Solution:</strong>
-                        <ul>
-                            <li>Go to Platform Settings → Configure Platforms</li>
-                            <li>Verify all your credentials are entered correctly</li>
-                            <li>Use the "Test Connections" button</li>
-                            <li>Make sure your bot has proper permissions</li>
-                        </ul>
-                    </div>
-                    
-                    <h3>🔗 Affiliate Links Not Working</h3>
-                    <div class="step">
-                        <span class="step-number">🔍</span>
-                        <strong>Solution:</strong>
-                        <ul>
-                            <li>Verify your Amazon affiliate ID is correct</li>
-                            <li>Check that your Amazon Associates account is active</li>
-                            <li>Make sure you're promoting products in approved categories</li>
-                        </ul>
-                    </div>
-                    
-                    <h3>🤖 AI Auto-Promotion Not Working</h3>
-                    <div class="step">
-                        <span class="step-number">🔍</span>
-                        <strong>Solution:</strong>
-                        <ul>
-                            <li>Ensure at least one platform is configured</li>
-                            <li>Check if you're within your posting limits</li>
-                            <li>Free users: wait 5 hours between AI promotions</li>
-                            <li>Verify your affiliate ID is set up</li>
-                        </ul>
-                    </div>
-                    
-                    <h3>📱 Discord Posts Not Appearing</h3>
-                    <div class="step">
-                        <span class="step-number">🔍</span>
-                        <strong>Solution:</strong>
-                        <ul>
-                            <li>Check your webhook URL is correct</li>
-                            <li>Make sure the channel still exists</li>
-                            <li>Verify webhook permissions in Discord</li>
-                            <li>Try creating a new webhook</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="warning">
-                        <strong>Still having issues?</strong> Contact support with specific error messages and we'll help you get set up quickly!
-                    </div>
-                </div>
+            <div class="faq-item">
+                <div class="faq-question">Q: How do I track my affiliate earnings?</div>
+                <p>Earnings are tracked through Amazon Associates. Check your Amazon Associates dashboard for detailed revenue reports.</p>
             </div>
             
-            <!-- FAQ Tab -->
-            <div id="faq" class="tab-content">
-                <div class="section">
-                    <h2>❓ Frequently Asked Questions</h2>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <span>Do I need an Amazon Associates account?</span>
-                            <span>+</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Yes, you need an active Amazon Associates (affiliate) account to earn commissions. AffiliateBot Pro automates the posting, but you need your own affiliate account to earn money. Sign up at affiliate-program.amazon.com if you don't have one yet.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <span>How much can I earn with affiliate marketing?</span>
-                            <span>+</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Earnings vary greatly depending on your audience, niche, and posting strategy. Amazon affiliate rates range from 1-10% depending on product categories. With consistent posting and good platform engagement, users report earning anywhere from $50-$5000+ per month.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <span>Is this allowed by platform terms of service?</span>
-                            <span>+</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Always check each platform's terms of service. Most platforms allow affiliate marketing if you:</p>
-                            <ul>
-                                <li>Disclose affiliate relationships clearly</li>
-                                <li>Don't spam or over-post</li>
-                                <li>Provide value to your audience</li>
-                                <li>Follow posting frequency guidelines</li>
-                            </ul>
-                            <p>AffiliateBot Pro includes built-in frequency limits to help you stay compliant.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <span>Can I customize the post content?</span>
-                            <span>+</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Currently, AffiliateBot Pro uses AI-generated content optimized for conversions. Future updates will include custom templates and messaging options. The AI creates engaging posts that typically perform better than generic product descriptions.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <span>What's the difference between subscription tiers?</span>
-                            <span>+</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p><strong>Free:</strong> 2 posts/day, basic features, 1 AI promotion per 5 hours</p>
-                            <p><strong>Premium ($29/month):</strong> 8 posts/day, Amazon search, analytics, unlimited AI</p>
-                            <p><strong>Pro ($79/month):</strong> 24 posts/day, advanced features, priority support</p>
-                            <p>All tiers include 7-day free trials!</p>
-                        </div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <span>How does the AI select products?</span>
-                            <span>+</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Our AI considers multiple factors:</p>
-                            <ul>
-                                <li>Product ratings and review count</li>
-                                <li>Price points that convert well</li>
-                                <li>Trending and seasonal items</li>
-                                <li>Your posting history to avoid duplicates</li>
-                                <li>Category performance metrics</li>
-                            </ul>
-                            <p>This ensures you're always promoting products with the highest conversion potential.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <span>Can I use this for multiple affiliate programs?</span>
-                            <span>+</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Currently, AffiliateBot Pro focuses on Amazon Associates for the best user experience. We're planning to add support for other major affiliate programs like ClickBank, ShareASale, and CJ Affiliate in future updates.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFaq(this)">
-                            <span>Is my data secure?</span>
-                            <span>+</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Yes! We use industry-standard security practices:</p>
-                            <ul>
-                                <li>All data is encrypted in transit and at rest</li>
-                                <li>We never store your passwords</li>
-                                <li>API tokens are securely encrypted</li>
-                                <li>Regular security audits and updates</li>
-                                <li>We never share your data with third parties</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <div class="faq-item">
+                <div class="faq-question">Q: Can I customize the post content?</div>
+                <p>Yes! Our AI generates engaging content, but you can modify templates and add your own style in the settings.</p>
             </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: What happens if I hit my daily post limit?</div>
+                <p>Free users get 2 posts/day, Premium gets 8, Pro gets 24. Upgrade your plan to increase your limits.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Is my data secure?</div>
+                <p>Absolutely! We use industry-standard encryption and never share your personal information or platform credentials.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🆘 Need More Help?</h2>
+            <p>If you're still having issues, use the problem reporting system on your dashboard to get immediate assistance. Our team monitors reports in real-time!</p>
         </div>
     </div>
-    
-    <script>
-        function showTab(tabName) {
-            // Hide all tab contents
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => content.classList.remove('active'));
-            
-            // Remove active class from all tabs
-            const tabs = document.querySelectorAll('.nav-tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            // Show selected tab content
-            document.getElementById(tabName).classList.add('active');
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-        }
-        
-        function toggleFaq(element) {
-            const answer = element.nextElementSibling;
-            const icon = element.querySelector('span:last-child');
-            
-            if (answer.classList.contains('active')) {
-                answer.classList.remove('active');
-                icon.textContent = '+';
-            } else {
-                // Close all other FAQs
-                document.querySelectorAll('.faq-answer').forEach(item => {
-                    item.classList.remove('active');
-                });
-                document.querySelectorAll('.faq-question span:last-child').forEach(item => {
-                    item.textContent = '+';
-                });
-                
-                // Open this FAQ
-                answer.classList.add('active');
-                icon.textContent = '−';
-            }
-        }
-    </script>
 </body>
 </html>
