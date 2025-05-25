@@ -1,0 +1,9 @@
+# Render deployment configuration
+# Use this for reference when setting up manually on Render
+
+# Build Command: pip install flask flask-sqlalchemy flask-login flask-dance beautifulsoup4 lxml psycopg2-binary requests python-dotenv sendgrid slack-sdk
+# Start Command: python run.py
+# Environment Variables:
+# - SESSION_SECRET (auto-generate)
+# - SENDGRID_API_KEY (optional)
+# - EMAIL_FROM (optional)
