@@ -57,11 +57,11 @@ def login_page():
 @app.route('/admin-login', methods=['POST'])
 def admin_login():
     """Secure admin login"""
-    email = request.form.get('email')
+    email_or_username = request.form.get('email')
     password = request.form.get('password')
     
-    # Only allow your specific email and a secure password
-    if email == 'the3kproduction@gmail.com' and password == 'Password123':
+    # Allow login with either email or username
+    if (email_or_username == 'the3kproduction@gmail.com' or email_or_username == '3Kloudz') and password == 'Password123':
         admin_user = create_admin_user()
         session.clear()  # Clear any existing session data
         session['user_id'] = admin_user.id
