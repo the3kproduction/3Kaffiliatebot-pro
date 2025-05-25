@@ -48,13 +48,13 @@ class InventoryManager:
         cutoff_date = datetime.now() - timedelta(days=avoid_recent_days)
         
         # Get ASINs that were promoted recently by this user
-        recent_promotions = db.session.query(UserProductPromotion.asin).filter(
+        recent_promotion_results = db.session.query(UserProductPromotion.asin).filter(
             UserProductPromotion.user_id == user.id,
             UserProductPromotion.promoted_at >= cutoff_date
-        ).subquery()
+        ).all()
         
-        # Get products not in recent promotions, with smart prioritization
-        recent_asins = [r[0] for r in recent_promotions]
+        # Extract ASINs from results
+        recent_asins = [r[0] for r in recent_promotion_results] if recent_promotion_results else []
         products = db.session.query(ProductInventory).filter(
             ProductInventory.is_active == True,
             ~ProductInventory.asin.in_(recent_asins)
