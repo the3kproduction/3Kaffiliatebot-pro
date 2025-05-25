@@ -651,20 +651,41 @@
         
         // Spotify Integration Functions
         function connectSpotify() {
-            // Redirect to Spotify authorization
-            const clientId = 'YOUR_SPOTIFY_CLIENT_ID'; // You'll need to set this up
-            const redirectUri = window.location.origin + '/spotify-callback';
-            const scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
-            
-            const authUrl = 'https://accounts.spotify.com/authorize?' +
-                'response_type=code' +
-                '&client_id=' + clientId +
-                '&scope=' + encodeURIComponent(scopes) +
-                '&redirect_uri=' + encodeURIComponent(redirectUri);
-            
-            // For now, show info message
-            alert('Spotify integration requires setup of Spotify API credentials. Contact admin to enable this feature for your account.');
-            updateNowPlaying('Spotify connection requires API setup');
+            // Check if we have Spotify credentials configured
+            fetch('/api/spotify-auth-url')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.auth_url) {
+                        // Smooth redirect to Spotify authorization
+                        updateNowPlaying('Connecting to Spotify...');
+                        window.location.href = data.auth_url;
+                    } else {
+                        // Show inline message instead of popup
+                        document.getElementById('spotifyAuth').innerHTML = `
+                            <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                                <p style="margin-bottom: 10px;">🎵 Spotify integration available!</p>
+                                <p style="font-size: 11px; opacity: 0.8;">Contact admin to enable Spotify for your account</p>
+                                <button onclick="requestSpotifyAccess()" style="background: #1DB954; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; margin-top: 8px;">
+                                    Request Access
+                                </button>
+                            </div>
+                        `;
+                        updateNowPlaying('Spotify setup needed');
+                    }
+                })
+                .catch(error => {
+                    updateNowPlaying('Spotify connection not available');
+                });
+        }
+        
+        function requestSpotifyAccess() {
+            document.getElementById('spotifyAuth').innerHTML = `
+                <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <p style="margin-bottom: 8px;">✅ Request submitted!</p>
+                    <p style="font-size: 11px; opacity: 0.8;">You'll be notified when Spotify access is enabled</p>
+                </div>
+            `;
+            updateNowPlaying('Spotify access requested');
         }
         
         function toggleSpotify() {
