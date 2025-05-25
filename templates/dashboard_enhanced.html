@@ -845,6 +845,50 @@
               });
         }
 
+        function savePinterestSetup() {
+            const accessToken = document.getElementById('pinterest_access_token_setup').value;
+            const boardId = document.getElementById('pinterest_board_id_setup').value;
+            fetch('/api/save-platform', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({platform: 'pinterest', access_token: accessToken, board_id: boardId})
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Pinterest configured successfully!');
+                  } else {
+                      alert('Error: ' + data.error);
+                  }
+              });
+        }
+
+        function saveRedditSetup() {
+            const clientId = document.getElementById('reddit_client_id_setup').value;
+            const clientSecret = document.getElementById('reddit_client_secret_setup').value;
+            const username = document.getElementById('reddit_username_setup').value;
+            const password = document.getElementById('reddit_password_setup').value;
+            const subreddit = document.getElementById('reddit_subreddit_setup').value;
+            fetch('/api/save-platform', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    platform: 'reddit', 
+                    client_id: clientId, 
+                    client_secret: clientSecret,
+                    username: username,
+                    password: password,
+                    subreddit: subreddit
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Reddit configured successfully!');
+                  } else {
+                      alert('Error: ' + data.error);
+                  }
+              });
+        }
+
         function testConnections() {
             fetch('/api/test-connections', {
                 method: 'POST',
@@ -859,6 +903,10 @@
                       else message += '❌ Telegram: Not configured\n';
                       if (data.slack) message += '✅ Slack: Connected\n';
                       else message += '❌ Slack: Not configured\n';
+                      if (data.pinterest) message += '✅ Pinterest: Connected\n';
+                      else message += '❌ Pinterest: Not configured\n';
+                      if (data.reddit) message += '✅ Reddit: Connected\n';
+                      else message += '❌ Reddit: Not configured\n';
                       alert(message);
                   } else {
                       alert('Test failed: ' + data.error);

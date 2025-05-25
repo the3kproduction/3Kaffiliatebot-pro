@@ -563,6 +563,15 @@ def api_save_platform():
         elif platform == 'slack':
             user.slack_bot_token = data.get('bot_token')
             user.slack_channel_id = data.get('channel_id')
+        elif platform == 'pinterest':
+            user.pinterest_access_token = data.get('access_token')
+            user.pinterest_board_id = data.get('board_id')
+        elif platform == 'reddit':
+            user.reddit_client_id = data.get('client_id')
+            user.reddit_client_secret = data.get('client_secret')
+            user.reddit_username = data.get('username')
+            user.reddit_password = data.get('password')
+            user.reddit_subreddit = data.get('subreddit')
         else:
             return jsonify({'success': False, 'error': 'Invalid platform'})
         
@@ -583,7 +592,9 @@ def api_test_connections():
         'success': True,
         'discord': bool(user.discord_webhook_url),
         'telegram': bool(user.telegram_bot_token and user.telegram_chat_id),
-        'slack': bool(user.slack_bot_token and user.slack_channel_id)
+        'slack': bool(user.slack_bot_token and user.slack_channel_id),
+        'pinterest': bool(user.pinterest_access_token and user.pinterest_board_id),
+        'reddit': bool(user.reddit_client_id and user.reddit_client_secret and user.reddit_username)
     }
     
     return jsonify(results)
