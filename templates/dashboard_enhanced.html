@@ -540,11 +540,7 @@
         <div class="card">
             <h3>⚡ Quick Actions</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                {% if user.subscription_tier == 'free' %}
-                <button onclick="alert('Product browsing is available for Premium and Pro members only. Upgrade to access thousands of products!')" class="btn" style="background: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; opacity: 0.7; text-decoration: none;">🔒 Browse Products</button>
-                {% else %}
-                <a href="/products" class="btn btn-primary" style="text-decoration: none;">Browse Products</a>
-                {% endif %}
+                <a href="/products" class="btn btn-primary" style="text-decoration: none;">🛍️ Browse Products</a>
                 <a href="/campaigns" class="btn btn-success" style="text-decoration: none;">Manage Campaigns</a>
                 <a href="/setup" class="btn btn-warning" style="text-decoration: none;">Setup Webhooks</a>
             </div>
