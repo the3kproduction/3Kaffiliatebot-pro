@@ -112,17 +112,21 @@ class AutoProductSelector:
         recommended_products = self.get_ai_recommended_products(limit=num_products * 2)
         
         # Filter out recently promoted products by this user
-        recent_posts = Post.query.filter(
-            Post.user_id == self.user.id,
-            Post.created_at >= datetime.now() - timedelta(hours=24)
-        ).all()
-        
-        recent_asins = [post.asin for post in recent_posts if post.asin]
-        
-        available_products = [
-            p for p in recommended_products 
-            if p.asin not in recent_asins
-        ][:num_products]
+        try:
+            recent_posts = db.session.query(Post).filter(
+                Post.user_id == self.user.id,
+                Post.created_at >= datetime.now() - timedelta(hours=24)
+            ).all()
+            
+            recent_asins = [post.asin for post in recent_posts if post.asin]
+            
+            available_products = [
+                p for p in recommended_products 
+                if p.asin not in recent_asins
+            ][:num_products]
+        except Exception:
+            # Fallback: just use the recommended products
+            available_products = recommended_products[:num_products]
         
         if not available_products:
             return {'success': False, 'error': 'No suitable products available'}
