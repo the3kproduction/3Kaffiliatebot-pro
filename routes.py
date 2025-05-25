@@ -506,3 +506,54 @@ def refresh_products():
     
     flash(f'Refreshed {count} trending products!', 'success')
     return redirect(url_for('dashboard'))
+
+@app.route('/products/browse')
+@require_login
+def browse_products():
+    """Browse all available products"""
+    from inventory_manager import InventoryManager
+    
+    inventory = InventoryManager()
+    # Get sample products for browsing
+    products = ProductInventory.query.order_by(ProductInventory.times_promoted.desc()).limit(50).all()
+    
+    # If no products in database, show some sample data
+    if not products:
+        # Add some sample trending products
+        sample_products = [
+            {
+                'asin': 'B08N5WRWNW',
+                'product_title': 'Echo Dot (4th Gen) | Smart speaker with Alexa',
+                'price': '$49.99',
+                'rating': 4.7,
+                'category': 'Electronics',
+                'image_url': 'https://m.media-amazon.com/images/I/61MCWFAZ90L._AC_UY218_.jpg'
+            },
+            {
+                'asin': 'B0B7BP6CJN',
+                'product_title': 'Apple AirPods Pro (2nd Generation)',
+                'price': '$249.00',
+                'rating': 4.4,
+                'category': 'Electronics',
+                'image_url': 'https://m.media-amazon.com/images/I/61SUj2aKoEL._AC_UY218_.jpg'
+            },
+            {
+                'asin': 'B09JQMJHXY',
+                'product_title': 'Kindle Paperwhite (11th Gen)',
+                'price': '$139.99',
+                'rating': 4.6,
+                'category': 'Electronics',
+                'image_url': 'https://m.media-amazon.com/images/I/61IBBVJvSDL._AC_UY218_.jpg'
+            }
+        ]
+        
+        # Convert to objects for template
+        class MockProduct:
+            def __init__(self, data):
+                for key, value in data.items():
+                    setattr(self, key, value)
+                self.times_promoted = 0
+        
+        products = [MockProduct(p) for p in sample_products]
+    
+    return render_template('browse_products.html', products=products)
