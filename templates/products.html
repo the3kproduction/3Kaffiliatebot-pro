@@ -34,11 +34,11 @@
         <div class="products-grid">
             {% for product in products %}
             <div class="product-card">
-                <img src="{{ product.image_url }}" alt="{{ product.title }}" class="product-image" 
+                <img src="{{ product.image_url }}" alt="{{ product.product_title }}" class="product-image" 
                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjBmMGYwIi8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5IiBmb250LXNpemU9IjE0Ij5Qcm9kdWN0IEltYWdlPC90ZXh0Pgo8L3N2Zz4='">
                 
                 <div class="product-category">{{ product.category }}</div>
-                <div class="product-title">{{ product.title }}</div>
+                <div class="product-title">{{ product.product_title }}</div>
                 <div class="product-price">{{ product.price }}</div>
                 
                 {% if product.rating %}

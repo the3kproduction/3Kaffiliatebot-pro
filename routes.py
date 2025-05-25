@@ -211,14 +211,14 @@ def products():
     
     products_raw = query.order_by(ProductInventory.times_promoted.desc()).limit(50).all()
     
-    # Convert to template format
+    # Convert to template format - keep original field names for template
     products = []
     for product in products_raw:
         affiliate_url = f"https://amazon.com/dp/{product.asin}?tag={user.amazon_affiliate_id or 'luxoraconnect-20'}"
         
         products.append({
             'asin': product.asin,
-            'title': product.product_title,
+            'product_title': product.product_title,  # Keep original field name
             'price': product.price,
             'rating': product.rating or 4.5,
             'category': product.category or 'Electronics',

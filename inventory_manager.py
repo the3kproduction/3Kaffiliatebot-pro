@@ -54,9 +54,10 @@ class InventoryManager:
         ).subquery()
         
         # Get products not in recent promotions, with smart prioritization
+        recent_asins = [r[0] for r in recent_promotions]
         products = db.session.query(ProductInventory).filter(
             ProductInventory.is_active == True,
-            ~ProductInventory.asin.in_(recent_promotions)
+            ~ProductInventory.asin.in_(recent_asins)
         ).order_by(
             # Prioritize trending products first
             ProductInventory.is_trending.desc(),
