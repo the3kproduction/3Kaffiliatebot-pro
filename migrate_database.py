@@ -30,15 +30,35 @@ def migrate_database():
         
         print("Connected to database successfully")
         
-        # List of columns to add
+        # List of ALL columns to add
         columns_to_add = [
+            # Pinterest columns
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS pinterest_access_token VARCHAR(500);",
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS pinterest_board_id VARCHAR(500);",
+            
+            # Reddit columns
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS reddit_client_id VARCHAR(500);",
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS reddit_client_secret VARCHAR(500);",
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS reddit_username VARCHAR(500);",
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS reddit_password VARCHAR(500);",
-            "ALTER TABLE users ADD COLUMN IF NOT EXISTS reddit_subreddit VARCHAR(500);"
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS reddit_subreddit VARCHAR(500);",
+            
+            # Trial system columns
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_start_date TIMESTAMP;",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_end_date TIMESTAMP;",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_tier VARCHAR(20);",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS is_trial_active BOOLEAN DEFAULT FALSE;",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS premium_trial_used BOOLEAN DEFAULT FALSE;",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS pro_trial_used BOOLEAN DEFAULT FALSE;",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS contest_winner BOOLEAN DEFAULT FALSE;",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_start_date TIMESTAMP;",
+            
+            # Setup notification columns
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS setup_notification_dismissed BOOLEAN DEFAULT FALSE;",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS setup_notification_dismissed_at TIMESTAMP;",
+            
+            # AI promotion columns
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS last_ai_promotion_time TIMESTAMP;"
         ]
         
         # Execute each migration
@@ -59,7 +79,10 @@ def migrate_database():
             SELECT column_name 
             FROM information_schema.columns 
             WHERE table_name = 'users' 
-            AND column_name LIKE '%pinterest%' OR column_name LIKE '%reddit%'
+            AND (column_name LIKE '%pinterest%' OR column_name LIKE '%reddit%' 
+                 OR column_name LIKE '%trial%' OR column_name LIKE '%notification%'
+                 OR column_name = 'last_ai_promotion_time' OR column_name = 'contest_winner'
+                 OR column_name = 'subscription_start_date')
             ORDER BY column_name;
         """)
         
