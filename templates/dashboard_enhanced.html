@@ -185,13 +185,38 @@
             </div>
         </div>
 
+        <!-- Admin Panel (moved to top) -->
+        {% if current_user.is_admin %}
+        <div class="card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: 3px solid #ff9ff3;">
+            <h3>👑 Admin Panel</h3>
+            <p>Manage users and send email campaigns</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                <a href="/admin" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">Admin Dashboard</a>
+                <a href="/admin/users" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">View Users</a>
+                <a href="/admin/email-blast" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">Send Email Blast</a>
+                <a href="/auth/replit_auth/logout" class="btn" style="background: rgba(255,255,255,0.3); color: white; text-decoration: none;">🚪 Logout</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Performance Analytics (moved under admin) -->
+        <div class="card" style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white;">
+            <h3>📊 Performance Analytics</h3>
+            <p>Track clicks, conversions, and revenue</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                <a href="/analytics" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">View Analytics</a>
+                {% if not current_user.is_admin %}
+                <a href="/auth/replit_auth/logout" class="btn" style="background: rgba(255,255,255,0.3); color: white; text-decoration: none;">🚪 Logout</a>
+                {% endif %}
+            </div>
+        </div>
+
         <!-- Quick Actions -->
         <div class="card">
             <h3>⚡ Quick Actions</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <a href="/products" class="btn btn-primary" style="text-decoration: none;">Browse Products</a>
+                <a href="/products/browse" class="btn btn-primary" style="text-decoration: none;">Browse Products</a>
                 <a href="/campaigns" class="btn btn-success" style="text-decoration: none;">Manage Campaigns</a>
-                <a href="/analytics" class="btn" style="background: purple; color: white; text-decoration: none;">View Analytics</a>
                 <a href="/setup-webhooks" class="btn btn-warning" style="text-decoration: none;">Setup Webhooks</a>
             </div>
         </div>
