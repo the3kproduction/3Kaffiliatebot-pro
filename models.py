@@ -50,6 +50,9 @@ class User(UserMixin, db.Model):
     setup_notification_dismissed = db.Column(db.Boolean, default=False)
     setup_notification_dismissed_at = db.Column(db.DateTime, nullable=True)
     
+    # AI promotion cooldown for free users
+    last_ai_promotion_time = db.Column(db.DateTime, nullable=True)
+    
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
     

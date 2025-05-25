@@ -311,14 +311,28 @@ def api_auto_promote():
     if not user:
         return jsonify({'error': 'Authentication required'}), 401
     
-    # Tier restriction: AI auto-promotion only for Pro users
-    if user.subscription_tier in ['free', 'premium']:
+    # Tier restriction and cooldown logic
+    if user.subscription_tier == 'free':
+        # Free users get 1 promotion every 5 hours
+        from datetime import datetime, timedelta
+        if user.last_ai_promotion_time:
+            time_since_last = datetime.now() - user.last_ai_promotion_time
+            if time_since_last < timedelta(hours=5):
+                hours_left = 5 - (time_since_last.total_seconds() / 3600)
+                return jsonify({'error': f'Free users can use AI auto-promotion once every 5 hours. Try again in {hours_left:.1f} hours.'}), 403
+    elif user.subscription_tier == 'premium':
         return jsonify({'error': 'AI auto-promotion is available for Pro members only. Upgrade to unlock advanced automation!'}), 403
     
     try:
         # Get AI-recommended products (avoiding recent duplicates)
         ai_selector = AutoProductSelector(user)
         selected_products = ai_selector.auto_promote_products(num_products=3)
+        
+        # Update last promotion time for free users
+        if user.subscription_tier == 'free':
+            from datetime import datetime
+            user.last_ai_promotion_time = datetime.now()
+            db.session.commit()
         
         return jsonify({
             'success': True,

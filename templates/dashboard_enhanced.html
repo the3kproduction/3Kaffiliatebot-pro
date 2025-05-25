@@ -210,6 +210,44 @@
         </script>
         {% endif %}
 
+        <!-- Upgrade Promotion for Free Users (Top Priority) -->
+        {% if user.subscription_tier == 'free' %}
+        <div class="card" style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: white; border: 3px solid #ffd700; margin-bottom: 25px;">
+            <h3>🚀 Upgrade to Unlock Premium Features!</h3>
+            <p style="opacity: 0.9; margin-bottom: 20px;">You're currently on the Free plan (2 posts/day). Upgrade to access powerful features:</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                    <h4 style="margin: 0 0 10px 0;">💎 Premium - $29/month</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>8 posts per day</li>
+                        <li>Amazon product search</li>
+                        <li>Advanced analytics</li>
+                        <li>Priority support</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                    <h4 style="margin: 0 0 10px 0;">🔥 Pro - $79/month</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>24 posts per day</li>
+                        <li>AI auto-promotion</li>
+                        <li>All Premium features</li>
+                        <li>White-label access</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button onclick="alert('Coming soon! Stripe payment integration will be available shortly.')" style="background: #28a745; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    Try Premium Free for 7 Days
+                </button>
+                <button onclick="alert('Coming soon! Stripe payment integration will be available shortly.')" style="background: #007bff; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    Try Pro Free for 7 Days
+                </button>
+            </div>
+        </div>
+        {% endif %}
+
         <!-- Analytics Overview -->
         <div class="dashboard-grid">
             <div class="card stats-card">
@@ -281,7 +319,22 @@
         <!-- AI Auto-Promotion -->
         <div class="card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
             <h3>🤖 AI Auto-Promotion</h3>
-            {% if user.subscription_tier in ['free', 'premium'] %}
+            {% if user.subscription_tier == 'free' %}
+            <p style="margin-bottom: 20px; opacity: 0.9;">Let AI automatically select and promote your top products <span style="background: rgba(52,144,220,0.9); color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px;">1 FREE / 5 HOURS</span></p>
+            
+            <button onclick="alert('Multiple promotions available for Pro members only. Free users get 1 promotion every 5 hours.')" style="width: 100%; background: rgba(255,255,255,0.3); color: white; font-weight: bold; padding: 15px 25px; border-radius: 10px; border: none; cursor: pointer; margin-bottom: 15px; font-size: 16px; opacity: 0.7;">
+                🔒 Auto-Promote Top 3 Products
+            </button>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button onclick="autoPromoteProducts(1)" style="background: rgba(255,255,255,0.2); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    🎯 Promote 1 (FREE)
+                </button>
+                <button onclick="alert('Multiple promotions available for Pro members only!')" style="background: rgba(255,255,255,0.3); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; opacity: 0.7;">
+                    🔒 Promote 5
+                </button>
+            </div>
+            {% elif user.subscription_tier == 'premium' %}
             <p style="margin-bottom: 20px; opacity: 0.9;">Let AI automatically select and promote your top products <span style="background: rgba(255,193,7,0.9); color: #000; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px;">PRO ONLY</span></p>
             
             <button onclick="alert('AI auto-promotion is available for Pro members only. Upgrade to unlock advanced automation features!')" style="width: 100%; background: rgba(255,255,255,0.3); color: white; font-weight: bold; padding: 15px 25px; border-radius: 10px; border: none; cursor: pointer; margin-bottom: 15px; font-size: 16px; opacity: 0.7;">
@@ -419,43 +472,7 @@
             </div>
         </div>
 
-        <!-- Upgrade Promotion for Free Users -->
-        {% if user.subscription_tier == 'free' %}
-        <div class="card" style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: white; border: 3px solid #ffd700;">
-            <h3>🚀 Upgrade to Unlock Premium Features!</h3>
-            <p style="opacity: 0.9; margin-bottom: 20px;">You're currently on the Free plan (2 posts/day). Upgrade to access powerful features:</p>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                    <h4 style="margin: 0 0 10px 0;">💎 Premium - $29/month</h4>
-                    <ul style="margin: 0; padding-left: 20px;">
-                        <li>8 posts per day</li>
-                        <li>Amazon product search</li>
-                        <li>Advanced analytics</li>
-                        <li>Priority support</li>
-                    </ul>
-                </div>
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                    <h4 style="margin: 0 0 10px 0;">🔥 Pro - $79/month</h4>
-                    <ul style="margin: 0; padding-left: 20px;">
-                        <li>24 posts per day</li>
-                        <li>AI auto-promotion</li>
-                        <li>All Premium features</li>
-                        <li>White-label access</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div style="display: flex; gap: 15px; justify-content: center;">
-                <button onclick="alert('Coming soon! Stripe payment integration will be available shortly.')" style="background: #28a745; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                    Try Premium Free for 7 Days
-                </button>
-                <button onclick="alert('Coming soon! Stripe payment integration will be available shortly.')" style="background: #007bff; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                    Try Pro Free for 7 Days
-                </button>
-            </div>
-        </div>
-        {% endif %}
+
 
         <!-- Mini Analytics Dashboard -->
         <div class="card">
