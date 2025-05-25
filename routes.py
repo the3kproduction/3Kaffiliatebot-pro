@@ -520,6 +520,24 @@ def api_promote_product():
         'platforms': platforms_posted
     })
 
+@app.route('/api/toggle-auto-posts', methods=['POST'])
+@require_login
+def api_toggle_auto_posts():
+    """Toggle auto-posting on/off for user"""
+    user = current_user
+    try:
+        user.auto_post_enabled = not user.auto_post_enabled
+        db.session.commit()
+        
+        status = "enabled" if user.auto_post_enabled else "disabled"
+        return jsonify({
+            'success': True,
+            'auto_post_enabled': user.auto_post_enabled,
+            'message': f'Auto-posting {status} successfully!'
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.route('/api/update-frequency', methods=['POST'])
 @require_login
 def api_update_frequency():

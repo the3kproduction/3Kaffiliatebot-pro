@@ -191,7 +191,7 @@
                 </button>
             </div>
             
-            <div id="problemReportResult" style="margin-top: 15px; display: none; text-align: center;"></div>
+            <div id="problemReportResult" style="margin-top: 15px; text-align: center;"></div>
         </div>
         
         <style>
@@ -218,17 +218,8 @@
         {% if not user.amazon_affiliate_id or user.amazon_affiliate_id == '' %}
             {% set _ = missing_items.append('Amazon Associate ID') %}
         {% endif %}
-        {% if not user.discord_webhook_url or user.discord_webhook_url == '' %}
-            {% set _ = missing_items.append('Discord webhook') %}
-        {% endif %}
-        {% if not user.telegram_bot_token or user.telegram_bot_token == '' %}
-            {% set _ = missing_items.append('Telegram bot') %}
-        {% endif %}
-        {% if not user.slack_bot_token or user.slack_bot_token == '' %}
-            {% set _ = missing_items.append('Slack bot') %}
-        {% endif %}
-        {% if not user.sendgrid_api_key or user.sendgrid_api_key == '' %}
-            {% set _ = missing_items.append('Email service') %}
+        {% if not user.email or user.email == '' %}
+            {% set _ = missing_items.append('Email address') %}
         {% endif %}
 
         {% if missing_items and not user.setup_notification_dismissed %}
