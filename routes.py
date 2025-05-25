@@ -610,18 +610,21 @@ def api_save_platform():
 @require_login
 def api_test_connections():
     """Test platform connections for user"""
-    user = current_user
-    
-    results = {
-        'success': True,
-        'discord': bool(user.discord_webhook_url),
-        'telegram': bool(user.telegram_bot_token and user.telegram_chat_id),
-        'slack': bool(user.slack_bot_token and user.slack_channel_id),
-        'pinterest': bool(user.pinterest_access_token and user.pinterest_board_id),
-        'reddit': bool(user.reddit_client_id and user.reddit_client_secret and user.reddit_username)
-    }
-    
-    return jsonify(results)
+    try:
+        user = current_user
+        
+        results = {
+            'success': True,
+            'discord': bool(getattr(user, 'discord_webhook_url', None)),
+            'telegram': bool(getattr(user, 'telegram_bot_token', None) and getattr(user, 'telegram_chat_id', None)),
+            'slack': bool(getattr(user, 'slack_bot_token', None) and getattr(user, 'slack_channel_id', None)),
+            'pinterest': bool(getattr(user, 'pinterest_access_token', None) and getattr(user, 'pinterest_board_id', None)),
+            'reddit': bool(getattr(user, 'reddit_client_id', None) and getattr(user, 'reddit_client_secret', None))
+        }
+        
+        return jsonify(results)
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/api/promote-products', methods=['POST'])
 @require_login
