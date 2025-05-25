@@ -222,6 +222,135 @@ def setup():
     
     return render_template('setup.html', user=user)
 
+@app.route('/admin')
+def admin_dashboard():
+    """Admin dashboard"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user:
+        return redirect(url_for('index'))
+    
+    try:
+        # Get platform stats
+        total_users = User.query.count()
+        total_posts = Post.query.count()
+        total_campaigns = Campaign.query.count()
+        
+        return render_template('admin_dashboard.html',
+                             user=user,
+                             total_users=total_users,
+                             total_posts=total_posts,
+                             total_campaigns=total_campaigns)
+    except Exception as e:
+        logger.error(f"Admin dashboard error: {e}")
+        return render_template('admin_dashboard.html',
+                             user=user,
+                             total_users=0,
+                             total_posts=0,
+                             total_campaigns=0)
+
+@app.route('/admin/users')
+def admin_users():
+    """View all users"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user:
+        return redirect(url_for('index'))
+    
+    try:
+        users = User.query.all()
+        return render_template('admin_users.html', user=user, users=users)
+    except Exception as e:
+        logger.error(f"Admin users error: {e}")
+        return render_template('admin_users.html', user=user, users=[])
+
+@app.route('/admin/email-blast')
+def admin_email_blast():
+    """Send email campaigns"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user:
+        return redirect(url_for('index'))
+    
+    try:
+        return render_template('admin_email_blast.html', user=user)
+    except Exception as e:
+        logger.error(f"Admin email blast error: {e}")
+        return render_template('admin_email_blast.html', user=user)
+
+@app.route('/campaigns')
+def campaigns():
+    """View campaigns"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user:
+        return redirect(url_for('index'))
+    
+    try:
+        user_campaigns = Campaign.query.filter_by(user_id=user.id).all()
+        return render_template('campaigns.html', user=user, campaigns=user_campaigns)
+    except Exception as e:
+        logger.error(f"Campaigns error: {e}")
+        return render_template('campaigns.html', user=user, campaigns=[])
+
+@app.route('/analytics')
+def analytics():
+    """View analytics"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user:
+        return redirect(url_for('index'))
+    
+    try:
+        # Get analytics data
+        user_posts = Post.query.filter_by(user_id=user.id).all()
+        analytics_data = {
+            'total_posts': len(user_posts),
+            'total_clicks': sum([post.clicks for post in user_posts]),
+            'estimated_revenue': sum([post.clicks for post in user_posts]) * 0.05,
+            'conversion_rate': 0.05
+        }
+        return render_template('analytics.html', user=user, analytics=analytics_data)
+    except Exception as e:
+        logger.error(f"Analytics error: {e}")
+        analytics_data = {'total_posts': 0, 'total_clicks': 0, 'estimated_revenue': 0, 'conversion_rate': 0}
+        return render_template('analytics.html', user=user, analytics=analytics_data)
+
+@app.route('/products')
+def products():
+    """Browse products"""
+    user_id = session.get('user_id')
+    user = load_user(user_id)
+    
+    if not user:
+        return redirect(url_for('index'))
+    
+    try:
+        inventory = InventoryManager()
+        ai_selector = AutoProductSelector(user)
+        available_products = ai_selector.get_ai_recommended_products(limit=20)
+        
+        products_display = []
+        for product in available_products:
+            products_display.append({
+                'asin': product.asin,
+                'title': product.product_title,
+                'price': product.price or 'N/A',
+                'rating': product.rating or 0,
+                'image_url': product.image_url or '/static/placeholder.jpg',
+                'category': product.category or 'General'
+            })
+        
+        return render_template('products.html', user=user, products=products_display)
+    except Exception as e:
+        logger.error(f"Products error: {e}")
+        return render_template('products.html', user=user, products=[])
+
 @app.route('/logout')
 def logout():
     """Simple logout"""
