@@ -297,6 +297,104 @@
                   location.reload();
               });
         }
+        
+        // AI Auto-Promotion Functions
+        function autoPromoteProducts(numProducts = 3) {
+            const resultDiv = document.getElementById('auto-promote-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'alert alert-warning';
+            resultDiv.innerHTML = '🤖 AI is selecting and promoting your top products...';
+            
+            fetch('/api/auto-promote', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    num_products: numProducts
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultDiv.className = 'alert alert-success';
+                    resultDiv.innerHTML = `
+                        <strong>🎉 Success!</strong><br>
+                        Promoted ${data.products_promoted} products to ${data.total_platforms} platform(s)<br>
+                        <small>${data.products.map(p => p.title.substring(0, 50) + '...').join('<br>')}</small>
+                    `;
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    resultDiv.className = 'alert alert-danger';
+                    resultDiv.innerHTML = `❌ ${data.error}`;
+                }
+            })
+            .catch(error => {
+                resultDiv.className = 'alert alert-danger';
+                resultDiv.innerHTML = '❌ Error: Please check your webhook settings';
+            });
+        }
+        
+        // Amazon Product Search Functions
+        function searchProducts() {
+            const query = document.getElementById('product-search-input').value.trim();
+            if (!query) {
+                alert('Please enter a search term');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('search-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'alert alert-warning';
+            resultDiv.innerHTML = `🔍 Searching Amazon for "${query}"...`;
+            
+            fetch('/api/search-products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: query,
+                    limit: 20
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultDiv.className = 'alert alert-success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ ${data.message}</strong><br>
+                        Found ${data.total_found} products, added ${data.products_added} new ones to your inventory
+                    `;
+                    document.getElementById('product-search-input').value = '';
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    resultDiv.className = 'alert alert-danger';
+                    resultDiv.innerHTML = `❌ ${data.message}`;
+                }
+            })
+            .catch(error => {
+                resultDiv.className = 'alert alert-danger';
+                resultDiv.innerHTML = '❌ Error searching products';
+            });
+        }
+        
+        function searchPreset(query) {
+            document.getElementById('product-search-input').value = query;
+            searchProducts();
+        }
+        
+        // Allow Enter key in search box
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('product-search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        searchProducts();
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
