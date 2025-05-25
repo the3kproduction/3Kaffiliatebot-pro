@@ -153,19 +153,19 @@
 
         <!-- Smart Setup Notification -->
         {% set missing_items = [] %}
-        {% if not current_user.amazon_affiliate_id %}
+        {% if not current_user.amazon_affiliate_id or current_user.amazon_affiliate_id == '' %}
             {% set _ = missing_items.append('Amazon Associate ID') %}
         {% endif %}
-        {% if not current_user.discord_webhook_url %}
+        {% if not current_user.discord_webhook_url or current_user.discord_webhook_url == '' %}
             {% set _ = missing_items.append('Discord webhook') %}
         {% endif %}
-        {% if not current_user.telegram_bot_token %}
+        {% if not current_user.telegram_bot_token or current_user.telegram_bot_token == '' %}
             {% set _ = missing_items.append('Telegram bot') %}
         {% endif %}
-        {% if not current_user.slack_bot_token %}
+        {% if not current_user.slack_bot_token or current_user.slack_bot_token == '' %}
             {% set _ = missing_items.append('Slack bot') %}
         {% endif %}
-        {% if not current_user.sendgrid_api_key %}
+        {% if not current_user.sendgrid_api_key or current_user.sendgrid_api_key == '' %}
             {% set _ = missing_items.append('Email service') %}
         {% endif %}
 
