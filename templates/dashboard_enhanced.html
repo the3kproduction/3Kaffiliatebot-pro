@@ -207,7 +207,7 @@
             <h3>📚 Quick Access</h3>
             <p>Essential resources and helpful guides</p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-                <a href="/help" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">📖 Complete Setup Guide & FAQ</a>
+                <button onclick="window.open('https://github.com/the3kproduction/3Kaffiliatebot-pro/blob/main/README.md', '_blank')" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 12px 20px; cursor: pointer;">📖 Complete Setup Guide & FAQ</button>
                 <button onclick="togglePlatformSetup()" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 12px 20px; cursor: pointer;">⚙️ Platform Settings</button>
                 <a href="/analytics" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 12px 20px; text-align: center;">📊 View Analytics</a>
             </div>
@@ -328,6 +328,14 @@
                     <input type="text" id="slack_bot_token" placeholder="Bot Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.slack_bot_token or '' }}">
                     <input type="text" id="slack_channel_id" placeholder="Channel ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.slack_channel_id or '' }}">
                     <button onclick="saveSlack()" style="background: #4a154b; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Slack</button>
+                </div>
+                
+                <!-- Pinterest Setup -->
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                    <h4>📌 Pinterest</h4>
+                    <input type="text" id="pinterest_access_token" placeholder="Access Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.pinterest_access_token or '' }}">
+                    <input type="text" id="pinterest_board_id" placeholder="Board ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.pinterest_board_id or '' }}">
+                    <button onclick="savePinterest()" style="background: #bd081c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Pinterest</button>
                 </div>
             </div>
         </div>
@@ -1029,6 +1037,11 @@
                 return;
             }
             
+            // Show immediate feedback
+            const resultDiv = document.getElementById('problemReportResult');
+            resultDiv.innerHTML = '<div style="background: rgba(255,255,255,0.9); color: #f39c12; padding: 10px; border-radius: 5px; font-weight: bold;">📤 Sending report...</div>';
+            resultDiv.style.display = 'block';
+            
             fetch('/api/report-problem', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -1040,15 +1053,16 @@
                 })
             }).then(response => response.json())
               .then(data => {
-                  const resultDiv = document.getElementById('problemReportResult');
                   if (data.success) {
                       resultDiv.innerHTML = '<div style="background: rgba(255,255,255,0.9); color: #2ecc71; padding: 10px; border-radius: 5px; font-weight: bold;">✅ Problem reported successfully! We\'ll look into it right away.</div>';
                       document.getElementById('problemType').value = '';
                       document.getElementById('problemDescription').value = '';
                   } else {
-                      resultDiv.innerHTML = '<div style="background: rgba(255,255,255,0.9); color: #e74c3c; padding: 10px; border-radius: 5px; font-weight: bold;">❌ Failed to send report. Please try again.</div>';
+                      resultDiv.innerHTML = '<div style="background: rgba(255,255,255,0.9); color: #e74c3c; padding: 10px; border-radius: 5px; font-weight: bold;">❌ Failed to send report: ' + (data.error || 'Unknown error') + '</div>';
                   }
-                  resultDiv.style.display = 'block';
+              }).catch(error => {
+                  resultDiv.innerHTML = '<div style="background: rgba(255,255,255,0.9); color: #e74c3c; padding: 10px; border-radius: 5px; font-weight: bold;">❌ Network error. Please try again.</div>';
+                  console.error('Error:', error);
               });
         }
 
