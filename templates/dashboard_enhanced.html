@@ -643,8 +643,30 @@
         function changeStation() {
             const stationUrl = document.getElementById('stationSelector').value;
             if (stationUrl) {
+                const wasPlaying = isPlaying;
                 radioAudio.src = stationUrl;
-                updateNowPlaying('Station loaded. Click play to start.');
+                radioAudio.load();
+                
+                if (wasPlaying) {
+                    // Keep playing when switching stations
+                    radioAudio.play().then(() => {
+                        const stationName = document.getElementById('stationSelector').selectedOptions[0].text;
+                        updateNowPlaying('Playing: ' + stationName);
+                        document.getElementById('playPauseBtn').innerHTML = '⏸';
+                        isPlaying = true;
+                        
+                        // Keep animations active
+                        document.getElementById('radioPlayer').classList.add('playing');
+                        document.getElementById('volumeVisualizer').style.display = 'flex';
+                    }).catch(error => {
+                        console.error('Error switching station:', error);
+                        updateNowPlaying('Error loading station - try another');
+                        document.getElementById('radioPlayer').classList.remove('playing');
+                        document.getElementById('volumeVisualizer').style.display = 'none';
+                    });
+                } else {
+                    updateNowPlaying('Station loaded. Click play to start.');
+                }
             }
         }
         
