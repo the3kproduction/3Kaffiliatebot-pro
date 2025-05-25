@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AffiliateBot Pro - Automated Amazon Affiliate Marketing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 0; position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: white; text-decoration: none; transition: opacity 0.3s; }
+        .nav-links a:hover { opacity: 0.8; }
+        .btn-login { background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; }
+        
+        /* Hero Section */
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8rem 2rem 4rem; text-align: center; }
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 1rem 2rem; border: none; border-radius: 25px; font-size: 1rem; cursor: pointer; text-decoration: none; display: inline-block; transition: transform 0.3s; }
+        .btn-primary { background: #4CAF50; color: white; }
+        .btn-secondary { background: rgba(255,255,255,0.2); color: white; border: 2px solid white; }
+        .btn:hover { transform: translateY(-2px); }
+        
+        /* Features */
+        .features { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .features h2 { text-align: center; margin-bottom: 3rem; font-size: 2.5rem; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .feature-card { background: #f8f9fa; padding: 2rem; border-radius: 15px; text-align: center; }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .feature-card h3 { margin-bottom: 1rem; color: #333; }
+        
+        /* Pricing */
+        .pricing { background: #f8f9fa; padding: 4rem 2rem; }
+        .pricing h2 { text-align: center; margin-bottom: 3rem; font-size: 2.5rem; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative; }
+        .pricing-card.featured { border: 3px solid #4CAF50; transform: scale(1.05); }
+        .pricing-card.featured::before { content: "MOST POPULAR"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #4CAF50; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        .price { font-size: 3rem; font-weight: bold; color: #4CAF50; margin-bottom: 1rem; }
+        .price-period { font-size: 1rem; color: #666; }
+        .feature-list { list-style: none; margin: 2rem 0; }
+        .feature-list li { padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+        .feature-list li:before { content: "✅ "; }
+        
+        /* Footer */
+        .footer { background: #333; color: white; padding: 2rem; text-align: center; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .pricing-card.featured { transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">🤖 AffiliateBot Pro</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="/login" class="btn-login">Admin Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Automated Amazon Affiliate Marketing</h1>
+        <p>Post products to 10+ platforms automatically. Increase your affiliate sales with AI-powered product selection and multi-platform automation.</p>
+        <div class="cta-buttons">
+            <a href="#pricing" class="btn btn-primary">🚀 Get Started Free</a>
+            <a href="#features" class="btn btn-secondary">📊 Learn More</a>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <h2>Powerful Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Product Selection</h3>
+                <p>Smart algorithms automatically select the best-performing Amazon products for maximum conversion rates.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>10+ Platforms</h3>
+                <p>Post to Discord, Telegram, Slack, Twitter, Facebook, Instagram, LinkedIn, Pinterest, Reddit, and Email automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Analytics Dashboard</h3>
+                <p>Track clicks, conversions, and revenue with detailed analytics and performance insights.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Automated Posting</h3>
+                <p>Set your schedule and let the bot handle all your affiliate marketing posts 24/7.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>No Duplicates</h3>
+                <p>Smart inventory tracking ensures you never post the same product twice on the same platform.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>High-Quality Images</h3>
+                <p>Enhanced image scraper gets the best product photos for higher click-through rates and sales.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <h2>Choose Your Plan</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span class="price-period">/month</span></div>
+                <ul class="feature-list">
+                    <li>2 posts per day</li>
+                    <li>3 platforms</li>
+                    <li>Basic analytics</li>
+                    <li>Email support</li>
+                </ul>
+                <a href="/login" class="btn btn-primary">Start Free</a>
+            </div>
+            
+            <div class="pricing-card featured">
+                <h3>Premium</h3>
+                <div class="price">$29<span class="price-period">/month</span></div>
+                <ul class="feature-list">
+                    <li>8 posts per day</li>
+                    <li>All 10+ platforms</li>
+                    <li>Advanced analytics</li>
+                    <li>AI product selection</li>
+                    <li>Priority support</li>
+                </ul>
+                <a href="/login" class="btn btn-primary">Go Premium</a>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>Pro</h3>
+                <div class="price">$79<span class="price-period">/month</span></div>
+                <ul class="feature-list">
+                    <li>24 posts per day</li>
+                    <li>All platforms + custom</li>
+                    <li>Full analytics suite</li>
+                    <li>Custom campaigns</li>
+                    <li>White-label options</li>
+                    <li>24/7 phone support</li>
+                </ul>
+                <a href="/login" class="btn btn-primary">Go Pro</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 AffiliateBot Pro. All rights reserved. | <a href="/login" style="color: #4CAF50;">Admin Access</a></p>
+    </footer>
+</body>
+</html>

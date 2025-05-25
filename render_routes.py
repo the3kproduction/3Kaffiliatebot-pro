@@ -46,7 +46,12 @@ def create_admin_user():
 
 @app.route('/')
 def index():
-    """Secure landing page"""
+    """Public landing page with pricing and features"""
+    return render_template('landing_page.html')
+
+@app.route('/login')
+def login_page():
+    """Admin login page"""
     return render_template('secure_login.html')
 
 @app.route('/admin-login', methods=['POST'])
@@ -58,12 +63,31 @@ def admin_login():
     # Only allow your specific email and a secure password
     if email == 'drfe8694@gmail.com' and password == 'AffiliateBot2025!':
         admin_user = create_admin_user()
+        session.clear()  # Clear any existing session data
         session['user_id'] = admin_user.id
+        session['user_email'] = admin_user.email
         session['is_authenticated'] = True
         session.permanent = True
         return redirect(url_for('dashboard'))
     else:
         return render_template('secure_login.html', error='Invalid credentials')
+
+@app.route('/forgot-password')
+def forgot_password():
+    """Forgot password page"""
+    return render_template('forgot_password.html')
+
+@app.route('/reset-password', methods=['POST'])
+def reset_password():
+    """Reset password functionality"""
+    email = request.form.get('email')
+    if email == 'drfe8694@gmail.com':
+        # In a real app, you'd send an email. For now, show the password.
+        return render_template('password_reset.html', 
+                             message="Your admin password is: AffiliateBot2025!")
+    else:
+        return render_template('forgot_password.html', 
+                             error='Email not found in admin records')
 
 @app.route('/dashboard')
 def dashboard():
