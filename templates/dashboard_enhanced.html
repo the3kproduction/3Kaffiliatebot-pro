@@ -611,12 +611,30 @@
             .then(data => {
                 if (data.success) {
                     resultDiv.className = 'alert alert-success';
+                    let productsHtml = '';
+                    if (data.products && data.products.length > 0) {
+                        productsHtml = '<div style="margin-top: 15px;"><h4>Found Products:</h4>';
+                        data.products.slice(0, 5).forEach(product => {
+                            productsHtml += `
+                                <div style="border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 8px; background: white;">
+                                    <strong>${product.title.substring(0, 60)}${product.title.length > 60 ? '...' : ''}</strong><br>
+                                    <small>ASIN: ${product.asin} | Price: ${product.price}</small><br>
+                                    <button onclick="promoteProduct('${product.asin}')" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 5px;">
+                                        Promote This Product
+                                    </button>
+                                </div>
+                            `;
+                        });
+                        productsHtml += '</div>';
+                    }
+                    
                     resultDiv.innerHTML = `
                         <strong>✅ ${data.message}</strong><br>
                         Found ${data.total_found} products, added ${data.products_added} new ones to your inventory
+                        ${productsHtml}
+                        <br><a href="/products/browse" style="color: #007bff;">View all products in Browse Products →</a>
                     `;
                     document.getElementById('product-search-input').value = '';
-                    setTimeout(() => location.reload(), 2000);
                 } else {
                     resultDiv.className = 'alert alert-danger';
                     resultDiv.innerHTML = `❌ ${data.message}`;
@@ -631,6 +649,25 @@
         function searchPreset(query) {
             document.getElementById('product-search-input').value = query;
             searchProducts();
+        }
+        
+        function promoteProduct(asin) {
+            if (confirm('Promote this product to all your connected platforms?')) {
+                fetch('/api/promote-product', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({asin: asin})
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          alert('✅ Product promoted successfully to ' + data.platforms_posted + ' platforms!');
+                      } else {
+                          alert('❌ Error: ' + data.error);
+                      }
+                  }).catch(error => {
+                      alert('❌ Error promoting product. Please check your webhook settings.');
+                  });
+            }
         }
         
         // Allow Enter key in search box
