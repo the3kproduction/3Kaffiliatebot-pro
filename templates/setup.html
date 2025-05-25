@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Setup - AffiliateBot Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { background: rgba(255,255,255,0.95); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .card { background: rgba(255,255,255,0.95); border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        .form-group input { width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; }
+        .form-group input:focus { border-color: #667eea; outline: none; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5a6fd8; transform: translateY(-2px); }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .help-text { color: #666; font-size: 0.9em; margin-top: 5px; }
+        .success-message { background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .info-box { background: #e7f3ff; border-left: 5px solid #667eea; padding: 15px; margin: 15px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/dashboard" class="btn btn-secondary">← Back to Dashboard</a>
+            <h1>💰 Amazon Affiliate Setup</h1>
+            <p>Configure your Amazon Associate ID to start earning commissions!</p>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Step 1: Amazon Associates Information</h3>
+            <div class="info-box">
+                <strong>Don't have an Amazon Associates account?</strong><br>
+                1. Visit <a href="https://affiliate-program.amazon.com" target="_blank">affiliate-program.amazon.com</a><br>
+                2. Sign up for free (takes 5 minutes)<br>
+                3. Get your Associate ID (looks like "yourname-20")<br>
+                4. Come back here and enter it below
+            </div>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label for="affiliate_id">Amazon Associate ID *</label>
+                    <input type="text" id="affiliate_id" name="affiliate_id" 
+                           value="{{ user.amazon_affiliate_id or '' }}" 
+                           placeholder="yourname-20" required>
+                    <div class="help-text">This is your unique Amazon Associate ID that earns you commissions</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="affiliate_link">Optional: Custom Affiliate Link Base</label>
+                    <input type="text" id="affiliate_link" name="affiliate_link" 
+                           value="{{ user.affiliate_link_base or '' }}" 
+                           placeholder="https://amzn.to/your-custom-link">
+                    <div class="help-text">Leave blank to use standard Amazon links with your Associate ID</div>
+                </div>
+
+                <h3 style="margin: 30px 0 20px 0;">🔗 Step 2: Platform Settings (Optional)</h3>
+                <p style="margin-bottom: 20px; color: #666;">You already set up webhooks in the previous step. These are legacy platform settings.</p>
+
+                <div class="form-group">
+                    <label for="discord_webhook">Discord Webhook URL</label>
+                    <input type="url" id="discord_webhook" name="discord_webhook" 
+                           value="{{ user.discord_webhook_url or '' }}" 
+                           placeholder="https://discord.com/api/webhooks/...">
+                </div>
+
+                <div class="form-group">
+                    <label for="sendgrid_key">SendGrid API Key (for email campaigns)</label>
+                    <input type="text" id="sendgrid_key" name="sendgrid_key" 
+                           value="{{ user.sendgrid_api_key or '' }}" 
+                           placeholder="SG.xxxxxxxxxxxx">
+                </div>
+
+                <div class="form-group">
+                    <label for="email_from">Email From Address</label>
+                    <input type="email" id="email_from" name="email_from" 
+                           value="{{ user.email_from or '' }}" 
+                           placeholder="deals@yourdomain.com">
+                </div>
+
+                <h3 style="margin: 30px 0 20px 0;">⚙️ Step 3: Automation Settings</h3>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="auto_post_enabled" 
+                               {{ 'checked' if user.auto_post_enabled else '' }}> 
+                        Enable automatic posting
+                    </label>
+                    <div class="help-text">Automatically post trending products at your selected frequency</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="font-size: 1.2em; padding: 15px 30px;">
+                    💾 Save Affiliate Settings
+                </button>
+            </form>
+        </div>
+
+        {% if user.amazon_affiliate_id %}
+        <div class="success-message">
+            <h4>✅ Great! Your Amazon Associate ID is configured</h4>
+            <p>You're ready to promote products and earn commissions! Every product you promote will include your affiliate ID: <strong>{{ user.amazon_affiliate_id }}</strong></p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
