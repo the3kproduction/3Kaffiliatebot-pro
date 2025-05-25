@@ -136,14 +136,19 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🚀 AffiliateBot Pro Enhanced Dashboard</h1>
-            <div class="user-info">
-                Welcome back, {{ current_user.first_name or current_user.email }}! 
-                <span style="background: #667eea; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.9em;">
-                    {{ current_user.subscription_tier|title }} Member
-                </span>
+        <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>🚀 AffiliateBot Pro Enhanced Dashboard</h1>
+                <div class="user-info">
+                    Welcome back, {{ current_user.first_name or current_user.email }}! 
+                    <span style="background: #667eea; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.9em;">
+                        {{ current_user.subscription_tier|title }} Member
+                    </span>
+                </div>
             </div>
+            <a href="/logout" class="btn btn-danger" style="background: #dc3545; color: white; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: bold;">
+                🚪 Logout
+            </a>
         </div>
 
         <!-- Affiliate Setup Alert -->
@@ -196,7 +201,6 @@
                 <a href="/admin/users" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">View Users</a>
                 <a href="/admin/email-blast" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">Send Email Blast</a>
                 <a href="/admin/product-catalog" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">🛍️ Product Catalog</a>
-                <a href="/logout" class="btn" style="background: rgba(255,255,255,0.3); color: white; text-decoration: none;">🚪 Logout</a>
             </div>
         </div>
         {% endif %}
@@ -205,11 +209,8 @@
         <div class="card" style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white;">
             <h3>📊 Performance Analytics</h3>
             <p>Track clicks, conversions, and revenue</p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-                <a href="/analytics" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none;">View Analytics</a>
-                {% if not current_user.is_admin %}
-                <a href="/logout" class="btn" style="background: rgba(255,255,255,0.3); color: white; text-decoration: none;">🚪 Logout</a>
-                {% endif %}
+            <div style="display: flex; justify-content: center; margin-top: 15px;">
+                <a href="/analytics" class="btn" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; text-align: center; padding: 12px 24px;">View Analytics</a>
             </div>
         </div>
 
