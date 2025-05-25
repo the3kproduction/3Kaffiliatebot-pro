@@ -3,6 +3,7 @@ Clean routes file specifically for Render deployment
 Bypasses all authentication complexities
 """
 from flask import render_template, request, redirect, url_for, flash, jsonify, session
+from datetime import timedelta
 from app import app, db
 from models import User, Campaign, Post, EmailBlast, ProductInventory, UserProductPromotion
 from simple_auth import load_user
@@ -62,6 +63,7 @@ def admin_login():
     """Secure admin login"""
     email_or_username = request.form.get('email')
     password = request.form.get('password')
+    remember_me = request.form.get('remember_me')
     
     # Allow login with either email or username
     if (email_or_username == 'the3kproduction@gmail.com' or email_or_username == '3Kloudz') and password == 'Password123':
@@ -70,7 +72,17 @@ def admin_login():
         session['user_id'] = admin_user.id
         session['user_email'] = admin_user.email
         session['is_authenticated'] = True
-        session.permanent = True
+        
+        # Set session duration based on "Remember Me"
+        if remember_me:
+            session.permanent = True
+            # Remember for 30 days if checked
+            app.permanent_session_lifetime = timedelta(days=30)
+        else:
+            session.permanent = False
+            # Session expires when browser closes
+            app.permanent_session_lifetime = timedelta(hours=12)
+        
         return redirect(url_for('dashboard'))
     else:
         return render_template('secure_login.html', error='Invalid credentials')
