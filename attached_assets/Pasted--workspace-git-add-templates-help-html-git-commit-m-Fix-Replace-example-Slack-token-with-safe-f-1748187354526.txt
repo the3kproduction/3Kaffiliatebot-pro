@@ -1,0 +1,42 @@
+~/workspace$ git add templates/help.html
+git commit -m "Fix: Replace example Slack token with safe format for GitHub security"
+git push origin render-deploy
+On branch render-deploy
+Your branch is ahead of 'origin/render-deploy' by 45 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+Enumerating objects: 190, done.
+Counting objects: 100% (190/190), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (177/177), done.
+Writing objects: 100% (177/177), 868.54 KiB | 21.18 MiB/s, done.
+Total 177 (delta 145), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (145/145), completed with 13 local objects.
+remote: error: GH013: Repository rule violations found for refs/heads/render-deploy.
+remote: 
+remote: - GITHUB PUSH PROTECTION
+remote:   —————————————————————————————————————————
+remote:     Resolve the following violations before pushing again
+remote: 
+remote:     - Push cannot contain secrets
+remote: 
+remote:     
+remote:      (?) Learn how to resolve a blocked push
+remote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push
+remote:     
+remote:     
+remote:       —— Slack API Token ———————————————————————————————————
+remote:        locations:
+remote:          - commit: ad0bab632c58b21080f5e03f2551b78ce084f07a
+remote:            path: templates/help.html:399
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/the3kproduction/3Kaffiliatebot-pro/security/secret-scanning/unblock-secret/2xas0Lb0tARbqp2d9st7MNi2dHf
+remote:     
+remote: 
+remote: 
+To https://github.com/the3kproduction/3Kaffiliatebot-pro.git
+ ! [remote rejected] render-deploy -> render-deploy (push declined due to repository rule violations)
+error: failed to push some refs to 'https://github.com/the3kproduction/3Kaffiliatebot-pro.git'
+~/workspace$ 
