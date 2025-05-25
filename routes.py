@@ -136,13 +136,32 @@ def dashboard():
     searcher = AmazonSearcher()
     trending_searches = searcher.get_trending_searches()[:8]
     
+    # Smart platform detection - only show unconfigured platforms
+    unconfigured_platforms = []
+    
+    # Check each platform configuration
+    if not current_user.discord_webhook_url:
+        unconfigured_platforms.append('Discord')
+    if not current_user.telegram_bot_token or not current_user.telegram_chat_id:
+        unconfigured_platforms.append('Telegram')
+    if not current_user.slack_bot_token or not current_user.slack_channel_id:
+        unconfigured_platforms.append('Slack')
+    if not current_user.sendgrid_api_key or not current_user.email_from or not current_user.email_to:
+        unconfigured_platforms.append('Email')
+    # Pinterest and Reddit are always shown as they need manual setup
+    if not getattr(current_user, 'pinterest_access_token', None):
+        unconfigured_platforms.append('Pinterest')
+    if not getattr(current_user, 'reddit_client_id', None):
+        unconfigured_platforms.append('Reddit')
+    
     return render_template('dashboard_enhanced.html', 
                          analytics=analytics,
                          trending_products=trending_products,
                          user_webhooks=user_webhooks,
                          next_post_time=next_post_time,
                          ai_recommendations=ai_recommendations,
-                         trending_searches=trending_searches)
+                         trending_searches=trending_searches,
+                         unconfigured_platforms=unconfigured_platforms)
 
 @app.route('/setup', methods=['GET', 'POST'])
 @require_login
