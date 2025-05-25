@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - AffiliateBot Pro{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">
+            <i class="bi bi-shield-check"></i> Admin Dashboard
+        </h1>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('admin_email_blast') }}" class="btn btn-primary">
+                <i class="bi bi-envelope-fill"></i> Send Email Blast
+            </a>
+            <a href="{{ url_for('admin_users') }}" class="btn btn-outline-primary">
+                <i class="bi bi-people"></i> View All Users
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card stats-card text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Users</h6>
+                            <h2 class="card-title mb-0">{{ total_users }}</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-people fs-1 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Posts</h6>
+                            <h2 class="card-title mb-0">{{ total_posts }}</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-box-seam fs-1 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Clicks</h6>
+                            <h2 class="card-title mb-0">{{ total_clicks }}</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-cursor-fill fs-1 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Revenue Potential</h6>
+                            <h2 class="card-title mb-0">$$$</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-cash-stack fs-1 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Recent Signups -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-plus"></i> Recent Signups
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_users %}
+                        {% for user in recent_users %}
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-shrink-0">
+                                    {% if user.profile_image_url %}
+                                        <img src="{{ user.profile_image_url }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <i class="bi bi-person text-white"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">{{ user.first_name }} {{ user.last_name }}</h6>
+                                    <small class="text-muted">{{ user.email }}</small>
+                                    <span class="badge bg-{{ 'success' if user.subscription_tier == 'pro' else 'info' if user.subscription_tier == 'premium' else 'secondary' }} ms-2">
+                                        {{ user.subscription_tier.title() }}
+                                    </span>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <small class="text-muted">{{ user.created_at.strftime('%m/%d') }}</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No users yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Blast History -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-envelope-check"></i> Recent Email Blasts
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_blasts %}
+                        {% for blast in recent_blasts %}
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div>
+                                    <h6 class="mb-0">{{ blast.subject }}</h6>
+                                    <small class="text-muted">
+                                        Sent to {{ blast.emails_sent }} users 
+                                        ({{ blast.target_tier }} tier)
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="text-success fw-bold">{{ blast.emails_sent }}</div>
+                                    <small class="text-muted">{{ blast.sent_at.strftime('%m/%d %H:%M') }}</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No email blasts sent yet.</p>
+                        <a href="{{ url_for('admin_email_blast') }}" class="btn btn-primary btn-sm">
+                            Send Your First Blast
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4 mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-lightning-charge"></i> Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="{{ url_for('admin_email_blast') }}" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-megaphone"></i><br>
+                                Marketing Campaign
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('admin_users') }}?tier=premium" class="btn btn-outline-success w-100">
+                                <i class="bi bi-crown"></i><br>
+                                Premium Users
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('admin_users') }}?tier=free" class="btn btn-outline-info w-100">
+                                <i class="bi bi-person-check"></i><br>
+                                Free Users
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('admin_subscription_settings') }}" class="btn btn-outline-warning w-100">
+                                <i class="bi bi-gear"></i><br>
+                                Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

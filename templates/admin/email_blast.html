@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Send Email Blast - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">
+            <i class="bi bi-megaphone"></i> Send Email Blast
+        </h1>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Compose Marketing Email</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="target_tier" class="form-label">Target Audience</label>
+                            <select class="form-select" id="target_tier" name="target_tier" required>
+                                <option value="all">All Users ({{ user_counts.all }} emails)</option>
+                                <option value="free">Free Users Only ({{ user_counts.free }} emails)</option>
+                                <option value="premium">Premium Users Only ({{ user_counts.premium }} emails)</option>
+                                <option value="pro">Pro Users Only ({{ user_counts.pro }} emails)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Email Subject</label>
+                            <input type="text" class="form-control" id="subject" name="subject" required 
+                                   placeholder="e.g., 🚀 New Premium Features Just Launched!">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Email Content (HTML)</label>
+                            <textarea class="form-control" id="content" name="content" rows="15" required 
+                                      placeholder="Write your marketing email content here..."></textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-send"></i> Send Email Blast
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Email Templates</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="loadTemplate('upgrade')">
+                            Premium Upgrade
+                        </button>
+                        <button class="btn btn-outline-success btn-sm" onclick="loadTemplate('feature')">
+                            New Feature Announcement
+                        </button>
+                        <button class="btn btn-outline-info btn-sm" onclick="loadTemplate('tips')">
+                            Marketing Tips
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm" onclick="loadTemplate('course')">
+                            Course Promotion
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">💡 Pro Tips</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success"></i>
+                            Use emojis in subject lines for higher open rates
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success"></i>
+                            Target specific tiers for better conversion
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success"></i>
+                            Include clear call-to-action buttons
+                        </li>
+                        <li class="mb-0">
+                            <i class="bi bi-check-circle text-success"></i>
+                            Send during peak hours (10AM-2PM)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadTemplate(type) {
+    const templates = {
+        upgrade: {
+            subject: "🚀 Ready to 10x Your Affiliate Earnings?",
+            content: `<h2>🚀 Time to Supercharge Your Earnings!</h2>
+
+<p>Hi there,</p>
+
+<p>I noticed you've been crushing it with the free plan! Your affiliate posts are getting great engagement, and I wanted to personally reach out about taking your earnings to the next level.</p>
+
+<h3>💰 What Premium Users Are Earning:</h3>
+<ul>
+<li>3x more posts per day = 3x more potential commissions</li>
+<li>All 4 platforms (Discord, Telegram, Slack, Email) for maximum reach</li>
+<li>Advanced analytics to see exactly what's converting</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+<a href="#upgrade" style="background: #007bff; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+🚀 Upgrade to Premium - $29/month
+</a>
+</div>
+
+<p>Many of our Premium users see their affiliate commissions pay for the upgrade within the first week!</p>
+
+<p>Ready to scale up?</p>
+
+<p>Best,<br>The AffiliateBot Pro Team</p>`
+        },
+        feature: {
+            subject: "🎉 NEW: Advanced Analytics Dashboard Just Dropped!",
+            content: `<h2>🎉 Exciting New Feature Alert!</h2>
+
+<p>Hey affiliate marketing rockstar!</p>
+
+<p>We just launched something HUGE that's going to change how you track your earnings...</p>
+
+<h3>📊 Introducing: Advanced Analytics Dashboard</h3>
+<ul>
+<li>Real-time click tracking on all your affiliate links</li>
+<li>Platform performance comparison (see which platform converts best!)</li>
+<li>Revenue optimization suggestions</li>
+<li>Daily/weekly/monthly earnings reports</li>
+</ul>
+
+<p>This feature is available for ALL users starting today!</p>
+
+<div style="text-align: center; margin: 30px 0;">
+<a href="#analytics" style="background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+📊 Check Out Your Analytics
+</a>
+</div>
+
+<p>Happy tracking!</p>`
+        },
+        tips: {
+            subject: "💡 5 Secrets to 10x Your Affiliate Commissions",
+            content: `<h2>💡 Pro Affiliate Marketing Secrets</h2>
+
+<p>Want to know what separates 6-figure affiliate marketers from everyone else?</p>
+
+<h3>🎯 Here are 5 insider secrets:</h3>
+
+<ol>
+<li><strong>Post at Peak Hours:</strong> 10AM-2PM gets 40% more clicks</li>
+<li><strong>Use Product Categories:</strong> Electronics and Home items convert best</li>
+<li><strong>A/B Test Your Descriptions:</strong> Small changes = big results</li>
+<li><strong>Multi-Platform Strategy:</strong> Don't rely on just one channel</li>
+<li><strong>Track Everything:</strong> What gets measured gets optimized</li>
+</ol>
+
+<p>💰 <strong>Bonus Tip:</strong> Premium users who post to all 4 platforms see 400% higher earnings on average!</p>
+
+<div style="text-align: center; margin: 30px 0;">
+<a href="#upgrade" style="background: #ff6b35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+🚀 Unlock All Platforms
+</a>
+</div>`
+        },
+        course: {
+            subject: "📚 FREE Course: Amazon Affiliate Mastery (Limited Time)",
+            content: `<h2>📚 FREE Amazon Affiliate Mastery Course!</h2>
+
+<p>For the next 48 hours only, I'm giving away my complete Amazon Affiliate Mastery course (normally $197) absolutely FREE!</p>
+
+<h3>🎓 What You'll Learn:</h3>
+<ul>
+<li>How to find products that convert at 10%+ rates</li>
+<li>The exact posting schedule that maximizes earnings</li>
+<li>Advanced automation techniques</li>
+<li>How to scale to $1000+/month in affiliate commissions</li>
+<li>Secret traffic sources most affiliates don't know about</li>
+</ul>
+
+<p><strong>⏰ Limited Time:</strong> This offer expires in 48 hours!</p>
+
+<div style="text-align: center; margin: 30px 0;">
+<a href="#course" style="background: #6f42c1; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+📚 Get FREE Course Access
+</a>
+</div>
+
+<p>Don't wait - spots are filling up fast!</p>`
+        }
+    };
+
+    const template = templates[type];
+    if (template) {
+        document.getElementById('subject').value = template.subject;
+        document.getElementById('content').value = template.content;
+    }
+}
+</script>
+{% endblock %}
