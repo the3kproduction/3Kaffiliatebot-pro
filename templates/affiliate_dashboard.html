@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Dashboard - AffiliateBot Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .tier-card {
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+        .tier-card:hover {
+            transform: translateY(-5px);
+        }
+        .commission-badge {
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+        .progress-custom {
+            height: 20px;
+            border-radius: 10px;
+        }
+        .affiliate-link-box {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                <i class="fas fa-robot"></i> AffiliateBot Pro
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a class="nav-link active" href="{{ url_for('affiliate_dashboard') }}">Affiliate</a>
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="gradient-bg p-4 rounded-lg mb-4">
+                    <h1 class="mb-0"><i class="fas fa-users"></i> Affiliate Program</h1>
+                    <p class="mb-0">Earn commissions by referring new users to AffiliateBot Pro!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Status -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card tier-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
+                        <h5>Current Tier</h5>
+                        <h3 class="text-primary">{{ data.current_tier.display_name }}</h3>
+                        <span class="badge commission-badge bg-success">{{ data.current_tier.commission_rate }}% Commission</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card tier-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-dollar-sign fa-3x text-success mb-3"></i>
+                        <h5>Total Earnings</h5>
+                        <h3 class="text-success">${{ "%.2f"|format(data.stats.total_commission) }}</h3>
+                        <small class="text-muted">Pending: ${{ "%.2f"|format(data.stats.pending_commission) }}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card tier-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-3x text-info mb-3"></i>
+                        <h5>Referrals</h5>
+                        <h3 class="text-info">{{ data.stats.total_referrals }}</h3>
+                        <small class="text-muted">Revenue: ${{ "%.2f"|format(data.stats.total_revenue) }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress to Lifetime Access -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">
+                                <i class="fas fa-infinity text-warning"></i> 
+                                Progress to Lifetime Access
+                            </h5>
+                            {% if data.stats.lifetime_access %}
+                                <span class="badge bg-warning text-dark fs-6">
+                                    <i class="fas fa-crown"></i> LIFETIME ACCESS UNLOCKED!
+                                </span>
+                            {% else %}
+                                <span class="text-muted">${{ "%.2f"|format(data.progress_to_lifetime.current) }} / $5,000</span>
+                            {% endif %}
+                        </div>
+                        {% if not data.stats.lifetime_access %}
+                            <div class="progress progress-custom">
+                                <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" 
+                                     style="width: {{ data.progress_to_lifetime.percentage }}%"></div>
+                            </div>
+                            <small class="text-muted">
+                                Unlock lifetime access by generating $5,000 in referral revenue!
+                            </small>
+                        {% else %}
+                            <div class="alert alert-warning d-flex align-items-center">
+                                <i class="fas fa-crown me-2"></i>
+                                <strong>Congratulations! You have unlocked lifetime access to AffiliateBot Pro!</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Affiliate Link -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5><i class="fas fa-link"></i> Your Affiliate Link</h5>
+                        <div class="affiliate-link-box">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="affiliateLink" 
+                                       value="{{ data.affiliate_link }}" readonly>
+                                <button class="btn btn-outline-primary" onclick="copyAffiliateLink()">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                        </div>
+                        <small class="text-muted mt-2">
+                            Share this link to earn commissions when people sign up and subscribe!
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commission Tiers -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="mb-4"><i class="fas fa-chart-line"></i> Commission Tiers</h5>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="card border-secondary h-100">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-medal text-secondary mb-2"></i>
+                                        <h6>Bronze Affiliate</h6>
+                                        <p class="text-muted">$0+ revenue</p>
+                                        <span class="badge bg-secondary">10% Commission</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="card border-info h-100">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-medal text-info mb-2"></i>
+                                        <h6>Silver Affiliate</h6>
+                                        <p class="text-muted">$500+ revenue</p>
+                                        <span class="badge bg-info">15% Commission</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="card border-warning h-100">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-medal text-warning mb-2"></i>
+                                        <h6>Gold Affiliate</h6>
+                                        <p class="text-muted">$1,500+ revenue</p>
+                                        <span class="badge bg-warning text-dark">20% Commission</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="card border-primary h-100">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-gem text-primary mb-2"></i>
+                                        <h6>Platinum Affiliate</h6>
+                                        <p class="text-muted">$3,000+ revenue</p>
+                                        <span class="badge bg-primary">25% Commission</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="card border-success h-100">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-crown text-success mb-2"></i>
+                                        <h6>Diamond Affiliate</h6>
+                                        <p class="text-muted">$5,000+ revenue</p>
+                                        <span class="badge bg-success">30% Commission + Lifetime Access</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Referrals -->
+        {% if data.recent_referrals %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5><i class="fas fa-users"></i> Recent Referrals</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Email</th>
+                                        <th>Signup Date</th>
+                                        <th>Plan</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for referral in data.recent_referrals %}
+                                    <tr>
+                                        <td>{{ referral.email }}</td>
+                                        <td>{{ referral.signup_date.strftime('%Y-%m-%d') if referral.signup_date else 'N/A' }}</td>
+                                        <td>
+                                            <span class="badge bg-{% if referral.subscription_tier == 'pro' %}success{% elif referral.subscription_tier == 'premium' %}warning{% else %}secondary{% endif %}">
+                                                {{ referral.subscription_tier.title() }}
+                                            </span>
+                                        </td>
+                                        <td>{{ referral.status }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function copyAffiliateLink() {
+            const linkInput = document.getElementById('affiliateLink');
+            linkInput.select();
+            document.execCommand('copy');
+            
+            // Show success message
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            button.classList.remove('btn-outline-primary');
+            button.classList.add('btn-success');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('btn-success');
+                button.classList.add('btn-outline-primary');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
