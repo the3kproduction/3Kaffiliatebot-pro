@@ -3,7 +3,7 @@ Product Inventory Manager - Track products and avoid duplicates
 """
 from datetime import datetime, timedelta
 from app import db
-from models import ProductInventory, Post
+from models import ProductInventory, Post, UserProductPromotion
 from amazon_scraper import AmazonProductScraper
 
 
@@ -43,33 +43,58 @@ class InventoryManager:
             db.session.commit()
             return product
     
-    def get_products_to_promote(self, user, limit=10):
-        """Get products that haven't been promoted recently by this user"""
-        # Get user's recent posts (last 7 days)
-        recent_posts = Post.query.filter(
-            Post.user_id == user.id,
-            Post.created_at >= datetime.now() - timedelta(days=7)
-        ).all()
+    def get_products_to_promote(self, user, limit=10, avoid_recent_days=7):
+        """Get products that haven't been promoted recently by this user with smart filtering"""
+        cutoff_date = datetime.now() - timedelta(days=avoid_recent_days)
         
-        recent_asins = [post.asin for post in recent_posts if post.asin]
+        # Get ASINs that were promoted recently by this user
+        recent_promotions = db.session.query(UserProductPromotion.asin).filter(
+            UserProductPromotion.user_id == user.id,
+            UserProductPromotion.promoted_at >= cutoff_date
+        ).subquery()
         
-        # Get products not recently promoted
-        query = ProductInventory.query.filter(
-            ProductInventory.is_active == True
-        )
+        # Get products not in recent promotions, with smart prioritization
+        products = db.session.query(ProductInventory).filter(
+            ProductInventory.is_active == True,
+            ~ProductInventory.asin.in_(recent_promotions)
+        ).order_by(
+            # Prioritize trending products first
+            ProductInventory.is_trending.desc(),
+            # Then by conversion rate (high-performing products)
+            ProductInventory.conversion_rate.desc(),
+            # Then by least promoted (fair rotation)
+            ProductInventory.times_promoted.asc(),
+            # Finally by rating
+            ProductInventory.rating.desc()
+        ).limit(limit).all()
         
-        if recent_asins:
-            query = query.filter(~ProductInventory.asin.in_(recent_asins))
-        
-        return query.order_by(ProductInventory.conversion_rate.desc()).limit(limit).all()
+        return products
     
-    def mark_product_promoted(self, asin, user_id):
-        """Mark a product as promoted"""
+    def mark_product_promoted(self, asin, user_id, platform=None, post_id=None):
+        """Mark a product as promoted by a specific user"""
+        # Update global product stats
         product = ProductInventory.query.filter_by(asin=asin).first()
         if product:
             product.times_promoted += 1
             product.last_promoted = datetime.now()
+        
+        # Record user-specific promotion to prevent duplicates
+        try:
+            user_promotion = UserProductPromotion(
+                user_id=user_id,
+                asin=asin,
+                platform=platform,
+                post_id=post_id,
+                promoted_at=datetime.now()
+            )
+            db.session.add(user_promotion)
             db.session.commit()
+            return True
+        except Exception as e:
+            # Handle duplicate promotion attempts gracefully
+            db.session.rollback()
+            print(f"Product {asin} already promoted by user {user_id} recently: {e}")
+            return False
     
     def update_product_stats(self, asin, clicks=0, conversions=0):
         """Update product performance stats"""
@@ -100,3 +125,50 @@ class InventoryManager:
         except Exception as e:
             print(f"Error refreshing trending products: {e}")
             return 0
+    
+    def check_duplicate_promotion(self, user_id, asin, days=7):
+        """Check if user has promoted this product recently"""
+        cutoff_date = datetime.now() - timedelta(days=days)
+        
+        existing = UserProductPromotion.query.filter(
+            UserProductPromotion.user_id == user_id,
+            UserProductPromotion.asin == asin,
+            UserProductPromotion.promoted_at >= cutoff_date
+        ).first()
+        
+        return existing is not None
+    
+    def get_user_promotion_history(self, user_id, limit=50):
+        """Get user's promotion history with performance data"""
+        promotions = db.session.query(UserProductPromotion).join(
+            ProductInventory, UserProductPromotion.asin == ProductInventory.asin
+        ).filter(
+            UserProductPromotion.user_id == user_id
+        ).order_by(
+            UserProductPromotion.promoted_at.desc()
+        ).limit(limit).all()
+        
+        return promotions
+    
+    def get_best_performing_products(self, user_id=None, limit=20):
+        """Get best performing products globally or for specific user"""
+        if user_id:
+            # Get best performing products for this specific user
+            promotions = db.session.query(UserProductPromotion).join(
+                ProductInventory, UserProductPromotion.asin == ProductInventory.asin
+            ).filter(
+                UserProductPromotion.user_id == user_id
+            ).order_by(
+                UserProductPromotion.revenue_generated.desc(),
+                UserProductPromotion.clicks_generated.desc()
+            ).limit(limit).all()
+            
+            return [p.product for p in promotions]
+        else:
+            # Get globally best performing products
+            return ProductInventory.query.filter(
+                ProductInventory.is_active == True
+            ).order_by(
+                ProductInventory.conversion_rate.desc(),
+                ProductInventory.total_clicks.desc()
+            ).limit(limit).all()

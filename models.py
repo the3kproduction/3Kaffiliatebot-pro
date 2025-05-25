@@ -161,6 +161,29 @@ class ProductInventory(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
+# Track user-specific product promotions to avoid duplicates
+class UserProductPromotion(db.Model):
+    __tablename__ = 'user_product_promotions'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
+    asin = db.Column(db.String(20), db.ForeignKey('product_inventory.asin'), nullable=False)
+    
+    # Track when and where promoted
+    promoted_at = db.Column(db.DateTime, default=datetime.now)
+    platform = db.Column(db.String(20))  # discord, telegram, slack, email
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=True)
+    
+    # Performance tracking
+    clicks_generated = db.Column(db.Integer, default=0)
+    revenue_generated = db.Column(db.Float, default=0.0)
+    
+    # Relationships
+    user = db.relationship('User', backref='product_promotions')
+    product = db.relationship('ProductInventory', backref='user_promotions')
+    
+    # Prevent same user promoting same product multiple times in short period
+    __table_args__ = (UniqueConstraint('user_id', 'asin', name='uq_user_product'),)
+
 # Multiple webhook destinations
 class WebhookDestination(db.Model):
     __tablename__ = 'webhook_destinations'

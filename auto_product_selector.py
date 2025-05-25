@@ -17,19 +17,29 @@ class AutoProductSelector:
         self.webhook_manager = WebhookManager(user)
     
     def get_ai_recommended_products(self, category=None, limit=10):
-        """AI algorithm to select best products for promotion"""
+        """AI algorithm to select best products for promotion (avoiding duplicates)"""
         
-        # Get all available products
-        query = ProductInventory.query.filter(ProductInventory.is_active == True)
+        # Use inventory manager to get products that haven't been promoted recently
+        available_products = self.inventory.get_products_to_promote(
+            self.user, 
+            limit=limit * 3,  # Get more options for AI scoring
+            avoid_recent_days=7
+        )
         
         if category:
-            query = query.filter(ProductInventory.category == category)
+            available_products = [p for p in available_products if p.category == category]
         
-        all_products = query.all()
+        if not available_products:
+            # Fallback: reduce duplicate avoidance to 3 days if no products found
+            available_products = self.inventory.get_products_to_promote(
+                self.user, 
+                limit=limit * 2,
+                avoid_recent_days=3
+            )
         
         # AI scoring algorithm
         scored_products = []
-        for product in all_products:
+        for product in available_products:
             score = self._calculate_ai_score(product)
             scored_products.append((product, score))
         
