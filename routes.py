@@ -203,11 +203,12 @@ def products():
     user = current_user
     category = request.args.get('category', 'all')
     
-    # Get all products directly from your inventory
-    products_raw = ProductInventory.query.filter_by(is_active=True).order_by(ProductInventory.asin).all()
-    
-    if not products_raw:
-        products_raw = ProductInventory.query.all()  # Show all if none are active
+    # Get only products with proper names (not "Unknown Product")
+    products_raw = ProductInventory.query.filter(
+        ProductInventory.is_active == True,
+        ProductInventory.product_title != 'Unknown Product',
+        ProductInventory.product_title != None
+    ).order_by(ProductInventory.times_promoted.desc()).all()
     
     # Convert database objects to dictionaries for template
     products = []
