@@ -14,6 +14,8 @@ services:
         fromDatabase:
           name: affiliatebot-db
           property: connectionString
+      - key: RENDER
+        value: "true"
       - key: REPLIT_DEPLOYMENT
         value: "true"
 

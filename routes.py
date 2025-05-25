@@ -5,9 +5,14 @@ from models import User, Campaign, Post, EmailBlast
 import os
 
 # Import authentication based on environment
-if os.environ.get('REPL_ID'):
-    from replit_auth import require_login, make_replit_blueprint
-else:
+try:
+    # Only try to import replit_auth if REPL_ID exists
+    if os.environ.get('REPL_ID'):
+        from replit_auth import require_login, make_replit_blueprint
+    else:
+        raise ImportError("REPL_ID not available, using simple auth")
+except (ImportError, SystemExit):
+    # Use simple auth for Render deployment
     from simple_auth import simple_require_login as require_login
     make_replit_blueprint = lambda: None
 
