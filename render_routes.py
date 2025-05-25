@@ -125,26 +125,48 @@ def dashboard():
         # Convert recommended products to display format
         products_display = []
         for product in recommended_products:
-            products_display.append({
-                'asin': product.asin,
-                'title': product.product_title,
-                'price': product.price or 'N/A',
-                'rating': product.rating or 0,
-                'image_url': product.image_url or '/static/placeholder.jpg',
-                'category': product.category or 'General'
-            })
+            # Handle both dict and object types
+            if isinstance(product, dict):
+                products_display.append({
+                    'asin': product.get('asin', ''),
+                    'title': product.get('product_title', product.get('title', 'Product')),
+                    'price': product.get('price', 'N/A'),
+                    'rating': product.get('rating', 0),
+                    'image_url': product.get('image_url', '/static/placeholder.jpg'),
+                    'category': product.get('category', 'General')
+                })
+            else:
+                products_display.append({
+                    'asin': getattr(product, 'asin', ''),
+                    'title': getattr(product, 'product_title', 'Product'),
+                    'price': getattr(product, 'price', 'N/A'),
+                    'rating': getattr(product, 'rating', 0),
+                    'image_url': getattr(product, 'image_url', '/static/placeholder.jpg'),
+                    'category': getattr(product, 'category', 'General')
+                })
         
         # Convert trending products to display format
         trending_display = []
         for product in trending_products:
-            trending_display.append({
-                'asin': product.asin,
-                'title': product.product_title,
-                'price': product.price or 'N/A',
-                'rating': product.rating or 0,
-                'image_url': product.image_url or '/static/placeholder.jpg',
-                'category': product.category or 'General'
-            })
+            # Handle both dict and object types
+            if isinstance(product, dict):
+                trending_display.append({
+                    'asin': product.get('asin', ''),
+                    'title': product.get('product_title', product.get('title', 'Product')),
+                    'price': product.get('price', 'N/A'),
+                    'rating': product.get('rating', 0),
+                    'image_url': product.get('image_url', '/static/placeholder.jpg'),
+                    'category': product.get('category', 'General')
+                })
+            else:
+                trending_display.append({
+                    'asin': getattr(product, 'asin', ''),
+                    'title': getattr(product, 'product_title', 'Product'),
+                    'price': getattr(product, 'price', 'N/A'),
+                    'rating': getattr(product, 'rating', 0),
+                    'image_url': getattr(product, 'image_url', '/static/placeholder.jpg'),
+                    'category': getattr(product, 'category', 'General')
+                })
         
         # Create analytics object for template
         analytics = {
