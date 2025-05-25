@@ -383,12 +383,14 @@
         {% if not user.sendgrid_api_key or user.sendgrid_api_key == '' or not user.email_from or user.email_from == '' %}
             {% set _ = unconfigured_platforms.append('Email') %}
         {% endif %}
+        {# Pinterest and Reddit temporarily disabled for Render deployment
         {% if not user.pinterest_access_token or user.pinterest_access_token == '' %}
             {% set _ = unconfigured_platforms.append('Pinterest') %}
         {% endif %}
         {% if not user.reddit_client_id or user.reddit_client_id == '' %}
             {% set _ = unconfigured_platforms.append('Reddit') %}
         {% endif %}
+        #}
 
         {% if unconfigured_platforms %}
         <div class="card" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: white; margin-bottom: 25px;">
