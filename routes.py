@@ -28,25 +28,38 @@ def index():
 @app.route('/dashboard')
 @require_login
 def dashboard():
-    """Main dashboard for logged-in users"""
-    user = current_user
+    """Enhanced dashboard with analytics and smart features"""
+    from analytics_dashboard import AnalyticsDashboard
+    from inventory_manager import InventoryManager
+    from webhook_manager import WebhookManager
     
-    # Get user's recent posts
-    recent_posts = Post.query.filter_by(user_id=user.id).order_by(Post.created_at.desc()).limit(5).all()
+    # Get user analytics
+    analytics = AnalyticsDashboard(current_user).get_user_analytics()
     
-    # Get user's campaigns
-    campaigns = Campaign.query.filter_by(user_id=user.id).all()
+    # Get trending products (avoiding recent duplicates)
+    inventory = InventoryManager()
+    trending_products = inventory.get_products_to_promote(current_user, limit=12)
     
-    # Calculate stats
-    total_posts = Post.query.filter_by(user_id=user.id).count()
-    total_clicks = db.session.query(db.func.sum(Post.clicks)).filter_by(user_id=user.id).scalar() or 0
+    # Get user's webhook configurations
+    webhook_manager = WebhookManager(current_user)
+    user_webhooks = webhook_manager.get_user_webhooks()
     
-    return render_template('dashboard.html', 
-                         user=user,
-                         recent_posts=recent_posts,
-                         campaigns=campaigns,
-                         total_posts=total_posts,
-                         total_clicks=total_clicks)
+    # Calculate next post time based on frequency
+    from datetime import datetime, timedelta
+    if current_user.auto_post_enabled and current_user.post_frequency_hours:
+        last_post = Post.query.filter_by(user_id=current_user.id).order_by(Post.created_at.desc()).first()
+        if last_post:
+            next_post_time = last_post.created_at + timedelta(hours=current_user.post_frequency_hours)
+        else:
+            next_post_time = datetime.now() + timedelta(hours=current_user.post_frequency_hours)
+    else:
+        next_post_time = None
+    
+    return render_template('dashboard_enhanced.html', 
+                         analytics=analytics,
+                         trending_products=trending_products,
+                         user_webhooks=user_webhooks,
+                         next_post_time=next_post_time)
 
 @app.route('/setup', methods=['GET', 'POST'])
 @require_login
@@ -359,3 +372,137 @@ def track_click(post_id):
     db.session.commit()
     
     return redirect(post.affiliate_url)
+
+# Enhanced API Endpoints for New Features
+
+@app.route('/api/promote-product', methods=['POST'])
+@require_login
+def api_promote_product():
+    """Promote a specific product to all platforms"""
+    from webhook_manager import WebhookManager
+    from inventory_manager import InventoryManager
+    
+    data = request.get_json()
+    asin = data.get('asin')
+    
+    if not asin:
+        return jsonify({'success': False, 'error': 'ASIN required'})
+    
+    # Get product details
+    inventory = InventoryManager()
+    product = ProductInventory.query.filter_by(asin=asin).first()
+    
+    if not product:
+        return jsonify({'success': False, 'error': 'Product not found'})
+    
+    # Get user's webhooks
+    webhook_manager = WebhookManager(current_user)
+    webhooks = webhook_manager.get_user_webhooks()
+    
+    platforms_posted = []
+    for webhook in webhooks:
+        result = webhook_manager.post_to_webhook(webhook.id, {
+            'title': product.product_title,
+            'price': product.price,
+            'rating': product.rating,
+            'affiliate_url': f"https://amazon.com/dp/{asin}?tag={current_user.amazon_affiliate_id}",
+            'image_url': product.image_url
+        })
+        
+        if result['success']:
+            platforms_posted.append(result['platform'])
+    
+    # Mark product as promoted
+    inventory.mark_product_promoted(asin, current_user.id)
+    
+    return jsonify({
+        'success': True,
+        'platforms_posted': len(platforms_posted),
+        'platforms': platforms_posted
+    })
+
+@app.route('/api/update-frequency', methods=['POST'])
+@require_login
+def api_update_frequency():
+    """Update user's posting frequency"""
+    data = request.get_json()
+    frequency = data.get('frequency_hours')
+    
+    if frequency not in [1, 3, 12]:
+        return jsonify({'success': False, 'error': 'Invalid frequency'})
+    
+    # Check if user's tier allows this frequency
+    from subscription_manager import SubscriptionManager
+    allowed_frequency = SubscriptionManager.get_user_posting_frequency(current_user)
+    
+    if frequency < allowed_frequency:
+        return jsonify({
+            'success': False, 
+            'error': f'Your {current_user.subscription_tier} plan only allows posting every {allowed_frequency} hours'
+        })
+    
+    current_user.post_frequency_hours = frequency
+    db.session.commit()
+    
+    return jsonify({'success': True})
+
+@app.route('/api/toggle-auto-posts', methods=['POST'])
+@require_login
+def api_toggle_auto_posts():
+    """Toggle automatic posting on/off"""
+    current_user.auto_post_enabled = not current_user.auto_post_enabled
+    db.session.commit()
+    
+    return jsonify({
+        'success': True,
+        'auto_post_enabled': current_user.auto_post_enabled
+    })
+
+@app.route('/test-webhook/<int:webhook_id>')
+@require_login
+def test_webhook(webhook_id):
+    """Test a specific webhook"""
+    from webhook_manager import WebhookManager
+    
+    webhook_manager = WebhookManager(current_user)
+    result = webhook_manager.test_webhook(webhook_id)
+    
+    if result['success']:
+        flash('Webhook test successful!', 'success')
+    else:
+        flash(f'Webhook test failed: {result["error"]}', 'danger')
+    
+    return redirect(url_for('dashboard'))
+
+@app.route('/setup-webhooks', methods=['GET', 'POST'])
+@require_login
+def setup_webhooks():
+    """Setup multiple webhook destinations"""
+    from webhook_manager import WebhookManager
+    
+    if request.method == 'POST':
+        webhook_manager = WebhookManager(current_user)
+        
+        name = request.form.get('webhook_name')
+        platform = request.form.get('platform')
+        webhook_url = request.form.get('webhook_url')
+        frequency = int(request.form.get('frequency', 3))
+        
+        webhook_manager.add_webhook_destination(name, platform, webhook_url, frequency)
+        flash('Webhook destination added successfully!', 'success')
+        
+        return redirect(url_for('dashboard'))
+    
+    return render_template('setup_webhooks.html')
+
+@app.route('/products/refresh')
+@require_login
+def refresh_products():
+    """Refresh trending products from Amazon"""
+    from inventory_manager import InventoryManager
+    
+    inventory = InventoryManager()
+    count = inventory.refresh_trending_products()
+    
+    flash(f'Refreshed {count} trending products!', 'success')
+    return redirect(url_for('dashboard'))
