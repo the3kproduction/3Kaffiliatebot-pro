@@ -198,37 +198,38 @@ def setup():
 @require_login
 def products():
     """Browse and manage products"""
+    from models import ProductInventory
+    
     user = current_user
-    category = request.args.get('category', 'Electronics')
+    category = request.args.get('category', 'all')
     
-    # If user hasn't set up affiliate link, redirect to setup
-    if not user.affiliate_link_base:
-        flash('Please set up your Amazon affiliate link first!', 'warning')
-        return redirect(url_for('setup'))
+    # Get products from your inventory (not live scraping)
+    query = ProductInventory.query.filter_by(is_active=True)
     
-    scraper = AmazonProductScraper()
+    if category != 'all':
+        query = query.filter(ProductInventory.category == category)
     
-    # Get top products from Amazon
-    try:
-        products = scraper.get_top_products_by_category(category, limit=20)
+    products_raw = query.order_by(ProductInventory.times_promoted.desc()).limit(50).all()
+    
+    # Convert to template format
+    products = []
+    for product in products_raw:
+        affiliate_url = f"https://amazon.com/dp/{product.asin}?tag={user.amazon_affiliate_id or 'luxoraconnect-20'}"
         
-        # Add affiliate links to products
-        for product in products:
-            if user.amazon_affiliate_id:
-                product['affiliate_url'] = scraper.create_affiliate_url(
-                    product['asin'], 
-                    user.amazon_affiliate_id
-                )
-            else:
-                # Use the short link format like amzn.to/44TOVc2
-                product['affiliate_url'] = f"{user.affiliate_link_base}/{product['asin']}"
-                
-    except Exception as e:
-        logger.error(f"Error fetching products: {e}")
-        products = []
-        flash('Unable to fetch products from Amazon. Please try again later.', 'error')
+        products.append({
+            'asin': product.asin,
+            'title': product.product_title,
+            'price': product.price,
+            'rating': product.rating or 4.5,
+            'category': product.category or 'Electronics',
+            'image_url': product.image_url or 'https://via.placeholder.com/200x200?text=Product',
+            'affiliate_url': affiliate_url,
+            'amazon_url': f"https://amazon.com/dp/{product.asin}"
+        })
     
-    categories = ['Electronics', 'Books', 'Home', 'Fashion', 'Health', 'Sports', 'Tools', 'Toys']
+    # Get available categories from your inventory
+    categories_raw = db.session.query(ProductInventory.category).distinct().all()
+    categories = ['all'] + [cat[0] for cat in categories_raw if cat[0]]
     
     return render_template('products.html', 
                          products=products, 
@@ -512,6 +513,44 @@ def admin_subscription_settings():
     
     # This is where you can set up pricing tiers, posting frequency limits, etc.
     return render_template('admin/subscription_settings.html')
+
+@app.route('/api/search-products', methods=['POST'])
+@require_login
+def api_search_products():
+    """Search Amazon for products and add to inventory"""
+    from amazon_search import AmazonSearcher
+    
+    try:
+        data = request.get_json()
+        query = data.get('query', '')
+        
+        if not query:
+            return jsonify({'error': 'Search query required'}), 400
+        
+        # Search and add to inventory
+        searcher = AmazonSearcher()
+        products = searcher.search_and_add_to_inventory(query, limit=12)
+        
+        # Format for display
+        results = []
+        for product in products:
+            results.append({
+                'asin': product.get('asin', ''),
+                'title': product.get('title', 'Product'),
+                'price': product.get('price', 'N/A'),
+                'rating': product.get('rating', 0),
+                'image_url': product.get('image_url', ''),
+                'category': product.get('category', 'General')
+            })
+        
+        return jsonify({
+            'success': True,
+            'products': results,
+            'message': f'Found {len(results)} products for "{query}"'
+        })
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/track-click/<int:post_id>')
 def track_click(post_id):
