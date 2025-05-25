@@ -30,14 +30,17 @@ if replit_bp:
 # Simple auth bypass for Render deployment
 def create_demo_user():
     """Create a demo user for Render deployment"""
-    demo_user = User.query.filter_by(id='demo-user').first()
+    demo_user = User.query.filter_by(email='the3kproduction@gmail.com').first()
     if not demo_user:
         demo_user = User(
-            id='demo-user',
-            email='demo@affiliatebot.com',
-            first_name='Demo',
-            last_name='User',
-            is_admin=True
+            id='admin-3kloudz',
+            email='the3kproduction@gmail.com',
+            username='3Kloudz',
+            first_name='3K',
+            last_name='Production',
+            is_admin=True,
+            subscription_tier='lifetime',
+            amazon_affiliate_id='luxoraconnect-20'
         )
         db.session.add(demo_user)
         db.session.commit()

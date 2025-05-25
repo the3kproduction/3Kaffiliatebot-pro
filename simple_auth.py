@@ -18,20 +18,22 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 def create_demo_user():
-    """Create a demo user for Render deployment"""
-    demo_user = User.query.filter_by(id='demo-user').first()
-    if not demo_user:
-        demo_user = User(
-            id='demo-user',
-            email='demo@affiliatebot.com',
-            first_name='Demo',
-            last_name='User',
+    """Create admin user with specified credentials"""
+    admin_user = User.query.filter_by(email='the3kproduction@gmail.com').first()
+    if not admin_user:
+        admin_user = User(
+            id='admin-3kloudz',
+            email='the3kproduction@gmail.com',
+            username='3Kloudz',
+            first_name='3K',
+            last_name='Production',
             is_admin=True,
-            subscription_tier='pro'  # Give demo user pro access
+            subscription_tier='lifetime',
+            amazon_affiliate_id='luxoraconnect-20'
         )
-        db.session.add(demo_user)
+        db.session.add(admin_user)
         db.session.commit()
-    return demo_user
+    return admin_user
 
 def simple_require_login(f):
     """Simple login requirement for Render deployment"""
