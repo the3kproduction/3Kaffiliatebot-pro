@@ -76,13 +76,16 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ url_for('setup') }}">Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('replit_auth.logout') }}">Logout</a></li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-danger btn-sm ms-2" href="{{ url_for('logout') }}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('replit_auth.login') }}">
+                            <a class="nav-link" href="{{ url_for('login') }}">
                                 <i class="bi bi-box-arrow-in-right"></i> Login
                             </a>
                         </li>
