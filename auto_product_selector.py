@@ -98,10 +98,11 @@ class AutoProductSelector:
     def auto_promote_products(self, num_products=3):
         """Automatically select and promote top products"""
         try:
-            # Check if user has basic platform configurations
-            has_platforms = (self.user.discord_webhook_url or 
-                            self.user.telegram_bot_token or 
-                            self.user.slack_bot_token)
+            import os
+            # Check if user has platform configurations (environment secrets or user settings)
+            has_platforms = (os.environ.get('DISCORD_WEBHOOK_URL') or self.user.discord_webhook_url or 
+                            os.environ.get('TELEGRAM_BOT_TOKEN') or self.user.telegram_bot_token or 
+                            os.environ.get('SLACK_BOT_TOKEN') or self.user.slack_bot_token)
             
             if not has_platforms:
                 return {'success': False, 'error': 'Please configure at least one platform in setup'}

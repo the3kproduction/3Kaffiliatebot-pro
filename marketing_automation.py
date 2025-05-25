@@ -1,6 +1,7 @@
 import requests
 import json
 import logging
+import os
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -9,10 +10,17 @@ class MultiPlatformPoster:
     def __init__(self, user):
         self.user = user
         self.timeout = 30
+        
+        # Use environment secrets as primary, user settings as fallback
+        self.discord_webhook_url = os.environ.get('DISCORD_WEBHOOK_URL') or user.discord_webhook_url
+        self.telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN') or user.telegram_bot_token
+        self.telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID') or user.telegram_chat_id
+        self.slack_bot_token = os.environ.get('SLACK_BOT_TOKEN') or user.slack_bot_token
+        self.slack_channel_id = os.environ.get('SLACK_CHANNEL_ID') or user.slack_channel_id
     
     def post_to_discord(self, product):
         """Post product to Discord webhook."""
-        if not self.user.discord_webhook_url:
+        if not self.discord_webhook_url:
             return False
         
         embed = {
@@ -46,7 +54,7 @@ class MultiPlatformPoster:
 
     def post_to_telegram(self, product):
         """Post product to Telegram."""
-        if not self.user.telegram_bot_token or not self.user.telegram_chat_id:
+        if not self.telegram_bot_token or not self.telegram_chat_id:
             return False
         
         message = f"""🛍️ *{product['title']}*
@@ -81,14 +89,14 @@ class MultiPlatformPoster:
 
     def post_to_slack(self, product):
         """Post product to Slack."""
-        if not self.user.slack_bot_token or not self.user.slack_channel_id:
+        if not self.slack_bot_token or not self.slack_channel_id:
             return False
         
         try:
             from slack_sdk import WebClient
             from slack_sdk.errors import SlackApiError
             
-            client = WebClient(token=self.user.slack_bot_token)
+            client = WebClient(token=self.slack_bot_token)
             
             blocks = [
                 {
@@ -125,7 +133,7 @@ class MultiPlatformPoster:
             ]
             
             response = client.chat_postMessage(
-                channel=self.user.slack_channel_id,
+                channel=self.slack_channel_id,
                 blocks=blocks,
                 text=f"New product: {product['title']}"
             )
