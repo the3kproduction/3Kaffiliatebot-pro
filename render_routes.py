@@ -3,8 +3,11 @@ Clean routes file specifically for Render deployment
 Bypasses all authentication complexities
 """
 from flask import render_template, request, redirect, url_for, flash, jsonify, session
-from datetime import timedelta
+from datetime import timedelta, datetime
 from app import app, db
+
+# Configure session settings for "Remember Me" functionality
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 from models import User, Campaign, Post, EmailBlast, ProductInventory, UserProductPromotion
 from simple_auth import load_user
 from inventory_manager import InventoryManager
@@ -76,12 +79,14 @@ def admin_login():
         # Set session duration based on "Remember Me"
         if remember_me:
             session.permanent = True
-            # Remember for 30 days if checked
-            app.permanent_session_lifetime = timedelta(days=30)
+            session['remember_me'] = True
+            session['login_time'] = datetime.now().isoformat()
+            # Session will last 30 days (configured above)
         else:
             session.permanent = False
+            session['remember_me'] = False
+            session['login_time'] = datetime.now().isoformat()
             # Session expires when browser closes
-            app.permanent_session_lifetime = timedelta(hours=12)
         
         return redirect(url_for('dashboard'))
     else:
