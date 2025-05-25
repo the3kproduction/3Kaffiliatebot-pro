@@ -301,44 +301,78 @@
         </div>
         {% endif %}
 
-        <!-- Platform Setup Section -->
+        <!-- Smart Platform Setup Section - Only shows unconfigured platforms -->
+        {% if unconfigured_platforms %}
         <div class="card" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: white; margin-bottom: 25px;">
             <h3>🔧 Platform Setup</h3>
-            <p>Connect your social media platforms to start posting</p>
+            <p>Connect your social media platforms to start posting ({{ unconfigured_platforms|length }} platforms need setup)</p>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
-                <!-- Discord Setup -->
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                    <h4>💬 Discord</h4>
-                    <input type="url" id="discord_webhook" placeholder="Discord Webhook URL" style="width: 100%; padding: 8px; margin: 10px 0; border: none; border-radius: 5px;" value="{{ user.discord_webhook_url or '' }}">
-                    <button onclick="saveDiscord()" style="background: #7289da; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Discord</button>
-                </div>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 15px;">
+                <button onclick="togglePlatformSetup()" id="platform-settings-btn" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    🔧 Configure Platforms
+                </button>
+                <button onclick="testConnections()" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    🧪 Test Connections
+                </button>
+            </div>
+            
+            <!-- Smart platform setup form - Only show unconfigured platforms -->
+            <div id="platform-setup-form" style="display: none; margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
                 
-                <!-- Telegram Setup -->
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                    <h4>📱 Telegram</h4>
-                    <input type="text" id="telegram_bot_token" placeholder="Bot Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.telegram_bot_token or '' }}">
-                    <input type="text" id="telegram_chat_id" placeholder="Chat ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.telegram_chat_id or '' }}">
-                    <button onclick="saveTelegram()" style="background: #0088cc; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Telegram</button>
-                </div>
-                
-                <!-- Slack Setup -->
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                    <h4>💼 Slack</h4>
-                    <input type="text" id="slack_bot_token" placeholder="Bot Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.slack_bot_token or '' }}">
-                    <input type="text" id="slack_channel_id" placeholder="Channel ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.slack_channel_id or '' }}">
-                    <button onclick="saveSlack()" style="background: #4a154b; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Slack</button>
-                </div>
-                
-                <!-- Pinterest Setup -->
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                    <h4>📌 Pinterest</h4>
-                    <input type="text" id="pinterest_access_token" placeholder="Access Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.pinterest_access_token or '' }}">
-                    <input type="text" id="pinterest_board_id" placeholder="Board ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.pinterest_board_id or '' }}">
-                    <button onclick="savePinterest()" style="background: #bd081c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Pinterest</button>
+                    {% if 'Discord' in unconfigured_platforms %}
+                    <!-- Discord Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>💬 Discord</h4>
+                        <input type="url" id="discord_webhook_setup" placeholder="Discord Webhook URL" style="width: 100%; padding: 8px; margin: 10px 0; border: none; border-radius: 5px;" value="{{ user.discord_webhook_url or '' }}">
+                        <button onclick="saveDiscordSetup()" style="background: #7289da; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Discord</button>
+                    </div>
+                    {% endif %}
+                    
+                    {% if 'Telegram' in unconfigured_platforms %}
+                    <!-- Telegram Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>📱 Telegram</h4>
+                        <input type="text" id="telegram_bot_token_setup" placeholder="Bot Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.telegram_bot_token or '' }}">
+                        <input type="text" id="telegram_chat_id_setup" placeholder="Chat ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.telegram_chat_id or '' }}">
+                        <button onclick="saveTelegramSetup()" style="background: #0088cc; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Telegram</button>
+                    </div>
+                    {% endif %}
+                    
+                    {% if 'Slack' in unconfigured_platforms %}
+                    <!-- Slack Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>💼 Slack</h4>
+                        <input type="text" id="slack_bot_token_setup" placeholder="Bot Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.slack_bot_token or '' }}">
+                        <input type="text" id="slack_channel_id_setup" placeholder="Channel ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.slack_channel_id or '' }}">
+                        <button onclick="saveSlackSetup()" style="background: #4a154b; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Slack</button>
+                    </div>
+                    {% endif %}
+                    
+                    {% if 'Pinterest' in unconfigured_platforms %}
+                    <!-- Pinterest Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>📌 Pinterest</h4>
+                        <input type="text" id="pinterest_access_token_setup" placeholder="Access Token" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.pinterest_access_token or '' }}">
+                        <input type="text" id="pinterest_board_id_setup" placeholder="Board ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.pinterest_board_id or '' }}">
+                        <button onclick="savePinterestSetup()" style="background: #bd081c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Pinterest</button>
+                    </div>
+                    {% endif %}
+                    
+                    {% if 'Reddit' in unconfigured_platforms %}
+                    <!-- Reddit Setup -->
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>🤖 Reddit</h4>
+                        <input type="text" id="reddit_client_id_setup" placeholder="Client ID" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.reddit_client_id or '' }}">
+                        <input type="text" id="reddit_client_secret_setup" placeholder="Client Secret" style="width: 100%; padding: 8px; margin: 5px 0; border: none; border-radius: 5px;" value="{{ user.reddit_client_secret or '' }}">
+                        <button onclick="saveRedditSetup()" style="background: #ff4500; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Save Reddit</button>
+                    </div>
+                    {% endif %}
+                    
                 </div>
             </div>
         </div>
+        {% endif %}
 
         <!-- Analytics Overview -->
         <div class="dashboard-grid">
