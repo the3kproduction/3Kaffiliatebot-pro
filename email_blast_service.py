@@ -60,7 +60,7 @@ def send_mass_email(email_blast):
                         <p style="margin: 0; color: #6c757d; font-size: 14px;">
                             You're receiving this because you signed up for our Amazon affiliate marketing platform.
                             <br>
-                            <a href="{{{{unsubscribe}}}}}" style="color: #6c757d;">Unsubscribe</a>
+                            <a href="#unsubscribe" style="color: #6c757d;">Unsubscribe</a>
                         </p>
                     </div>
                 </div>

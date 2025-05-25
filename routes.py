@@ -244,6 +244,43 @@ def analytics():
                          platform_stats=platform_stats,
                          recent_posts=posts[:10])
 
+@app.route('/analytics/detailed')
+@require_login
+def analytics_detailed():
+    """Detailed Analytics Page"""
+    user = current_user
+    posts = Post.query.filter_by(user_id=user.id).all()
+    
+    return render_template('analytics.html', 
+                         total_posts=len(posts),
+                         total_clicks=sum(post.clicks for post in posts),
+                         total_impressions=sum(post.impressions for post in posts),
+                         platform_stats={
+                             'discord': len([p for p in posts if p.posted_to_discord]),
+                             'telegram': len([p for p in posts if p.posted_to_telegram]),
+                             'slack': len([p for p in posts if p.posted_to_slack]),
+                             'email': len([p for p in posts if p.posted_to_email])
+                         },
+                         recent_posts=posts[:20])
+
+@app.route('/analytics/export')
+@require_login
+def analytics_export():
+    """Export Analytics Data"""
+    from datetime import datetime
+    user = current_user
+    posts = Post.query.filter_by(user_id=user.id).all()
+    
+    export_data = {
+        'user_id': user.id,
+        'export_date': datetime.now().isoformat(),
+        'total_posts': len(posts),
+        'total_clicks': sum(post.clicks for post in posts),
+        'recent_posts': [{'title': p.product_title, 'clicks': p.clicks, 'created_at': p.created_at.isoformat()} for p in posts[:50]]
+    }
+    
+    return jsonify(export_data)
+
 # ADMIN ROUTES - Money-making features for platform owner
 @app.route('/admin')
 @require_login
