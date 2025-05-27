@@ -2835,7 +2835,287 @@ def save_telegram_config_new():
     session['telegram_chat_id'] = chat_id
     return jsonify({'success': True})
 
+@app.route('/contact')
+def contact():
+    """Contact/Support page"""
+    return '''
+    <!DOCTYPE html>
+    <html><head><title>Contact Support - AffiliateBot Pro</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 15px; border: none; border-radius: 10px; background: rgba(255,255,255,0.9); color: #333; }
+        textarea { height: 120px; resize: vertical; }
+        .btn { background: #4CAF50; color: white; padding: 15px 30px; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; }
+        .btn:hover { background: #45a049; }
+        .back-btn { background: #6c757d; margin-right: 15px; }
+    </style></head>
+    <body>
+        <div class="container">
+            <h1>📞 Contact Support</h1>
+            <p>Need help? Send us a message and we'll get back to you quickly!</p>
+            
+            <form action="/submit-support-message" method="POST">
+                <div class="form-group">
+                    <label>Your Name:</label>
+                    <input type="text" name="user_name" required placeholder="Your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email Address:</label>
+                    <input type="email" name="user_email" required placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Subject:</label>
+                    <input type="text" name="subject" required placeholder="Brief description of your issue">
+                </div>
+                
+                <div class="form-group">
+                    <label>Priority Level:</label>
+                    <select name="priority" required>
+                        <option value="normal">Normal - General questions</option>
+                        <option value="high">High - Account/billing issues</option>
+                        <option value="urgent">Urgent - Service not working</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Message:</label>
+                    <textarea name="message" required placeholder="Please describe your issue in detail. Include any error messages, steps you tried, and what you expected to happen."></textarea>
+                </div>
+                
+                <button type="button" class="btn back-btn" onclick="history.back()">← Back</button>
+                <button type="submit" class="btn">📤 Send Message</button>
+            </form>
+        </div>
+    </body></html>
+    '''
 
+@app.route('/submit-support-message', methods=['POST'])
+def submit_support_message():
+    """Submit support message"""
+    try:
+        user_name = request.form.get('user_name')
+        user_email = request.form.get('user_email')
+        subject = request.form.get('subject')
+        message = request.form.get('message')
+        priority = request.form.get('priority', 'normal')
+        
+        if not all([user_name, user_email, subject, message]):
+            return "All fields are required!"
+        
+        # Create support message
+        support_msg = SupportMessage()
+        support_msg.user_id = session.get('user_id')
+        support_msg.user_email = user_email
+        support_msg.user_name = user_name
+        support_msg.subject = subject
+        support_msg.message = message
+        support_msg.priority = priority
+        support_msg.status = 'open'
+        support_msg.created_at = datetime.now()
+        
+        db.session.add(support_msg)
+        db.session.commit()
+        
+        return f'''
+        <!DOCTYPE html>
+        <html><head><title>Message Sent - AffiliateBot Pro</title>
+        <style>
+            body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }}
+            .success-box {{ background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; text-align: center; backdrop-filter: blur(10px); }}
+            .btn {{ background: #4CAF50; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; display: inline-block; margin-top: 20px; }}
+        </style></head>
+        <body>
+            <div class="success-box">
+                <h2>✅ Message Sent Successfully!</h2>
+                <p>Thank you for contacting us. We'll get back to you within 24 hours.</p>
+                <p><strong>Reference ID:</strong> #{support_msg.id}</p>
+                <a href="/dashboard" class="btn">Return to Dashboard</a>
+            </div>
+        </body></html>
+        '''
+        
+    except Exception as e:
+        return f"Error sending message: {str(e)}"
+
+@app.route('/admin/support-messages')
+def admin_support_messages():
+    """Admin panel to view and manage support messages with notifications"""
+    if not session.get('is_admin'):
+        return redirect('/admin-login')
+    
+    # Get all support messages ordered by priority and date
+    messages = SupportMessage.query.order_by(
+        SupportMessage.priority.desc(), 
+        SupportMessage.created_at.desc()
+    ).all()
+    
+    # Count messages by status
+    open_count = SupportMessage.query.filter_by(status='open').count()
+    in_progress_count = SupportMessage.query.filter_by(status='in_progress').count()
+    resolved_count = SupportMessage.query.filter_by(status='resolved').count()
+    
+    # Notification effect for new messages
+    notification_style = ""
+    if open_count > 0:
+        notification_style = '''
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+        }
+        .urgent-notification { animation: pulse 2s infinite; }
+        '''
+    
+    # Build message HTML
+    messages_html = ""
+    for msg in messages:
+        priority_color = {
+            'urgent': '#ff4757',
+            'high': '#ff9800', 
+            'normal': '#4CAF50'
+        }.get(msg.priority, '#4CAF50')
+        
+        status_color = {
+            'open': '#ff4757',
+            'in_progress': '#ff9800',
+            'resolved': '#4CAF50'
+        }.get(msg.status, '#ff4757')
+        
+        # Add pulsing effect for new urgent messages
+        message_class = 'urgent-notification' if msg.status == 'open' and msg.priority == 'urgent' else ''
+        
+        messages_html += f'''
+        <div class="{message_class}" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid {priority_color};">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3>#{msg.id} - {msg.subject}</h3>
+                <div>
+                    <span style="background: {priority_color}; color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-right: 5px;">{msg.priority.upper()}</span>
+                    <span style="background: {status_color}; color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px;">{msg.status.upper()}</span>
+                </div>
+            </div>
+            <p><strong>From:</strong> {msg.user_name} ({msg.user_email})</p>
+            <p><strong>Date:</strong> {msg.created_at.strftime('%Y-%m-%d %H:%M')}</p>
+            <p><strong>Message:</strong></p>
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                {msg.message}
+            </div>
+            <div style="margin-top: 15px;">
+                <button onclick="updateStatus({msg.id}, 'in_progress')" class="btn" style="background: #ff9800; margin-right: 10px;">📝 In Progress</button>
+                <button onclick="updateStatus({msg.id}, 'resolved')" class="btn" style="background: #4CAF50; margin-right: 10px;">✅ Resolve</button>
+                <a href="mailto:{msg.user_email}?subject=Re: {msg.subject}" class="btn" style="background: #2196F3; text-decoration: none;">📧 Reply</a>
+            </div>
+        </div>
+        '''
+    
+    return f'''
+    <!DOCTYPE html>
+    <html><head><title>Support Messages - Admin Panel</title>
+    <style>
+        body {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; font-family: Arial; color: white; min-height: 100vh; }}
+        .container {{ max-width: 1200px; margin: 0 auto; padding: 30px; }}
+        .btn {{ background: #4CAF50; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: inline-block; margin: 5px; border: none; cursor: pointer; }}
+        .stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }}
+        .stat-card {{ background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; text-align: center; }}
+        .stat-number {{ font-size: 32px; font-weight: bold; }}
+        {notification_style}
+        .notification-alert {{ background: #ff4757; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; animation: pulse 2s infinite; }}
+    </style></head>
+    <body>
+        <div class="container">
+            <h1>📬 Support Messages</h1>
+            <p>Manage customer support inquiries and help requests</p>
+            
+            {f'<div class="notification-alert">🚨 {open_count} NEW SUPPORT REQUEST(S) NEED ATTENTION! 🚨</div>' if open_count > 0 else ''}
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #ff4757;">{open_count}</div>
+                    <div>Open Messages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #ff9800;">{in_progress_count}</div>
+                    <div>In Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #4CAF50;">{resolved_count}</div>
+                    <div>Resolved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{len(messages)}</div>
+                    <div>Total Messages</div>
+                </div>
+            </div>
+            
+            <a href="/dashboard" class="btn" style="background: #666; margin-bottom: 20px;">← Back to Dashboard</a>
+            
+            <div>
+                {messages_html if messages else '<div style="text-align: center; padding: 60px; background: rgba(255,255,255,0.1); border-radius: 15px;"><h3>No Support Messages</h3><p>No customer inquiries yet!</p></div>'}
+            </div>
+        </div>
+        
+        <script>
+            // Auto-refresh every 30 seconds to check for new messages
+            setInterval(function() {{
+                location.reload();
+            }}, 30000);
+            
+            // Play notification sound for new urgent messages
+            if ({open_count} > 0) {{
+                // Browser notification ping
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBkOd1/LHey4GJHfH8N1/NwQNar3t4pNGCAY+k9n2vHQgBiOI4/fDdiMFmD+n6+y5Qgk=');
+                audio.play().catch(() => {{}});
+            }}
+            
+            function updateStatus(messageId, newStatus) {{
+                fetch(`/admin/support-message/${{messageId}}/status`, {{
+                    method: 'POST',
+                    headers: {{ 'Content-Type': 'application/json' }},
+                    body: JSON.stringify({{ status: newStatus }})
+                }})
+                .then(response => response.json())
+                .then(data => {{
+                    if (data.success) {{
+                        location.reload();
+                    }} else {{
+                        alert('Error updating status');
+                    }}
+                }});
+            }}
+        </script>
+    </body></html>
+    '''
+
+@app.route('/admin/support-message/<int:message_id>/status', methods=['POST'])
+def update_support_message_status(message_id):
+    """Update support message status"""
+    if not session.get('is_admin'):
+        return {"success": False, "error": "Unauthorized"}, 403
+    
+    try:
+        import json
+        
+        data = json.loads(request.data)
+        new_status = data.get('status')
+        
+        if new_status not in ['open', 'in_progress', 'resolved']:
+            return {"success": False, "error": "Invalid status"}, 400
+        
+        message = SupportMessage.query.get_or_404(message_id)
+        message.status = new_status
+        
+        if new_status == 'resolved':
+            message.resolved_at = datetime.now()
+        
+        db.session.commit()
+        return {"success": True}
+        
+    except Exception as e:
+        return {"success": False, "error": str(e)}, 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
