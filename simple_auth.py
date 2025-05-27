@@ -11,7 +11,7 @@ from models import User
 
 # Initialize Flask-Login
 login_manager = LoginManager(app)
-login_manager.login_view = 'index'
+login_manager.login_view = None  # Allow access to subscription pages
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -40,7 +40,11 @@ def simple_require_login(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
-            # Don't auto-login, let customers access subscription pages
-            return redirect(url_for('index'))
+            # Only redirect if this is actually a protected route
+            if request.endpoint in ['subscribe', 'pricing', 'test', 'signup', 'create_checkout_session']:
+                # Allow access to these public routes
+                pass
+            else:
+                return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function

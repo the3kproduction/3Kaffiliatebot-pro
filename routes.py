@@ -13,7 +13,15 @@ try:
         raise ImportError("REPL_ID not available, using simple auth")
 except (ImportError, SystemExit):
     # Use simple auth for Render deployment
-    from simple_auth import simple_require_login as require_login
+    from simple_auth import simple_require_login as require_login_original
+    
+    # Create a bypass version for customer-facing pages
+    def require_login(f):
+        # Only protect admin/user dashboard routes, not customer pages
+        if f.__name__ in ['subscribe', 'pricing', 'create_checkout_session', 'signup', 'index']:
+            return f  # No protection needed
+        else:
+            return require_login_original(f)  # Use original protection
     make_replit_blueprint = lambda: None
 
 from amazon_scraper import AmazonProductScraper
@@ -380,6 +388,11 @@ def subscribe():
 def pricing():
     """Alternative pricing page that definitely works"""
     return render_template('subscribe.html', user=None, show_signup=True)
+
+@app.route('/test')
+def test():
+    """Simple test route"""
+    return "TEST PAGE WORKS"
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
