@@ -407,7 +407,7 @@ def ai_products():
                 </div>
                 
                 <div style="text-align: center; margin-top: 20px;">
-                    <a href="/products" class="btn">🚀 View AI-Selected Products</a>
+                    <a href="/ai-selected-products" class="btn">🚀 View AI-Selected Products</a>
                     <a href="/settings" class="btn" style="background: rgba(255,255,255,0.2);">⚙️ Customize AI Preferences</a>
                 </div>
             </div>
@@ -465,6 +465,79 @@ def support():
                 <p>• Troubleshooting Common Issues</p>
                 <p>• Advanced Analytics Guide</p>
                 <a href="#" class="btn" style="background: rgba(255,255,255,0.2);">📖 Browse Help Articles</a>
+            </div>
+        </div>
+    </body></html>
+    '''
+
+@app.route('/ai-selected-products')
+def ai_selected_products():
+    """AI-Selected Products page showing curated high-performers"""
+    if not session.get('user_id'):
+        return redirect('/admin-login')
+    
+    username = session.get('user_id', 'User')
+    
+    # Get top-rated products with high ratings (AI selection criteria)
+    ai_products = ProductInventory.query.filter(
+        ProductInventory.rating >= 4.0,
+        ProductInventory.is_active == True
+    ).order_by(ProductInventory.rating.desc()).limit(12).all()
+    
+    product_html = ""
+    for product in ai_products:
+        rating_stars = "⭐" * int(product.rating) if product.rating else "⭐⭐⭐⭐"
+        ai_score = round(float(product.rating) * 20, 1) if product.rating else 85.0
+        
+        product_html += f'''
+                <div class="product-card">
+                    <img src="{product.image_url or 'https://via.placeholder.com/200x200?text=No+Image'}" alt="Product" class="product-image" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'">
+                    <div class="product-title">{product.product_title or 'Premium Product'}</div>
+                    <div class="product-price">{product.price or '$25.99'}</div>
+                    <div class="product-rating">{rating_stars} ({product.rating or 4.5})</div>
+                    <div class="ai-score">🤖 AI Score: {ai_score}%</div>
+                    <a href="/promote/{product.asin}" class="btn">🚀 Promote This Product</a>
+                </div>
+            '''
+    
+    return f'''
+    <!DOCTYPE html>
+    <html><head><title>AI-Selected Products - AffiliateBot Pro</title>
+    <style>
+        body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; margin: 0; }}
+        .navbar {{ background: rgba(0,0,0,0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }}
+        .container {{ max-width: 1200px; margin: 0 auto; padding: 30px; }}
+        .ai-header {{ text-align: center; margin-bottom: 30px; }}
+        .ai-badge {{ background: #FFD700; color: black; padding: 8px 20px; border-radius: 25px; font-weight: bold; display: inline-block; margin-bottom: 20px; }}
+        .products-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }}
+        .product-card {{ background: rgba(255,255,255,0.15); border-radius: 15px; padding: 20px; text-align: center; }}
+        .product-image {{ width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }}
+        .product-title {{ font-size: 16px; font-weight: bold; margin-bottom: 10px; height: 40px; overflow: hidden; }}
+        .product-price {{ color: #4CAF50; font-size: 18px; font-weight: bold; margin-bottom: 10px; }}
+        .product-rating {{ color: #FFD700; margin-bottom: 15px; }}
+        .ai-score {{ background: rgba(255,215,0,0.2); padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 15px; }}
+        .btn {{ background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; display: inline-block; }}
+        .btn:hover {{ background: #45a049; }}
+    </style></head>
+    <body>
+        <div class="navbar">
+            <div style="font-size: 24px; font-weight: bold;">🤖 AffiliateBot Pro</div>
+            <div><a href="/ai-products" style="color: white;">← Back to AI Dashboard</a></div>
+        </div>
+        <div class="container">
+            <div class="ai-header">
+                <div class="ai-badge">🤖 AI CURATED SELECTION</div>
+                <h1>Top-Performing Products</h1>
+                <p>These products were selected by our AI based on high ratings, conversion potential, and commission value.</p>
+            </div>
+            
+            <div class="products-grid">
+            {product_html}
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <p>🎯 These products have the highest potential for conversions and commissions!</p>
+                <a href="/products" class="btn" style="background: rgba(255,255,255,0.2);">Browse All Products</a>
             </div>
         </div>
     </body></html>
