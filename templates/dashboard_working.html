@@ -522,15 +522,41 @@
                 if (data.success) {
                     const platforms = data.platforms_posted.join(', ');
                     const errors = data.errors.length > 0 ? ` (Errors: ${data.errors.join(', ')})` : '';
-                    alert(`🚀 SUCCESS! AffiliateBot Pro promoted to: ${platforms}${errors}\n\nYour referral code: ${data.referral_code}\nSignup URL: ${data.signup_url}\n\nEarn 6 months free when you get 10 signups!`);
+                    showSuccessNotification(`🚀 SUCCESS! AffiliateBot Pro promoted to: ${platforms}${errors}<br><br><strong>Your referral code:</strong> ${data.referral_code}<br><strong>Signup URL:</strong> ${data.signup_url}<br><br>🎯 Earn 6 months free when you get 10 signups!`);
                 } else {
-                    alert(`❌ Error: ${data.error}`);
+                    showErrorNotification(`❌ Error: ${data.error}`);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('❌ Network error occurred. Please try again.');
+                showErrorNotification('❌ Network error occurred. Please try again.');
             });
+        }
+
+        function showSuccessNotification(message) {
+            const notification = document.getElementById('successNotification');
+            const content = document.getElementById('notificationContent');
+            content.innerHTML = message;
+            notification.style.background = 'linear-gradient(135deg, #4caf50, #45a049)';
+            notification.classList.add('show');
+            
+            // Auto-hide after 8 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 8000);
+        }
+
+        function showErrorNotification(message) {
+            const notification = document.getElementById('successNotification');
+            const content = document.getElementById('notificationContent');
+            content.innerHTML = message;
+            notification.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+            notification.classList.add('show');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
         }
 
         function showReferralPopup(referralCode, signupUrl) {
