@@ -413,5 +413,282 @@
             </div>
         </div>
     </div>
+
+    <!-- Facebook Configuration Modal -->
+    <div id="facebookModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px;">
+            <h3>Configure Facebook</h3>
+            <div style="margin: 15px 0;">
+                <label>Page Access Token:</label>
+                <input type="text" id="facebookToken" placeholder="Your Facebook Page Access Token" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Page ID:</label>
+                <input type="text" id="facebookPageId" placeholder="Your Facebook Page ID" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveFacebookConfig()" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Facebook Settings</button>
+                <button onclick="hideFacebookConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Twitter/X Configuration Modal -->
+    <div id="twitterModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px;">
+            <h3>Configure Twitter/X</h3>
+            <div style="margin: 15px 0;">
+                <label>API Key:</label>
+                <input type="text" id="twitterApiKey" placeholder="Your Twitter API Key" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>API Secret:</label>
+                <input type="password" id="twitterApiSecret" placeholder="Your Twitter API Secret" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Access Token:</label>
+                <input type="text" id="twitterAccessToken" placeholder="Your Twitter Access Token" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Access Token Secret:</label>
+                <input type="password" id="twitterAccessSecret" placeholder="Your Twitter Access Token Secret" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveTwitterConfig()" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Twitter/X Settings</button>
+                <button onclick="hideTwitterConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instagram Configuration Modal -->
+    <div id="instagramModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px;">
+            <h3>Configure Instagram</h3>
+            <div style="margin: 15px 0;">
+                <label>Access Token:</label>
+                <input type="text" id="instagramToken" placeholder="Your Instagram Access Token" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>User ID:</label>
+                <input type="text" id="instagramUserId" placeholder="Your Instagram User ID" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveInstagramConfig()" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Instagram Settings</button>
+                <button onclick="hideInstagramConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LinkedIn Configuration Modal -->
+    <div id="linkedinModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px;">
+            <h3>Configure LinkedIn</h3>
+            <div style="margin: 15px 0;">
+                <label>Access Token:</label>
+                <input type="text" id="linkedinToken" placeholder="Your LinkedIn Access Token" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Person ID:</label>
+                <input type="text" id="linkedinPersonId" placeholder="Your LinkedIn Person ID" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveLinkedInConfig()" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save LinkedIn Settings</button>
+                <button onclick="hideLinkedInConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Telegram Configuration Modal -->
+    <div id="telegramModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px;">
+            <h3>Configure Telegram</h3>
+            <div style="margin: 15px 0;">
+                <label>Bot Token:</label>
+                <input type="text" id="telegramToken" placeholder="Your Telegram Bot Token" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Chat ID:</label>
+                <input type="text" id="telegramChatId" placeholder="Your Telegram Chat ID" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveTelegramConfig()" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Telegram Settings</button>
+                <button onclick="hideTelegramConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Facebook Configuration Functions
+        function showFacebookConfig() {
+            document.getElementById('facebookModal').style.display = 'block';
+        }
+        
+        function hideFacebookConfig() {
+            document.getElementById('facebookModal').style.display = 'none';
+        }
+        
+        function saveFacebookConfig() {
+            const formData = new FormData();
+            formData.append('page_access_token', document.getElementById('facebookToken').value);
+            formData.append('page_id', document.getElementById('facebookPageId').value);
+            
+            fetch('/api/save-facebook-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const facebookPlatform = document.querySelector('.platform-item:has(span:contains("📘 Facebook"))');
+                    if (facebookPlatform) {
+                        facebookPlatform.querySelector('.platform-status').className = 'platform-status status-connected';
+                        facebookPlatform.querySelector('.platform-status').textContent = 'Connected';
+                        facebookPlatform.querySelector('button').textContent = 'Update Facebook';
+                    }
+                    hideFacebookConfig();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            });
+        }
+
+        // Twitter/X Configuration Functions
+        function showTwitterConfig() {
+            document.getElementById('twitterModal').style.display = 'block';
+        }
+        
+        function hideTwitterConfig() {
+            document.getElementById('twitterModal').style.display = 'none';
+        }
+        
+        function saveTwitterConfig() {
+            const formData = new FormData();
+            formData.append('api_key', document.getElementById('twitterApiKey').value);
+            formData.append('api_secret', document.getElementById('twitterApiSecret').value);
+            formData.append('access_token', document.getElementById('twitterAccessToken').value);
+            formData.append('access_token_secret', document.getElementById('twitterAccessSecret').value);
+            
+            fetch('/api/save-twitter-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const twitterPlatform = document.querySelector('.platform-item:has(span:contains("🐦 Twitter/X"))');
+                    if (twitterPlatform) {
+                        twitterPlatform.querySelector('.platform-status').className = 'platform-status status-connected';
+                        twitterPlatform.querySelector('.platform-status').textContent = 'Connected';
+                        twitterPlatform.querySelector('button').textContent = 'Update Twitter/X';
+                    }
+                    hideTwitterConfig();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            });
+        }
+
+        // Instagram Configuration Functions
+        function showInstagramConfig() {
+            document.getElementById('instagramModal').style.display = 'block';
+        }
+        
+        function hideInstagramConfig() {
+            document.getElementById('instagramModal').style.display = 'none';
+        }
+        
+        function saveInstagramConfig() {
+            const formData = new FormData();
+            formData.append('access_token', document.getElementById('instagramToken').value);
+            formData.append('user_id', document.getElementById('instagramUserId').value);
+            
+            fetch('/api/save-instagram-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const instagramPlatform = document.querySelector('.platform-item:has(span:contains("📸 Instagram"))');
+                    if (instagramPlatform) {
+                        instagramPlatform.querySelector('.platform-status').className = 'platform-status status-connected';
+                        instagramPlatform.querySelector('.platform-status').textContent = 'Connected';
+                        instagramPlatform.querySelector('button').textContent = 'Update Instagram';
+                    }
+                    hideInstagramConfig();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            });
+        }
+
+        // LinkedIn Configuration Functions
+        function showLinkedInConfig() {
+            document.getElementById('linkedinModal').style.display = 'block';
+        }
+        
+        function hideLinkedInConfig() {
+            document.getElementById('linkedinModal').style.display = 'none';
+        }
+        
+        function saveLinkedInConfig() {
+            const formData = new FormData();
+            formData.append('access_token', document.getElementById('linkedinToken').value);
+            formData.append('person_id', document.getElementById('linkedinPersonId').value);
+            
+            fetch('/api/save-linkedin-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const linkedinPlatform = document.querySelector('.platform-item:has(span:contains("💼 LinkedIn"))');
+                    if (linkedinPlatform) {
+                        linkedinPlatform.querySelector('.platform-status').className = 'platform-status status-connected';
+                        linkedinPlatform.querySelector('.platform-status').textContent = 'Connected';
+                        linkedinPlatform.querySelector('button').textContent = 'Update LinkedIn';
+                    }
+                    hideLinkedInConfig();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            });
+        }
+
+        // Telegram Configuration Functions
+        function showTelegramConfig() {
+            document.getElementById('telegramModal').style.display = 'block';
+        }
+        
+        function hideTelegramConfig() {
+            document.getElementById('telegramModal').style.display = 'none';
+        }
+        
+        function saveTelegramConfig() {
+            const formData = new FormData();
+            formData.append('bot_token', document.getElementById('telegramToken').value);
+            formData.append('chat_id', document.getElementById('telegramChatId').value);
+            
+            fetch('/api/save-telegram-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const telegramPlatform = document.querySelector('.platform-item:has(span:contains("📱 Telegram"))');
+                    if (telegramPlatform) {
+                        telegramPlatform.querySelector('.platform-status').className = 'platform-status status-connected';
+                        telegramPlatform.querySelector('.platform-status').textContent = 'Connected';
+                        telegramPlatform.querySelector('button').textContent = 'Update Telegram';
+                    }
+                    hideTelegramConfig();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
