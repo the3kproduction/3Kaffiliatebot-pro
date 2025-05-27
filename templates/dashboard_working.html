@@ -401,7 +401,12 @@
         }
 
         function promotePlatform() {
-            fetch('/promote-platform')
+            fetch('/promote-platform', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -416,6 +421,7 @@
                 }
             })
             .catch(error => {
+                console.error('Error:', error);
                 showNotification('❌ Network error occurred', 'error');
             });
         }

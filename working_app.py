@@ -2559,10 +2559,12 @@ def register_free_user():
     except Exception as e:
         return f"Error creating account: {str(e)}"
 
-@app.route('/promote-platform')
+@app.route('/promote-platform', methods=['GET', 'POST'])
 def promote_platform():
     """Promote AffiliateBot Pro platform to earn referrals and free months"""
     if 'user_id' not in session:
+        if request.method == 'POST':
+            return jsonify({'success': False, 'error': 'Not authenticated'})
         return redirect('/admin-login')
     
     user_id = session['user_id']
