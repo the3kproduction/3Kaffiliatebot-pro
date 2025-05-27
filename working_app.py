@@ -559,7 +559,7 @@ def api_search_amazon():
     try:
         matching_products = ProductInventory.query.filter(
             ProductInventory.product_title.ilike(f'%{query}%')
-        ).limit(10).all()
+        ).limit(50).all()
         
         if not matching_products:
             return {'success': False, 'message': '⚠️ No products found. Try a different search term.'}, 200
@@ -601,7 +601,7 @@ def api_add_product():
     # Check if product already exists
     existing = ProductInventory.query.filter_by(asin=asin).first()
     if existing:
-        return {'success': False, 'message': 'Product already exists in catalog'}, 400
+        return {'success': True, 'message': f'Product "{title}" is already in your catalog!'}, 200
     
     try:
         new_product = ProductInventory(
