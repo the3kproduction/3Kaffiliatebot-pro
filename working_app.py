@@ -1076,32 +1076,7 @@ def admin_login():
         else:
             return "Invalid credentials. Please try again."
     
-    return '''
-    <!DOCTYPE html>
-    <html><head><title>Admin Login - AffiliateBot Pro</title>
-    <style>
-        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .login-form { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); width: 400px; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 10px; }
-        button { background: #4CAF50; color: white; padding: 15px; border: none; border-radius: 10px; width: 100%; font-size: 16px; cursor: pointer; }
-    </style></head>
-    <body>
-        <div class="login-form">
-            <h2>🔐 Login</h2>
-            <form method="POST">
-                <input type="text" name="email" placeholder="Email or Username" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="/forgot-password" style="color: #667eea; text-decoration: none; font-size: 14px;">🔑 Forgot Password?</a>
-                </div>
-                <div style="text-align: center; margin-top: 15px;">
-                    <a href="/" style="color: #ffffff; text-decoration: none; font-size: 14px; opacity: 0.8;">🏠 Back to Home</a>
-                </div>
-            </form>
-        </div>
-    </body></html>
-    '''
+    return render_template('secure_login.html')
 
 @app.route('/logout')
 def logout():
