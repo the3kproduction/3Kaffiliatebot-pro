@@ -1911,7 +1911,11 @@ def add_amazon_product():
     
     # Check if user has paid subscription or is admin
     user_id = session.get('user_id')
-    if user_id != 'admin':
+    if user_id == 'admin':
+        # Convert admin session to real user ID
+        user_id = '43018417'
+        session['user_id'] = user_id
+    else:
         user = User.query.get(user_id)
         if not user or user.subscription_tier == 'free':
             return redirect('/subscribe')
