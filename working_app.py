@@ -116,8 +116,140 @@ def create_checkout_session():
 
 @app.route('/success')
 def success():
-    """Payment success page"""
-    return "🎉 Payment Successful! Your subscription is now active. Welcome to AffiliateBot Pro!"
+    """Payment success page with account creation"""
+    return '''
+    <!DOCTYPE html>
+    <html><head><title>Payment Success - Create Your Account</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .success-form { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); width: 500px; text-align: center; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 10px; }
+        button { background: #4CAF50; color: white; padding: 15px; border: none; border-radius: 10px; width: 100%; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .success-icon { font-size: 4rem; margin-bottom: 20px; }
+    </style></head>
+    <body>
+        <div class="success-form">
+            <div class="success-icon">🎉</div>
+            <h2>Payment Successful!</h2>
+            <p>Create your account credentials to access your dashboard:</p>
+            
+            <form action="/create-account" method="POST">
+                <input type="text" name="username" placeholder="Choose a username" required>
+                <input type="email" name="email" placeholder="Your email address" required>
+                <input type="password" name="password" placeholder="Create a password" required>
+                <input type="password" name="confirm_password" placeholder="Confirm password" required>
+                
+                <h4>Set up your affiliate information:</h4>
+                <input type="text" name="affiliate_id" placeholder="Amazon Affiliate ID (e.g., yourname-20)" required>
+                
+                <button type="submit">Create Account & Access Dashboard</button>
+            </form>
+        </div>
+    </body></html>
+    '''
+
+@app.route('/create-account', methods=['POST'])
+def create_account():
+    """Create user account after successful payment"""
+    username = request.form.get('username')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    confirm_password = request.form.get('confirm_password')
+    affiliate_id = request.form.get('affiliate_id')
+    
+    # Validate passwords match
+    if password != confirm_password:
+        return "Passwords don't match. Please go back and try again."
+    
+    # Create user session (in a real app, you'd save to database)
+    session['user_id'] = username
+    session['user_email'] = email
+    session['affiliate_id'] = affiliate_id
+    session['subscription_tier'] = 'premium'  # Since they just paid
+    
+    return '''
+    <!DOCTYPE html>
+    <html><head><title>Account Created Successfully</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .success-message { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); text-align: center; }
+        .btn { background: #4CAF50; color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; display: inline-block; margin-top: 20px; }
+    </style></head>
+    <body>
+        <div class="success-message">
+            <h1>🚀 Welcome to AffiliateBot Pro!</h1>
+            <h2>Account Created Successfully</h2>
+            <p><strong>Username:</strong> ''' + username + '''</p>
+            <p><strong>Email:</strong> ''' + email + '''</p>
+            <p><strong>Affiliate ID:</strong> ''' + affiliate_id + '''</p>
+            <p><strong>Plan:</strong> Premium (Active)</p>
+            <br>
+            <p>Your account is now ready! You can start promoting products and earning commissions.</p>
+            <a href="/user-dashboard" class="btn">Access Your Dashboard</a>
+        </div>
+    </body></html>
+    '''
+
+@app.route('/user-dashboard')
+def user_dashboard():
+    """User dashboard for paid subscribers"""
+    if not session.get('user_id'):
+        return redirect('/admin-login')
+    
+    username = session.get('user_id', 'User')
+    affiliate_id = session.get('affiliate_id', 'Not set')
+    
+    return f'''
+    <!DOCTYPE html>
+    <html><head><title>{username}'s Dashboard</title>
+    <style>
+        body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }}
+        .navbar {{ background: rgba(0,0,0,0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }}
+        .container {{ max-width: 1200px; margin: 0 auto; padding: 30px; }}
+        .welcome-section {{ text-align: center; margin-bottom: 40px; }}
+        .stats-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }}
+        .stat-card {{ background: rgba(255,255,255,0.15); border-radius: 15px; padding: 25px; text-align: center; }}
+        .btn {{ background: #4CAF50; color: white; padding: 12px 25px; text-decoration: none; border-radius: 10px; display: inline-block; margin: 10px; }}
+    </style></head>
+    <body>
+        <div class="navbar">
+            <div style="font-size: 24px; font-weight: bold;">🤖 AffiliateBot Pro</div>
+            <div>
+                <a href="/user-dashboard" style="color: white; margin: 0 10px;">Dashboard</a>
+                <a href="/products" style="color: white; margin: 0 10px;">Products</a>
+                <a href="/logout" style="background: #f44336; color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none;">Logout</a>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="welcome-section">
+                <h1>Welcome back, {username}!</h1>
+                <p>Your Premium account is active and ready to generate commissions</p>
+                <p><strong>Your Affiliate ID:</strong> {affiliate_id}</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>0</h3>
+                    <p>Products Promoted</p>
+                </div>
+                <div class="stat-card">
+                    <h3>$0.00</h3>
+                    <p>Estimated Earnings</p>
+                </div>
+                <div class="stat-card">
+                    <h3>0</h3>
+                    <p>Total Clicks</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="/products" class="btn">🛍️ Browse Products to Promote</a>
+                <a href="/settings" class="btn">⚙️ Configure Platforms</a>
+            </div>
+        </div>
+    </body></html>
+    '''
 
 @app.route('/products')
 def products():
