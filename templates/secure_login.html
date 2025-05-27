@@ -95,7 +95,7 @@
                 <label for="password">Password:</label>
                 <div style="position: relative;">
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                    <button type="button" id="togglePassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); border: none; color: white; cursor: pointer; font-size: 16px; padding: 8px; border-radius: 5px; width: 35px; height: 35px;">👁️</button>
+                    <button type="button" id="togglePassword" style="position: absolute; right: 5px; top: 5px; bottom: 5px; background: rgba(255,255,255,0.3); border: none; color: white; cursor: pointer; font-size: 12px; padding: 5px 8px; border-radius: 5px; font-weight: bold;">SHOW</button>
                 </div>
             </div>
             
@@ -129,11 +129,11 @@
                     
                     if (passwordField.type === 'password') {
                         passwordField.type = 'text';
-                        toggleButton.innerHTML = '🙈'; // Hide password icon
+                        toggleButton.innerHTML = 'HIDE';
                         toggleButton.title = 'Hide password';
                     } else {
                         passwordField.type = 'password';
-                        toggleButton.innerHTML = '👁️'; // Show password icon
+                        toggleButton.innerHTML = 'SHOW';
                         toggleButton.title = 'Show password';
                     }
                 });
