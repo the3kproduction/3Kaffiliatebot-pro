@@ -62,12 +62,7 @@ def index():
         flash('Welcome! Creating your free tier account with 2 posts per day...', 'info')
         return render_template('landing.html', free_signup=True)
     
-    # For Render deployment without Replit auth, auto-login demo user ONLY on home page
-    if os.environ.get('RENDER') and not current_user.is_authenticated and request.endpoint == 'index':
-        from flask_login import login_user
-        demo_user = create_demo_user()
-        login_user(demo_user)
-        return redirect(url_for('dashboard'))
+    # Removed auto-login to allow customer access to subscription pages
     
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
@@ -378,12 +373,13 @@ def campaigns():
 @app.route('/subscribe')
 def subscribe():
     """Subscription upgrade page - accessible to all users"""
-    if current_user.is_authenticated:
-        user = current_user
-        return render_template('subscribe.html', user=user)
-    else:
-        # For non-logged-in users, show subscription page with signup prompt
-        return render_template('subscribe.html', user=None, show_signup=True)
+    # Force this page to be accessible to everyone
+    return render_template('subscribe.html', user=None, show_signup=True)
+
+@app.route('/pricing')
+def pricing():
+    """Alternative pricing page that definitely works"""
+    return render_template('subscribe.html', user=None, show_signup=True)
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():

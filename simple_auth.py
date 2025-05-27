@@ -40,11 +40,7 @@ def simple_require_login(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
-            # Auto-login demo user on Render
-            if os.environ.get('RENDER'):
-                demo_user = create_demo_user()
-                login_user(demo_user)
-            else:
-                return redirect(url_for('index'))
+            # Don't auto-login, let customers access subscription pages
+            return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function
