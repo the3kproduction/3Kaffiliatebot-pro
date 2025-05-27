@@ -1944,10 +1944,16 @@ def get_platform_status():
     
     user_id = session.get('user_id')
     
+    # Get the actual user record to check email configuration
+    if user_id == 'admin':
+        user = User.query.get('43018417')  # Your actual user ID
+    else:
+        user = User.query.get(user_id)
+    
     # Check if user has configured platforms
     status = {
         'success': True,
-        'email_configured': bool(session.get('email_configured')),
+        'email_configured': bool(user and user.email),  # Check database for email
         'facebook_configured': bool(session.get('facebook_configured')),
         'twitter_configured': bool(session.get('twitter_configured')),
         'instagram_configured': bool(session.get('instagram_configured')),
