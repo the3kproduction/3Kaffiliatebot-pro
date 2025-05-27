@@ -67,10 +67,16 @@
                     <li>✅ White-label access</li>
                     <li>✅ 24/7 premium support</li>
                 </ul>
-                <form action="/create-checkout-session" method="post">
-                    <input type="hidden" name="plan" value="pro">
-                    <button type="submit" class="subscribe-btn">Start Pro Trial</button>
-                </form>
+                {% if user %}
+                    <form action="/create-checkout-session" method="post">
+                        <input type="hidden" name="plan" value="pro">
+                        <button type="submit" class="subscribe-btn">Start Pro Trial</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('signup') }}?plan=pro" class="subscribe-btn" style="text-decoration: none; display: block; text-align: center;">
+                        Sign Up & Get Pro
+                    </a>
+                {% endif %}
             </div>
         </div>
 
