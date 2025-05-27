@@ -937,10 +937,17 @@ def dashboard():
         'posts_today': posts_today
     }
     
+    # Create current_user object for template
+    current_user = type('obj', (object,), {
+        'subscription_tier': session.get('subscription_tier', 'free'),
+        'affiliate_id': session.get('affiliate_id', 'luxoraconnect-20')
+    })()
+    
     return render_template('dashboard_working.html', 
                          is_admin=is_admin, 
                          platform_status=platform_status,
-                         real_stats=real_stats)
+                         real_stats=real_stats,
+                         current_user=current_user)
 
 @app.route('/admin/email-blast', methods=['GET', 'POST'])
 def admin_email_blast():
