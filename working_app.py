@@ -378,20 +378,34 @@ def products():
             return redirect('/subscribe')
     
     page = request.args.get('page', 1, type=int)
-    per_page = 12
+    per_page = 12  # 12 items per page for good layout
     
-    # Get all active products from inventory
-    all_products = ProductInventory.query.filter_by(is_active=True).all()
+    # Get search query if provided
+    search_query = request.args.get('search', '')
     
     # Limit products for free users to only 6
     if user and user.subscription_tier == 'free':
-        products = all_products[:6]
-        pagination = None  # No pagination for free users
+        # Free users see only 6 products, no pagination
+        if search_query:
+            all_products = ProductInventory.query.filter(
+                ProductInventory.product_title.contains(search_query),
+                ProductInventory.is_active == True
+            ).limit(6).all()
+        else:
+            all_products = ProductInventory.query.filter_by(is_active=True).limit(6).all()
+        products = all_products
+        pagination = None
     else:
-        # Full access for admin and paid users
-        pagination = ProductInventory.query.filter_by(is_active=True).paginate(
-            page=page, per_page=per_page, error_out=False
-        )
+        # Full access for admin and paid users with pagination
+        if search_query:
+            pagination = ProductInventory.query.filter(
+                ProductInventory.product_title.contains(search_query),
+                ProductInventory.is_active == True
+            ).paginate(page=page, per_page=per_page, error_out=False)
+        else:
+            pagination = ProductInventory.query.filter_by(is_active=True).paginate(
+                page=page, per_page=per_page, error_out=False
+            )
         products = pagination.items
     
     # Convert to list for template
@@ -417,7 +431,7 @@ def products():
                          pagination=pagination,
                          user=user,
                          subscription_tier=subscription_tier,
-                         search_query='')
+                         search_query=search_query)
 
 @app.route('/analytics')
 def analytics():
