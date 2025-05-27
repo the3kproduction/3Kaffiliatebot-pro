@@ -2442,5 +2442,47 @@ def admin_refresh_trending():
             'message': f'Error updating products: {str(e)}'
         }
 
+@app.route('/upload-image/<asin>', methods=['POST'])
+def upload_product_image(asin):
+    """Upload custom image for a product"""
+    if 'image' not in request.files:
+        return {"success": False, "message": "No image file provided"}
+    
+    file = request.files['image']
+    if file.filename == '':
+        return {"success": False, "message": "No image selected"}
+    
+    if file and allowed_file(file.filename):
+        import os
+        import uuid
+        
+        # Create uploads directory if it doesn't exist
+        upload_folder = 'static/uploads'
+        os.makedirs(upload_folder, exist_ok=True)
+        
+        # Generate unique filename
+        file_extension = file.filename.rsplit('.', 1)[1].lower()
+        filename = f"{asin}_{uuid.uuid4().hex}.{file_extension}"
+        file_path = os.path.join(upload_folder, filename)
+        
+        # Save the file
+        file.save(file_path)
+        
+        # Update product with new image URL
+        product = ProductInventory.query.filter_by(asin=asin).first()
+        if product:
+            product.image_url = f"/static/uploads/{filename}"
+            db.session.commit()
+            return {"success": True, "message": "Image uploaded successfully", "image_url": product.image_url}
+        else:
+            return {"success": False, "message": "Product not found"}
+    
+    return {"success": False, "message": "Invalid file type"}
+
+def allowed_file(filename):
+    """Check if file type is allowed"""
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -52,6 +52,12 @@
                 {% endif %}
                 
                 <a href="#" class="btn" onclick="promoteProduct('{{ product.asin }}')">🚀 Promote This Product</a>
+                
+                <!-- Image Upload Section -->
+                <div style="margin-top: 10px;">
+                    <input type="file" id="imageUpload{{ product.asin }}" accept="image/*" style="display: none;" onchange="uploadImage('{{ product.asin }}', this)">
+                    <button onclick="document.getElementById('imageUpload{{ product.asin }}').click()" class="btn" style="background: linear-gradient(135deg, #FF9800, #F57C00); font-size: 14px; padding: 8px 16px;">📸 Upload Image</button>
+                </div>
             </div>
             {% endfor %}
             
@@ -105,6 +111,57 @@
             })
             .catch(error => {
                 alert('Error: ' + error);
+            });
+        }
+        
+        function uploadImage(asin, fileInput) {
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            // Find the upload button for this specific product
+            const uploadBtn = fileInput.parentElement.querySelector('button');
+            
+            // Show loading
+            uploadBtn.textContent = '⏳ Uploading...';
+            uploadBtn.disabled = true;
+            
+            fetch(`/upload-image/${asin}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the image immediately
+                    const productCard = uploadBtn.closest('.product-card');
+                    const img = productCard.querySelector('.product-image');
+                    img.src = data.image_url + '?t=' + new Date().getTime(); // Add timestamp to prevent caching
+                    
+                    uploadBtn.textContent = '✅ Uploaded!';
+                    setTimeout(() => {
+                        uploadBtn.textContent = '📸 Upload Image';
+                        uploadBtn.disabled = false;
+                    }, 2000);
+                } else {
+                    uploadBtn.textContent = '❌ Failed';
+                    setTimeout(() => {
+                        uploadBtn.textContent = '📸 Upload Image';
+                        uploadBtn.disabled = false;
+                    }, 2000);
+                    alert('Upload failed: ' + data.message);
+                }
+            })
+            .catch(error => {
+                uploadBtn.textContent = '❌ Error';
+                setTimeout(() => {
+                    uploadBtn.textContent = '📸 Upload Image';
+                    uploadBtn.disabled = false;
+                }, 2000);
+                alert('Upload error: ' + error);
             });
         }
     </script>
