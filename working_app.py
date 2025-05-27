@@ -844,8 +844,8 @@ Don't miss out on this incredible deal!
                 errors.append(f"Telegram: {str(e)}")
         
         # 3. POST TO SLACK
-        slack_token = os.environ.get('SLACK_BOT_TOKEN')
-        slack_channel = os.environ.get('SLACK_CHANNEL_ID')
+        slack_token = session.get('slack_bot_token') or os.environ.get('SLACK_BOT_TOKEN')
+        slack_channel = session.get('slack_channel_id') or os.environ.get('SLACK_CHANNEL_ID')
         if slack_token and slack_channel:
             try:
                 import requests
@@ -867,7 +867,8 @@ Don't miss out on this incredible deal!
                 if response.status_code == 200 and response.json().get("ok"):
                     platforms_posted.append("Slack")
                 else:
-                    errors.append(f"Slack: {response.status_code}")
+                    error_details = response.json() if response.status_code == 200 else f"Status: {response.status_code}"
+                    errors.append(f"Slack: {error_details}")
             except Exception as e:
                 errors.append(f"Slack: {str(e)}")
         
