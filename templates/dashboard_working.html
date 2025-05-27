@@ -238,40 +238,41 @@
                 <div class="platform-status">
                     <div class="platform-item">
                         <span>📱 Discord</span>
-                        <span class="status-connected">Connected</span>
+                        <span class="{{ 'status-connected' if platform_status.discord else 'status-disconnected' }}">{{ 'Connected' if platform_status.discord else 'Setup Required' }}</span>
                     </div>
                     <div class="platform-item">
                         <span>📧 Telegram</span>
-                        <span class="status-connected">Connected</span>
+                        <span class="{{ 'status-connected' if platform_status.telegram else 'status-disconnected' }}">{{ 'Connected' if platform_status.telegram else 'Setup Required' }}</span>
                     </div>
                     <div class="platform-item">
                         <span>💼 Slack</span>
-                        <span class="status-disconnected">Setup Required</span>
+                        <span class="{{ 'status-connected' if platform_status.slack else 'status-disconnected' }}">{{ 'Connected' if platform_status.slack else 'Setup Required' }}</span>
                     </div>
                     <div class="platform-item">
                         <span>📧 Email</span>
-                        <span class="status-disconnected">Setup Required</span>
+                        <span class="{{ 'status-connected' if platform_status.email else 'status-disconnected' }}">{{ 'Connected' if platform_status.email else 'Setup Required' }}</span>
                     </div>
                     <div class="platform-item">
                         <span>📌 Pinterest</span>
-                        <span class="status-disconnected">Setup Required</span>
+                        <span class="{{ 'status-connected' if platform_status.pinterest else 'status-disconnected' }}">{{ 'Connected' if platform_status.pinterest else 'Setup Required' }}</span>
                     </div>
                 </div>
 
                 <h3 class="section-title">Recent Activity</h3>
                 <div class="recent-posts">
-                    <div class="post-item">
-                        <div class="post-title">Posted: Wireless Earbuds</div>
-                        <div class="post-meta">Discord • 2 hours ago • 23 clicks</div>
-                    </div>
-                    <div class="post-item">
-                        <div class="post-title">Posted: Gaming Mouse</div>
-                        <div class="post-meta">Telegram • 4 hours ago • 18 clicks</div>
-                    </div>
-                    <div class="post-item">
-                        <div class="post-title">Posted: Phone Case</div>
-                        <div class="post-meta">Discord • 6 hours ago • 31 clicks</div>
-                    </div>
+                    {% if recent_posts %}
+                        {% for post in recent_posts %}
+                        <div class="post-item">
+                            <div class="post-title">Posted: {{ post.product_title }}</div>
+                            <div class="post-meta">{{ post.platform }} • {{ post.time_ago }} • {{ post.clicks }} clicks</div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="post-item">
+                            <div class="post-title">No recent posts yet</div>
+                            <div class="post-meta">Start promoting products to see activity here</div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

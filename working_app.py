@@ -906,7 +906,8 @@ def dashboard():
         'discord': bool(os.environ.get('DISCORD_WEBHOOK_URL')),
         'telegram': bool(os.environ.get('TELEGRAM_BOT_TOKEN') and os.environ.get('TELEGRAM_CHAT_ID')),
         'slack': bool(os.environ.get('SLACK_BOT_TOKEN') and os.environ.get('SLACK_CHANNEL_ID')),
-        'email': False  # Email not configured yet
+        'email': False,  # Email not configured yet
+        'pinterest': False  # Pinterest not configured yet
     }
     
     # Get real statistics from database
