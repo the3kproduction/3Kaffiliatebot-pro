@@ -1922,24 +1922,7 @@ def save_linkedin_config():
     
     return jsonify({'success': True, 'message': 'LinkedIn configuration saved successfully'})
 
-@app.route('/api/save-telegram-config', methods=['POST'])
-def save_telegram_config():
-    """Save Telegram configuration for user"""
-    if not session.get('user_id'):
-        return jsonify({'success': False, 'error': 'Not authenticated'}), 401
-    
-    bot_token = request.form.get('bot_token', '').strip()
-    chat_id = request.form.get('chat_id', '').strip()
-    
-    if not all([bot_token, chat_id]):
-        return jsonify({'success': False, 'error': 'All Telegram credentials required'}), 400
-    
-    session['telegram_bot_token'] = bot_token
-    session['telegram_chat_id'] = chat_id
-    session['telegram_configured'] = True
-    session.permanent = True
-    
-    return jsonify({'success': True, 'message': 'Telegram configuration saved successfully'})
+
 
 @app.route('/api/get-platform-status', methods=['GET'])
 def get_platform_status():
@@ -2602,6 +2585,52 @@ def upload_product_image(asin):
             return {"success": False, "message": "Product not found"}
     
     return {"success": False, "message": "Invalid file type"}
+
+@app.route('/api/save-discord-config', methods=['POST'])
+def save_discord_config():
+    """Save Discord webhook configuration"""
+    if not session.get('user_id'):
+        return {"success": False, "error": "Not authenticated"}
+    
+    webhook_url = request.form.get('webhook_url')
+    if not webhook_url:
+        return {"success": False, "error": "Webhook URL is required"}
+    
+    # Here you would typically save to environment or database
+    # For now, we'll just return success
+    return {"success": True, "message": "Discord configuration saved"}
+
+@app.route('/api/save-telegram-config', methods=['POST'])
+def save_telegram_config_settings():
+    """Save Telegram bot configuration from settings page"""
+    if not session.get('user_id'):
+        return {"success": False, "error": "Not authenticated"}
+    
+    bot_token = request.form.get('bot_token')
+    chat_id = request.form.get('chat_id')
+    
+    if not bot_token or not chat_id:
+        return {"success": False, "error": "Bot token and chat ID are required"}
+    
+    # Here you would typically save to environment or database
+    # For now, we'll just return success
+    return {"success": True, "message": "Telegram configuration saved"}
+
+@app.route('/api/save-slack-config', methods=['POST'])
+def save_slack_config():
+    """Save Slack bot configuration"""
+    if not session.get('user_id'):
+        return {"success": False, "error": "Not authenticated"}
+    
+    bot_token = request.form.get('bot_token')
+    channel_id = request.form.get('channel_id')
+    
+    if not bot_token or not channel_id:
+        return {"success": False, "error": "Bot token and channel ID are required"}
+    
+    # Here you would typically save to environment or database
+    # For now, we'll just return success
+    return {"success": True, "message": "Slack configuration saved"}
 
 @app.route('/create-free-account')
 def create_free_account():

@@ -449,6 +449,88 @@
                 location.reload();
             });
         }
+        
+        // Discord Configuration Functions
+        function showDiscordConfig() {
+            document.getElementById('discordModal').style.display = 'block';
+        }
+        
+        function hideDiscordConfig() {
+            document.getElementById('discordModal').style.display = 'none';
+        }
+        
+        function saveDiscordConfig() {
+            const webhookUrl = document.getElementById('discordWebhook').value;
+            
+            const formData = new FormData();
+            formData.append('webhook_url', webhookUrl);
+            
+            fetch('/api/save-discord-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideDiscordConfig();
+                location.reload();
+            });
+        }
+        
+        // Telegram Configuration Functions
+        function showTelegramConfig() {
+            document.getElementById('telegramModal').style.display = 'block';
+        }
+        
+        function hideTelegramConfig() {
+            document.getElementById('telegramModal').style.display = 'none';
+        }
+        
+        function saveTelegramConfig() {
+            const token = document.getElementById('telegramToken').value;
+            const chatId = document.getElementById('telegramChatId').value;
+            
+            const formData = new FormData();
+            formData.append('bot_token', token);
+            formData.append('chat_id', chatId);
+            
+            fetch('/api/save-telegram-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTelegramConfig();
+                location.reload();
+            });
+        }
+        
+        // Slack Configuration Functions
+        function showSlackConfig() {
+            document.getElementById('slackModal').style.display = 'block';
+        }
+        
+        function hideSlackConfig() {
+            document.getElementById('slackModal').style.display = 'none';
+        }
+        
+        function saveSlackConfig() {
+            const token = document.getElementById('slackToken').value;
+            const channelId = document.getElementById('slackChannelId').value;
+            
+            const formData = new FormData();
+            formData.append('bot_token', token);
+            formData.append('channel_id', channelId);
+            
+            fetch('/api/save-slack-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideSlackConfig();
+                location.reload();
+            });
+        }
     </script>
 
     <!-- Reddit Configuration Modal -->
