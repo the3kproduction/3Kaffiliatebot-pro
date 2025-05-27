@@ -410,20 +410,26 @@ def create_checkout_session():
         # Get domain for redirect URLs
         domain = request.host_url.rstrip('/')
         
-        checkout_session = stripe.checkout.Session.create(
-            line_items=[{
+        # Create checkout session data
+        session_data = {
+            'line_items': [{
                 'price': price_ids[plan],
                 'quantity': 1,
             }],
-            mode='subscription',
-            success_url=f'{domain}/success?session_id={{CHECKOUT_SESSION_ID}}',
-            cancel_url=f'{domain}/subscribe',
-            customer_email=current_user.email,
-            metadata={
-                'user_id': current_user.id,
+            'mode': 'subscription',
+            'success_url': f'{domain}/success?session_id={{CHECKOUT_SESSION_ID}}',
+            'cancel_url': f'{domain}/subscribe',
+            'metadata': {
                 'plan': plan
             }
-        )
+        }
+        
+        # Add customer email if user is logged in
+        if current_user.is_authenticated:
+            session_data['customer_email'] = current_user.email
+            session_data['metadata']['user_id'] = current_user.id
+        
+        checkout_session = stripe.checkout.Session.create(**session_data)
         return redirect(checkout_session.url, code=303)
         
     except Exception as e:
