@@ -939,7 +939,7 @@ def dashboard():
     
     # Create current_user object for template
     current_user = type('obj', (object,), {
-        'subscription_tier': session.get('subscription_tier', 'free'),
+        'subscription_tier': 'admin' if is_admin else session.get('subscription_tier', 'free'),
         'affiliate_id': session.get('affiliate_id', 'luxoraconnect-20')
     })()
     
