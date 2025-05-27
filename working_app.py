@@ -1696,11 +1696,9 @@ def save_email_config():
         user_id = session.get('user_id')
         
         if user_id == 'admin':
-            # For admin, store in session 
-            session['user_email'] = user_email
-            session['email_list'] = email_list
-            session['email_configured'] = True
-            return jsonify({'success': True, 'message': 'Email settings saved!'})
+            # Convert admin session to real user ID
+            user_id = '43018417'
+            session['user_id'] = user_id
         
         user = User.query.get(user_id)
         if not user:
@@ -1757,9 +1755,11 @@ def my_catalog():
         user_id = '43018417'
         session['user_id'] = user_id
     
+    # Get user object for display purposes
+    user = User.query.get(user_id)
+    
     # Admin users have full access, others need paid subscription
     if not is_admin:
-        user = User.query.get(user_id)
         if not user or user.subscription_tier == 'free':
             return redirect('/subscribe')
     
@@ -1811,7 +1811,7 @@ def my_catalog():
                     <a href="/products">Browse Products</a>
                 </div>
                 <div>
-                    <span style="color: #FFD700;">👑 {user.subscription_tier.title()} Member</span>
+                    <span style="color: #FFD700;">👑 {user.subscription_tier.title() if user else 'Admin'} Member</span>
                 </div>
             </div>
         </div>
