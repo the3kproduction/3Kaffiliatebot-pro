@@ -250,20 +250,27 @@
             const userEmail = document.getElementById('userEmail').value;
             const emailList = document.getElementById('emailList').value;
             
+            const formData = new FormData();
+            formData.append('user_email', userEmail);
+            formData.append('email_list', emailList);
+            
             fetch('/api/save-email-config', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    user_email: userEmail,
-                    email_list: emailList
-                })
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
+                if (data.success) {
+                    alert('Email settings saved successfully!');
+                } else {
+                    alert('Error: ' + data.error);
+                }
                 hideEmailConfig();
                 location.reload();
+            })
+            .catch(error => {
+                alert('Error saving email settings');
+                console.error(error);
             });
         }
         
