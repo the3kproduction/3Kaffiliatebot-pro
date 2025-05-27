@@ -1849,6 +1849,21 @@ def get_platform_status():
     
     return jsonify(status)
 
+@app.route('/api/promote-product', methods=['POST'])
+def api_promote_product_new():
+    """API endpoint for promoting products"""
+    if not session.get('user_id'):
+        return jsonify({'success': False, 'error': 'Not authenticated'}), 401
+    
+    data = request.get_json()
+    asin = data.get('asin')
+    
+    if not asin:
+        return jsonify({'success': False, 'error': 'ASIN required'}), 400
+    
+    # Redirect to the success page instead of using popup
+    return jsonify({'success': True, 'redirect_url': f'/promote-success?asin={asin}'})
+
 @app.route('/api/save-email-config', methods=['POST'])
 def save_email_config():
     """Save email configuration for user"""

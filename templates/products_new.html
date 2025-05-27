@@ -303,15 +303,16 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    // Redirect to success page instead of alert
-                    window.location.href = '/promote-success?asin=' + asin;
+                if (data.success && data.redirect_url) {
+                    // Redirect to success page - no ugly popup!
+                    window.location.href = data.redirect_url;
                 } else {
-                    alert('Error promoting product: ' + data.error);
+                    // Show error message only if there's actually an error
+                    console.error('Promotion error:', data.error);
                 }
             })
             .catch(error => {
-                alert('Error: ' + error);
+                console.error('Network error:', error);
             });
         }
         
