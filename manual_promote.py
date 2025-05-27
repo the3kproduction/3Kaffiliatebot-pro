@@ -7,7 +7,8 @@ Run this to instantly promote a product to all your connected platforms!
 import os
 import sys
 import requests
-from app import app, ProductInventory
+from working_app import app
+from models import ProductInventory
 
 def promote_product_now(asin=None):
     """Promote a product immediately to all connected platforms"""
