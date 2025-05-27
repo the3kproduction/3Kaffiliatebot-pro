@@ -206,7 +206,9 @@
             <div class="nav-buttons">
                 <a href="/dashboard" class="nav-btn">🎯 Go to Dashboard</a>
                 <a href="/products" class="nav-btn">🛍️ Browse Products</a>
+                {% if not session.get('user_id') or not session.get('is_admin') %}
                 <a href="/subscribe" class="nav-btn">⭐ Upgrade Plan</a>
+                {% endif %}
             </div>
         </div>
         
@@ -357,7 +359,9 @@
             <div style="text-align: center; margin-top: 40px;">
                 <a href="/dashboard" class="btn">🎯 Go to Dashboard</a>
                 <a href="/products" class="btn">🛍️ Browse Products</a>
+                {% if not session.get('user_id') or not session.get('is_admin') %}
                 <a href="/subscribe" class="btn">⭐ Upgrade Plan</a>
+                {% endif %}
             </div>
         </div>
         
