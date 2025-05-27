@@ -1166,8 +1166,8 @@ def dashboard():
     # Check if auto-posting is enabled
     auto_posting_enabled = session.get('auto_posting_enabled', False)
     
-    # No featured products until members add them
-    featured_products = []
+    # Get featured products from inventory
+    featured_products = ProductInventory.query.filter_by(is_active=True).limit(6).all()
     
     # Count open support tickets for admin notification
     open_tickets = 0
