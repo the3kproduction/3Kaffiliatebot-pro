@@ -2933,14 +2933,19 @@ def submit_support_message():
         <style>
             body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }}
             .success-box {{ background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; text-align: center; backdrop-filter: blur(10px); }}
-            .btn {{ background: #4CAF50; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; display: inline-block; margin-top: 20px; }}
+            .btn {{ background: #4CAF50; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; display: inline-block; margin-top: 20px; margin: 10px; }}
+            .reference-box {{ background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; margin: 20px 0; }}
         </style></head>
         <body>
             <div class="success-box">
                 <h2>✅ Message Sent Successfully!</h2>
                 <p>Thank you for contacting us. We'll get back to you within 24 hours.</p>
-                <p><strong>Reference ID:</strong> #{support_msg.id}</p>
+                <div class="reference-box">
+                    <p><strong>Reference ID:</strong> #{support_msg.id}</p>
+                    <p><small>Save this ID to check your ticket status later</small></p>
+                </div>
                 <a href="/dashboard" class="btn">Return to Dashboard</a>
+                <a href="/check-ticket" class="btn" style="background: #667eea;">Check Ticket Status</a>
             </div>
         </body></html>
         '''
