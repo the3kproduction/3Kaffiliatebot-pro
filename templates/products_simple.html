@@ -61,16 +61,29 @@
         <!-- Pagination Controls -->
         {% if pagination %}
         <div style="text-align: center; margin-top: 40px;">
-            <div style="display: inline-flex; gap: 10px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 25px; backdrop-filter: blur(10px);">
+            <div style="display: inline-flex; gap: 10px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 25px; backdrop-filter: blur(10px); flex-wrap: wrap; justify-content: center;">
                 {% if pagination.has_prev %}
                     <a href="{{ url_for('products', page=pagination.prev_num) }}" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
                         ← Previous
                     </a>
                 {% endif %}
                 
-                <span style="color: white; padding: 10px 20px; font-weight: bold;">
-                    Page {{ pagination.page }} of {{ pagination.pages }}
-                </span>
+                <!-- Page Numbers -->
+                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        {% if page_num != pagination.page %}
+                            <a href="{{ url_for('products', page=page_num) }}" style="background: rgba(255,255,255,0.15); color: white; padding: 10px 15px; border-radius: 15px; text-decoration: none; min-width: 40px; text-align: center;">
+                                {{ page_num }}
+                            </a>
+                        {% else %}
+                            <span style="background: #4CAF50; color: white; padding: 10px 15px; border-radius: 15px; font-weight: bold; min-width: 40px; text-align: center;">
+                                {{ page_num }}
+                            </span>
+                        {% endif %}
+                    {% else %}
+                        <span style="color: rgba(255,255,255,0.5); padding: 10px 5px;">...</span>
+                    {% endif %}
+                {% endfor %}
                 
                 {% if pagination.has_next %}
                     <a href="{{ url_for('products', page=pagination.next_num) }}" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
