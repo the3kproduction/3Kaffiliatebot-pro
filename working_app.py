@@ -1918,7 +1918,7 @@ def get_platform_status():
     # Check if user has configured platforms
     status = {
         'success': True,
-        'email_configured': bool(session.get('email_configured') or (user_id != 'admin' and User.query.get(user_id) and User.query.get(user_id).email_configured)),
+        'email_configured': bool(session.get('email_configured')),
         'facebook_configured': bool(session.get('facebook_configured')),
         'twitter_configured': bool(session.get('twitter_configured')),
         'instagram_configured': bool(session.get('instagram_configured')),
