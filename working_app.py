@@ -120,9 +120,20 @@ def success():
 
 @app.route('/products')
 def products():
-    """Show available products"""
-    products = ProductInventory.query.filter_by(is_active=True).limit(20).all()
-    return render_template('products_simple.html', products=products)
+    """Show available products with pagination"""
+    page = request.args.get('page', 1, type=int)
+    per_page = 12  # Show 12 products per page
+    
+    # Get paginated products from inventory
+    products_pagination = ProductInventory.query.filter_by(is_active=True).paginate(
+        page=page, 
+        per_page=per_page, 
+        error_out=False
+    )
+    
+    return render_template('products_simple.html', 
+                         products=products_pagination.items,
+                         pagination=products_pagination)
 
 @app.route('/campaigns')
 def campaigns():
