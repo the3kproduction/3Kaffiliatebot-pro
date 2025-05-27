@@ -149,13 +149,20 @@
                 <div>📊 Posts today: <span id="postsToday">{{ real_stats.posts_today or 0 }}</span></div>
             </div>
             <div style="display: flex; gap: 10px; align-items: center; font-size: 14px;">
-                <label>Auto-post every:</label>
-                <select id="postingFrequency" style="padding: 5px; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                <label style="color: white;">Auto-post every:</label>
+                <select id="postingFrequency" style="padding: 8px; border-radius: 5px; background: white; color: #333; border: none; font-size: 14px;">
+                    {% if current_user.subscription_tier == 'admin' or current_user.subscription_tier == 'pro' %}
                     <option value="15">15 minutes</option>
                     <option value="30">30 minutes</option>
+                    {% endif %}
                     <option value="60" selected>1 hour</option>
                     <option value="120">2 hours</option>
+                    {% if current_user.subscription_tier == 'free' %}
+                    <option value="720">12 hours</option>
+                    {% else %}
                     <option value="240">4 hours</option>
+                    <option value="480">8 hours</option>
+                    {% endif %}
                 </select>
             </div>
         </div>

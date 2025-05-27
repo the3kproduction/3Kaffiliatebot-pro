@@ -1327,10 +1327,20 @@ def api_auto_post():
         import random
         selected_product = random.choice(products)
         
-        # Post to configured platforms
+        # Post to configured platforms manually since MultiPlatformPoster expects dict
+        product_dict = {
+            'title': selected_product.product_title,
+            'price': selected_product.price,
+            'rating': selected_product.rating,
+            'image_url': selected_product.image_url,
+            'amazon_url': f"https://www.amazon.com/dp/{selected_product.asin}?tag=luxoraconnect-20",
+            'affiliate_url': f"https://www.amazon.com/dp/{selected_product.asin}?tag=luxoraconnect-20",
+            'asin': selected_product.asin
+        }
+        
         from marketing_automation import MultiPlatformPoster
         poster = MultiPlatformPoster(user)
-        result = poster.post_product(selected_product)
+        result = poster.post_product(product_dict)
         
         if result['success']:
             return jsonify({
