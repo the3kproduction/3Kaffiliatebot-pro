@@ -686,7 +686,29 @@ def api_add_product():
 @app.route('/settings')
 def settings():
     """User settings"""
-    return render_template('settings.html')
+    if 'user_id' not in session:
+        return redirect('/admin-login')
+    
+    user_id = session['user_id']
+    user = User.query.get(user_id) if user_id != 'admin' else None
+    
+    # Get real platform connection status
+    platform_status = {
+        'discord': bool(os.environ.get('DISCORD_WEBHOOK_URL')),
+        'telegram': bool(os.environ.get('TELEGRAM_BOT_TOKEN') and os.environ.get('TELEGRAM_CHAT_ID')),
+        'slack': bool(os.environ.get('SLACK_BOT_TOKEN') and os.environ.get('SLACK_CHANNEL_ID')),
+        'email': bool(os.environ.get('SENDGRID_API_KEY')),
+        'pinterest': False,  # Not configured yet
+        'reddit': bool(os.environ.get('REDDIT_CLIENT_ID') and os.environ.get('REDDIT_CLIENT_SECRET'))
+    }
+    
+    # Create current_user object for template
+    current_user = type('obj', (object,), {
+        'subscription_tier': session.get('subscription_tier', 'free'),
+        'affiliate_id': session.get('affiliate_id', 'luxoraconnect-20')
+    })()
+    
+    return render_template('settings.html', platform_status=platform_status, current_user=current_user)
 
 @app.route('/login')
 def login():
@@ -1252,6 +1274,52 @@ def terms():
 def privacy():
     """Privacy Policy page"""
     return render_template('privacy.html', current_date="May 27, 2025")
+
+@app.route('/api/auto-post', methods=['POST'])
+def api_auto_post():
+    """API endpoint for manual auto-posting trigger"""
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'error': 'Not logged in'}), 401
+    
+    user_id = session['user_id']
+    user = User.query.get(user_id) if user_id != 'admin' else None
+    
+    if not user:
+        return jsonify({'success': False, 'error': 'User not found'}), 404
+    
+    try:
+        # Get products available for promotion
+        products = ProductInventory.query.filter_by(is_active=True).limit(10).all()
+        
+        if not products:
+            return jsonify({'success': False, 'error': 'No products available for promotion'})
+        
+        # Select random product
+        import random
+        selected_product = random.choice(products)
+        
+        # Post to configured platforms
+        from marketing_automation import MultiPlatformPoster
+        poster = MultiPlatformPoster(user)
+        result = poster.post_product(selected_product)
+        
+        if result['success']:
+            return jsonify({
+                'success': True,
+                'message': f'Successfully posted {selected_product.product_title} to your platforms!',
+                'product': selected_product.product_title
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': result.get('error', 'Failed to post product')
+            })
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Auto-posting failed: {str(e)}'
+        }), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

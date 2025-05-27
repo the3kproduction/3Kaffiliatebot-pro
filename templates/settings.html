@@ -78,36 +78,61 @@
                 <div class="platform-item">
                     <span>📱 Discord</span>
                     <div>
+                        {% if platform_status.discord %}
                         <span class="platform-status status-connected">Connected</span>
                         <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                        {% else %}
+                        <span class="platform-status status-disconnected">Not Connected</span>
+                        <button class="btn" style="margin-left: 10px;">Connect</button>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="platform-item">
                     <span>📧 Telegram</span>
                     <div>
+                        {% if platform_status.telegram %}
                         <span class="platform-status status-connected">Connected</span>
                         <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                        {% else %}
+                        <span class="platform-status status-disconnected">Not Connected</span>
+                        <button class="btn" style="margin-left: 10px;">Connect</button>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="platform-item">
                     <span>💼 Slack</span>
                     <div>
+                        {% if platform_status.slack %}
+                        <span class="platform-status status-connected">Connected</span>
+                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                        {% else %}
                         <span class="platform-status status-disconnected">Not Connected</span>
                         <button class="btn" style="margin-left: 10px;">Connect</button>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="platform-item">
                     <span>📧 Email</span>
                     <div>
+                        {% if platform_status.email %}
+                        <span class="platform-status status-connected">Connected</span>
+                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                        {% else %}
                         <span class="platform-status status-disconnected">Not Connected</span>
                         <button class="btn" style="margin-left: 10px;">Connect</button>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="platform-item">
                     <span>📌 Pinterest</span>
                     <div>
+                        {% if platform_status.pinterest %}
+                        <span class="platform-status status-connected">Connected</span>
+                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                        {% else %}
                         <span class="platform-status status-disconnected">Not Connected</span>
                         <button class="btn" style="margin-left: 10px;">Connect</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -140,10 +165,18 @@
 
             <div class="settings-panel">
                 <div class="panel-title">💳 Subscription & Billing</div>
-                <p style="margin-bottom: 20px;">Current Plan: <strong>Premium</strong> ✅</p>
-                <p style="margin-bottom: 20px;">Posts per day: <strong>8</strong></p>
+                <p style="margin-bottom: 20px;">Current Plan: <strong>{{ current_user.subscription_tier|title }}</strong> ✅</p>
+                <p style="margin-bottom: 20px;">Posts per day: <strong>
+                    {% if current_user.subscription_tier == 'free' %}2{% endif %}
+                    {% if current_user.subscription_tier == 'premium' %}8{% endif %}
+                    {% if current_user.subscription_tier == 'pro' %}24{% endif %}
+                </strong></p>
                 <p style="margin-bottom: 20px; color: #4CAF50;">Your subscription is active and ready to earn commissions!</p>
-                <button class="btn btn-secondary" onclick="location.href='/subscribe'">💎 Upgrade to Pro (24 posts/day)</button>
+                {% if current_user.subscription_tier != 'pro' %}
+                <button class="btn btn-secondary" onclick="location.href='/subscribe'">💎 Upgrade to 
+                    {% if current_user.subscription_tier == 'free' %}Premium (8 posts/day){% else %}Pro (24 posts/day){% endif %}
+                </button>
+                {% endif %}
             </div>
         </div>
     </div>
