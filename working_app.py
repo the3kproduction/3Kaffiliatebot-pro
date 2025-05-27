@@ -154,9 +154,12 @@ def success():
     </body></html>
     '''
 
-@app.route('/create-account', methods=['POST'])
+@app.route('/create-account', methods=['GET', 'POST'])
 def create_account():
     """Create user account after successful payment"""
+    if request.method == 'GET':
+        return redirect('/test-success')
+    
     username = request.form.get('username')
     email = request.form.get('email')
     password = request.form.get('password')
