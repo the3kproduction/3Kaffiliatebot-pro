@@ -323,6 +323,59 @@ def campaigns():
     
     return render_template('campaigns.html', campaigns=user_campaigns)
 
+@app.route('/subscribe')
+@require_login
+def subscribe():
+    """Subscription upgrade page"""
+    user = current_user
+    return render_template('subscribe.html', user=user)
+
+@app.route('/create-checkout-session', methods=['POST'])
+@require_login
+def create_checkout_session():
+    """Create Stripe checkout session for subscription"""
+    import stripe
+    import os
+    
+    # Set Stripe API key
+    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
+    
+    plan = request.form.get('plan')
+    
+    # Define price IDs (you'll need to create these in Stripe Dashboard)
+    price_ids = {
+        'premium': 'price_premium_monthly',  # Replace with your actual Stripe price ID
+        'pro': 'price_pro_monthly'           # Replace with your actual Stripe price ID
+    }
+    
+    if plan not in price_ids:
+        flash('Invalid plan selected', 'error')
+        return redirect(url_for('subscribe'))
+    
+    try:
+        # Get domain for redirect URLs
+        domain = request.host_url.rstrip('/')
+        
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[{
+                'price': price_ids[plan],
+                'quantity': 1,
+            }],
+            mode='subscription',
+            success_url=f'{domain}/success?session_id={{CHECKOUT_SESSION_ID}}',
+            cancel_url=f'{domain}/subscribe',
+            customer_email=current_user.email,
+            metadata={
+                'user_id': current_user.id,
+                'plan': plan
+            }
+        )
+        return redirect(checkout_session.url, code=303)
+        
+    except Exception as e:
+        flash(f'Error creating checkout session: {str(e)}', 'error')
+        return redirect(url_for('subscribe'))
+
 @app.route('/analytics')
 @require_login
 def analytics():
