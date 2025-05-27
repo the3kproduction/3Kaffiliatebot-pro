@@ -1950,17 +1950,17 @@ def get_platform_status():
     else:
         user = User.query.get(user_id)
     
-    # Check if user has configured platforms
+    # Check if user has configured platforms - using environment/database for persistence
     status = {
         'success': True,
         'email_configured': bool(user and user.email),  # Check database for email
-        'facebook_configured': bool(session.get('facebook_configured')),
-        'twitter_configured': bool(session.get('twitter_configured')),
-        'instagram_configured': bool(session.get('instagram_configured')),
-        'linkedin_configured': bool(session.get('linkedin_configured')),
-        'telegram_configured': bool(session.get('telegram_configured')),
-        'reddit_configured': bool(session.get('reddit_client_id')),
-        'pinterest_configured': bool(session.get('pinterest_access_token'))
+        'facebook_configured': bool(os.environ.get('FACEBOOK_PAGE_TOKEN')),
+        'twitter_configured': bool(os.environ.get('TWITTER_API_KEY')),
+        'instagram_configured': bool(os.environ.get('INSTAGRAM_ACCESS_TOKEN')),
+        'linkedin_configured': bool(os.environ.get('LINKEDIN_ACCESS_TOKEN')),
+        'telegram_configured': bool(os.environ.get('TELEGRAM_BOT_TOKEN') and os.environ.get('TELEGRAM_CHAT_ID')),
+        'reddit_configured': bool(os.environ.get('REDDIT_CLIENT_ID') and os.environ.get('REDDIT_CLIENT_SECRET')),
+        'pinterest_configured': bool(os.environ.get('PINTEREST_ACCESS_TOKEN'))
     }
     
     return jsonify(status)
