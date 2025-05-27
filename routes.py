@@ -342,10 +342,10 @@ def create_checkout_session():
     
     plan = request.form.get('plan')
     
-    # Define price IDs (you'll need to create these in Stripe Dashboard)
+    # Your actual Stripe Price IDs
     price_ids = {
-        'premium': 'price_premium_monthly',  # Replace with your actual Stripe price ID
-        'pro': 'price_pro_monthly'           # Replace with your actual Stripe price ID
+        'premium': 'price_1RTCsLAjaTA9iq9Q4JF7UKrx',  # $29/month Premium Plan
+        'pro': 'price_1RTCtOAjaTA9iq9QKNJJSUwF'        # $79/month Pro Plan
     }
     
     if plan not in price_ids:
