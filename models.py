@@ -223,6 +223,22 @@ class UserProductPromotion(db.Model):
     # Prevent same user promoting same product multiple times in short period
     __table_args__ = (UniqueConstraint('user_id', 'asin', name='uq_user_product'),)
 
+# Track referral promotions for platform sharing
+class ReferralPromotion(db.Model):
+    __tablename__ = 'referral_promotions'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
+    referral_code = db.Column(db.String(50), nullable=False)
+    platforms_posted = db.Column(db.String(200), nullable=True)  # comma-separated list
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    
+    # Track performance
+    signups_generated = db.Column(db.Integer, default=0)
+    free_months_earned = db.Column(db.Integer, default=0)
+    
+    # Relationship
+    user = db.relationship('User', backref='referral_promotions')
+
 # Multiple webhook destinations
 class WebhookDestination(db.Model):
     __tablename__ = 'webhook_destinations'

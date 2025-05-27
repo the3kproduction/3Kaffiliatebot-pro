@@ -2816,6 +2816,7 @@ Join thousands making passive income: {signup_url}
         # Track referral promotion
         try:
             from datetime import datetime
+            from models import ReferralPromotion
             promotion = ReferralPromotion()
             promotion.user_id = user_id
             promotion.referral_code = referral_code
