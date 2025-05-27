@@ -91,6 +91,20 @@ class UserSavedProducts(db.Model):
     notes = db.Column(db.Text)  # Personal notes about the product
     priority = db.Column(db.String(20), default='medium')  # high, medium, low
 
+class SupportMessage(db.Model):
+    __tablename__ = 'support_messages'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'))
+    user_email = db.Column(db.String(200))
+    user_name = db.Column(db.String(100))
+    subject = db.Column(db.String(200))
+    message = db.Column(db.Text)
+    status = db.Column(db.String(20), default='open')  # open, replied, closed
+    priority = db.Column(db.String(20), default='normal')  # low, normal, high, urgent
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    admin_reply = db.Column(db.Text)
+    replied_at = db.Column(db.DateTime)
+
 # Routes
 @app.route('/')
 def index():
@@ -1470,13 +1484,34 @@ def create_campaign():
         platforms = request.form.getlist('platforms')
         
         try:
-            from models import Campaign
-            new_campaign = Campaign(
-                user_id=session.get('user_id'),
-                name=name,
-                description=description,
-                category=category
-            )
+            user_id = session.get('user_id')
+            
+            # Create admin user in database if it doesn't exist
+            if user_id == 'admin':
+                admin_user = User.query.get('admin')
+                if not admin_user:
+                    admin_user = User()
+                    admin_user.id = 'admin'
+                    admin_user.email = 'admin@affiliatebotpro.com'
+                    admin_user.username = 'admin'
+                    admin_user.subscription_tier = 'admin'
+                    admin_user.is_admin = True
+                    admin_user.affiliate_id = 'luxoraconnect-20'
+                    db.session.add(admin_user)
+                    db.session.commit()
+            
+            # Create the campaign
+            new_campaign = Campaign()
+            new_campaign.user_id = user_id
+            new_campaign.name = name
+            new_campaign.description = description
+            new_campaign.category = category
+            new_campaign.status = 'active'
+            new_campaign.total_posts = 0
+            new_campaign.total_clicks = 0
+            new_campaign.total_revenue = 0.0
+            new_campaign.created_at = datetime.now()
+            
             db.session.add(new_campaign)
             db.session.commit()
             
