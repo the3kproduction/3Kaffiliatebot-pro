@@ -168,16 +168,71 @@ def promote_product(asin):
 
 #AmazonDeals #TechDeals #Affiliate"""
 
-        # For now, we'll simulate posting (you can connect real platforms later)
+        # Actually post to real platforms using your credentials
         platforms_posted = []
         
-        # Simulate Discord posting
-        if True:  # Replace with actual Discord webhook check
-            platforms_posted.append("Discord")
+        # Post to Discord
+        discord_webhook = os.environ.get('DISCORD_WEBHOOK_URL')
+        if discord_webhook:
+            try:
+                import requests
+                discord_data = {
+                    "content": message,
+                    "embeds": [{
+                        "title": product.product_title,
+                        "description": f"Price: {product.price} | Rating: {product.rating}/5",
+                        "url": affiliate_url,
+                        "image": {"url": product.image_url} if product.image_url else None,
+                        "color": 0x00ff00
+                    }]
+                }
+                response = requests.post(discord_webhook, json=discord_data)
+                if response.status_code == 204:
+                    platforms_posted.append("Discord")
+            except Exception as e:
+                print(f"Discord posting error: {e}")
         
-        # Simulate Telegram posting  
-        if True:  # Replace with actual Telegram bot check
-            platforms_posted.append("Telegram")
+        # Post to Telegram
+        telegram_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+        telegram_chat = os.environ.get('TELEGRAM_CHAT_ID')
+        if telegram_token and telegram_chat:
+            try:
+                import requests
+                telegram_url = f"https://api.telegram.org/bot{telegram_token}/sendMessage"
+                telegram_data = {
+                    "chat_id": telegram_chat,
+                    "text": message,
+                    "parse_mode": "Markdown"
+                }
+                response = requests.post(telegram_url, json=telegram_data)
+                if response.status_code == 200:
+                    platforms_posted.append("Telegram")
+            except Exception as e:
+                print(f"Telegram posting error: {e}")
+        
+        # Post to Slack
+        slack_token = os.environ.get('SLACK_BOT_TOKEN')
+        slack_channel = os.environ.get('SLACK_CHANNEL_ID')
+        if slack_token and slack_channel:
+            try:
+                import requests
+                slack_url = "https://slack.com/api/chat.postMessage"
+                slack_headers = {"Authorization": f"Bearer {slack_token}"}
+                slack_data = {
+                    "channel": slack_channel,
+                    "text": message,
+                    "attachments": [{
+                        "title": product.product_title,
+                        "title_link": affiliate_url,
+                        "image_url": product.image_url,
+                        "color": "good"
+                    }]
+                }
+                response = requests.post(slack_url, headers=slack_headers, json=slack_data)
+                if response.status_code == 200:
+                    platforms_posted.append("Slack")
+            except Exception as e:
+                print(f"Slack posting error: {e}")
         
         return {
             "success": True, 
