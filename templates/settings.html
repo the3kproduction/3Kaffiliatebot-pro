@@ -114,25 +114,15 @@
                 <div class="platform-item">
                     <span>📧 Email</span>
                     <div>
-                        {% if platform_status.email %}
-                        <span class="platform-status status-connected">Connected</span>
-                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
-                        {% else %}
-                        <span class="platform-status status-disconnected">Not Connected</span>
-                        <button class="btn" style="margin-left: 10px;">Connect</button>
-                        {% endif %}
+                        <span class="platform-status status-disconnected">Setup Required</span>
+                        <button class="btn" style="margin-left: 10px;" onclick="showEmailConfig()">Configure Email</button>
                     </div>
                 </div>
                 <div class="platform-item">
                     <span>📌 Pinterest</span>
                     <div>
-                        {% if platform_status.pinterest %}
-                        <span class="platform-status status-connected">Connected</span>
-                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
-                        {% else %}
-                        <span class="platform-status status-disconnected">Not Connected</span>
-                        <button class="btn" style="margin-left: 10px;">Connect</button>
-                        {% endif %}
+                        <span class="platform-status status-disconnected">Setup Required</span>
+                        <button class="btn" style="margin-left: 10px;" onclick="showPinterestConfig()">Configure Pinterest</button>
                     </div>
                 </div>
             </div>
