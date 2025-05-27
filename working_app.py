@@ -650,10 +650,7 @@ def api_add_product():
         db.session.rollback()
         return {'success': False, 'message': f'Database error: {str(e)}'}, 500
 
-@app.route('/campaigns')
-def campaigns():
-    """Campaign management"""
-    return render_template('campaigns.html')
+# Campaigns route moved below to include proper functionality
 
 
 
@@ -957,6 +954,129 @@ with app.app_context():
         print("Added sample products to database")
 
 
+
+@app.route('/campaigns')
+def campaigns():
+    """View and manage campaigns"""
+    if not session.get('user_id'):
+        return redirect('/')
+    
+    user_id = session.get('user_id')
+    user_campaigns = []
+    
+    try:
+        from models import Campaign
+        user_campaigns = Campaign.query.filter_by(user_id=user_id).all()
+    except:
+        pass
+    
+    return render_template('campaigns.html', campaigns=user_campaigns)
+
+@app.route('/create-campaign', methods=['GET', 'POST'])
+def create_campaign():
+    """Create new campaign"""
+    if not session.get('user_id'):
+        return redirect('/')
+    
+    if request.method == 'POST':
+        name = request.form.get('name')
+        description = request.form.get('description')
+        category = request.form.get('category')
+        platforms = request.form.getlist('platforms')
+        
+        try:
+            from models import Campaign
+            new_campaign = Campaign(
+                user_id=session.get('user_id'),
+                name=name,
+                description=description,
+                category=category
+            )
+            db.session.add(new_campaign)
+            db.session.commit()
+            
+            return redirect('/campaigns')
+        except Exception as e:
+            return f"Error creating campaign: {str(e)}"
+    
+    return '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Create Campaign - AffiliateBot Pro</title>
+        <style>
+            body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; padding: 20px; }
+            .container { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; backdrop-filter: blur(10px); }
+            .form-group { margin-bottom: 20px; }
+            label { display: block; margin-bottom: 5px; font-weight: bold; }
+            input, textarea, select { width: 100%; padding: 12px; border: none; border-radius: 8px; background: rgba(255,255,255,0.9); color: #333; }
+            .checkbox-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+            .checkbox-item { display: flex; align-items: center; gap: 8px; }
+            .btn { background: #4CAF50; color: white; padding: 15px 30px; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; }
+            .btn:hover { background: #45a049; }
+            .back-btn { background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border: none; border-radius: 20px; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <a href="/campaigns" class="back-btn">← Back to Campaigns</a>
+            <h1>🚀 Create New Campaign</h1>
+            <p>Set up a targeted marketing campaign for your affiliate products</p>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label>Campaign Name</label>
+                    <input type="text" name="name" placeholder="e.g., Electronics Holiday Sale" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="3" placeholder="Describe your campaign goals and target audience" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Product Category</label>
+                    <select name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Home & Kitchen">Home & Kitchen</option>
+                        <option value="Sports & Outdoors">Sports & Outdoors</option>
+                        <option value="Health & Personal Care">Health & Personal Care</option>
+                        <option value="Books">Books</option>
+                        <option value="Beauty & Personal Care">Beauty & Personal Care</option>
+                        <option value="Toys & Games">Toys & Games</option>
+                        <option value="Clothing">Clothing</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Target Platforms</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="platforms" value="discord" id="discord">
+                            <label for="discord">Discord</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="platforms" value="slack" id="slack">
+                            <label for="slack">Slack</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="platforms" value="telegram" id="telegram">
+                            <label for="telegram">Telegram</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="platforms" value="reddit" id="reddit">
+                            <label for="reddit">Reddit</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">🚀 Create Campaign</button>
+            </form>
+        </div>
+    </body>
+    </html>
+    '''
 
 @app.route('/terms')
 def terms():
