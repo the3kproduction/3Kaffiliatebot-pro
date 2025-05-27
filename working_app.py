@@ -1656,8 +1656,7 @@ def save_email_config():
             return jsonify({'success': False, 'error': 'User not found'})
         
         # Store email settings in user profile
-        user.email_sendgrid_key = data.get('sendgrid_key')
-        user.email_from_address = data.get('from_email')
+        user.user_email = data.get('user_email')
         user.email_list = data.get('email_list')
         user.email_configured = True
         
