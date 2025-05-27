@@ -62,8 +62,8 @@ def index():
         flash('Welcome! Creating your free tier account with 2 posts per day...', 'info')
         return render_template('landing.html', free_signup=True)
     
-    # For Render deployment without Replit auth, auto-login demo user
-    if os.environ.get('RENDER') and not current_user.is_authenticated:
+    # For Render deployment without Replit auth, auto-login demo user ONLY on home page
+    if os.environ.get('RENDER') and not current_user.is_authenticated and request.endpoint == 'index':
         from flask_login import login_user
         demo_user = create_demo_user()
         login_user(demo_user)
