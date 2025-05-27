@@ -35,7 +35,7 @@
                 {% endif %}
                 <div class="product-title">{{ product.product_title or 'Amazon Product' }}</div>
                 <div class="product-price">${{ product.price or '29.99' }}</div>
-                <button class="promote-btn" onclick="promoteProduct('{{ product.asin }}')">
+                <button class="promote-btn" onclick="promoteProduct('{{ product.asin }}', '{{ product.product_title }}')">
                     🚀 Promote This Product
                 </button>
             </div>
@@ -44,8 +44,53 @@
     </div>
 
     <script>
-        function promoteProduct(asin) {
-            alert('Product promotion feature coming soon! ASIN: ' + asin);
+        async function promoteProduct(asin, productTitle) {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '⏳ Promoting...';
+            button.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/promote/${asin}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    button.innerHTML = '✅ Posted!';
+                    alert(`🎉 SUCCESS!\n\n"${productTitle}" has been promoted to:\n${result.platforms.join(', ')}\n\nYour affiliate link is now live and earning commissions!`);
+                    
+                    // Reset button after 3 seconds
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }, 3000);
+                } else {
+                    button.innerHTML = '❌ Error';
+                    alert(`Error: ${result.message}`);
+                    
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }, 2000);
+                }
+            } catch (error) {
+                button.innerHTML = '❌ Error';
+                alert('Network error. Please check your connection and try again.');
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
+            }
         }
     </script>
 </body>

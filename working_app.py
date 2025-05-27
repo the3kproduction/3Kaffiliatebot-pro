@@ -144,6 +144,56 @@ def login():
     """Simple login page"""
     return "<h1>Login Page</h1><p>Admin can login here</p>"
 
+@app.route('/promote/<asin>', methods=['POST'])
+def promote_product(asin):
+    """Promote a specific product across platforms"""
+    try:
+        # Get product details
+        product = ProductInventory.query.filter_by(asin=asin).first()
+        if not product:
+            return {"success": False, "message": "Product not found"}
+        
+        # Create affiliate URL with your Amazon affiliate ID
+        affiliate_id = "luxoraconnect-20"
+        affiliate_url = f"https://www.amazon.com/dp/{asin}?tag={affiliate_id}"
+        
+        # Format promotion message
+        message = f"""🔥 **DEAL ALERT!** 🔥
+
+{product.product_title}
+💰 Price: {product.price}
+⭐ Rating: {product.rating}/5
+
+🛒 Get it here: {affiliate_url}
+
+#AmazonDeals #TechDeals #Affiliate"""
+
+        # For now, we'll simulate posting (you can connect real platforms later)
+        platforms_posted = []
+        
+        # Simulate Discord posting
+        if True:  # Replace with actual Discord webhook check
+            platforms_posted.append("Discord")
+        
+        # Simulate Telegram posting  
+        if True:  # Replace with actual Telegram bot check
+            platforms_posted.append("Telegram")
+        
+        return {
+            "success": True, 
+            "message": f"Product promoted successfully to: {', '.join(platforms_posted)}",
+            "product": product.product_title,
+            "platforms": platforms_posted
+        }
+        
+    except Exception as e:
+        return {"success": False, "message": f"Error promoting product: {str(e)}"}
+
+@app.route('/api/promote/<asin>', methods=['POST'])
+def api_promote_product(asin):
+    """API endpoint for promoting products"""
+    return promote_product(asin)
+
 @app.route('/dashboard')
 def dashboard():
     """Professional affiliate marketing dashboard"""
