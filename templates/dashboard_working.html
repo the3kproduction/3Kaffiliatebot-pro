@@ -102,11 +102,25 @@
         <div class="admin-panel">
             <h3>🔐 Admin Panel</h3>
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <button onclick="location.href='/my-catalog'" style="background: #e91e63; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">💎 My Catalog</button>
                 <button onclick="location.href='/add-amazon-product'" style="background: #ff9800; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">🔗 Add Amazon Product</button>
                 <button onclick="location.href='/admin/email-blast'" style="background: #ff4444; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">📧 Send Email Blast</button>
                 <button onclick="location.href='/admin/users'" style="background: #4444ff; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">👥 Manage Users</button>
                 <button onclick="location.href='/admin'" style="background: #44ff44; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">📊 Admin Dashboard</button>
                 <button onclick="location.href='/products'" style="background: #9c27b0; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">🛍️ Product Catalog</button>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if current_user.subscription_tier in ['premium', 'pro'] and not is_admin %}
+        <div class="admin-panel" style="background: rgba(76,175,80,0.1); border: 2px solid #4CAF50;">
+            <h3 style="color: #4CAF50;">💎 Members Panel</h3>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <button onclick="location.href='/my-catalog'" style="background: #e91e63; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">💎 My Catalog</button>
+                <button onclick="location.href='/add-amazon-product'" style="background: #ff9800; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">🔗 Add Amazon Product</button>
+                <button onclick="location.href='/products'" style="background: #9c27b0; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">🛍️ Product Catalog</button>
+                <button onclick="location.href='/settings'" style="background: #607d8b; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">⚙️ Settings</button>
+                <button onclick="location.href='/how-to-guide'" style="background: #795548; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">📚 How-To Guide</button>
             </div>
         </div>
         {% endif %}
@@ -386,5 +400,14 @@
         updateTimer();
         setInterval(updateTimer, 60000); // Update every minute
     </script>
+    
+    <!-- Footer Links -->
+    <div style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6);">
+        <p>
+            <a href="/terms" style="color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 15px;">Terms of Service</a>
+            <a href="/privacy" style="color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 15px;">Privacy Policy</a>
+            <a href="/how-to-guide" style="color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 15px;">How-To Guide</a>
+        </p>
+    </div>
 </body>
 </html>
