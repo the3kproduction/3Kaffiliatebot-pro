@@ -64,6 +64,7 @@ class ProductInventory(db.Model):
     image_url = db.Column(db.String(500))
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
+    uploaded_by = db.Column(db.String, db.ForeignKey('users.id'))  # Track who uploaded this product
 
 # Product promotion tracking model
 class ProductPromotion(db.Model):
@@ -2373,6 +2374,7 @@ def add_amazon_product():
             product.category = request.form.get('category', 'General')
             product.image_url = f"https://images-na.ssl-images-amazon.com/images/P/{asin}.jpg"
             product.is_active = True
+            product.uploaded_by = user_id  # Track who uploaded this product
             
             db.session.add(product)
             
@@ -2564,7 +2566,22 @@ def admin_refresh_trending():
 
 @app.route('/upload-image/<asin>', methods=['POST'])
 def upload_product_image(asin):
-    """Upload custom image for a product"""
+    """Upload custom image for a product - ONLY product owner or admin can upload"""
+    if 'user_id' not in session:
+        return {"success": False, "message": "Not authenticated"}
+    
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+    
+    # Check if product exists and get ownership info
+    product = ProductInventory.query.filter_by(asin=asin).first()
+    if not product:
+        return {"success": False, "message": "Product not found"}
+    
+    # SECURITY CHECK: Only product owner or admin can upload images
+    if product.uploaded_by != user_id and not user.is_admin:
+        return {"success": False, "message": "Access denied. Only the product owner or admin can change this image."}
+    
     if 'image' not in request.files:
         return {"success": False, "message": "No image file provided"}
     
@@ -2588,19 +2605,14 @@ def upload_product_image(asin):
         # Save the file
         file.save(file_path)
         
-        # Update product with new image URL - use full URL for external platforms
-        product = ProductInventory.query.filter_by(asin=asin).first()
-        if product:
-            # Get the domain for full URL
-            domain = request.headers.get('Host', 'localhost:5000')
-            protocol = 'https' if 'replit.app' in domain or 'render.com' in domain else 'http'
-            full_image_url = f"{protocol}://{domain}/static/uploads/{filename}"
-            
-            product.image_url = full_image_url
-            db.session.commit()
-            return {"success": True, "message": "Image uploaded successfully", "image_url": product.image_url}
-        else:
-            return {"success": False, "message": "Product not found"}
+        # Get the domain for full URL
+        domain = request.headers.get('Host', 'localhost:5000')
+        protocol = 'https' if 'replit.app' in domain or 'render.com' in domain else 'http'
+        full_image_url = f"{protocol}://{domain}/static/uploads/{filename}"
+        
+        product.image_url = full_image_url
+        db.session.commit()
+        return {"success": True, "message": "Image uploaded successfully", "image_url": product.image_url}
     
     return {"success": False, "message": "Invalid file type"}
 
