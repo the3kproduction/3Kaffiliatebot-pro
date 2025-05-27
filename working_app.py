@@ -1082,6 +1082,9 @@ def admin_login():
                 <div style="text-align: center; margin-top: 20px;">
                     <a href="/forgot-password" style="color: #667eea; text-decoration: none; font-size: 14px;">🔑 Forgot Password?</a>
                 </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="/" style="color: #ffffff; text-decoration: none; font-size: 14px; opacity: 0.8;">🏠 Back to Home</a>
+                </div>
             </form>
         </div>
     </body></html>
