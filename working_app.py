@@ -34,6 +34,7 @@ class User(db.Model):
     password_hash = db.Column(db.String)
     subscription_tier = db.Column(db.String, default='free')
     is_admin = db.Column(db.Boolean, default=False)
+    affiliate_id = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
 # Product model
