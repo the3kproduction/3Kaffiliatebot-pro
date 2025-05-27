@@ -451,20 +451,32 @@
             spotlight.style.width = (rect.width + 20) + 'px';
             spotlight.style.height = (rect.height + 20) + 'px';
             
-            // Position tooltip
+            // Position tooltip with better logic
             let tooltipTop, tooltipLeft;
+            const tooltipWidth = 350;
+            const tooltipHeight = 200;
+            
             if (step.position === 'bottom') {
-                tooltipTop = rect.bottom + 20;
-                tooltipLeft = rect.left + (rect.width / 2) - 175;
+                tooltipTop = rect.bottom + 30;
+                tooltipLeft = rect.left + (rect.width / 2) - (tooltipWidth / 2);
             } else {
-                tooltipTop = rect.top - 200;
-                tooltipLeft = rect.left + (rect.width / 2) - 175;
+                tooltipTop = rect.top - tooltipHeight - 30;
+                tooltipLeft = rect.left + (rect.width / 2) - (tooltipWidth / 2);
             }
             
-            // Keep tooltip in viewport
+            // Smart positioning to avoid viewport edges
             if (tooltipLeft < 20) tooltipLeft = 20;
-            if (tooltipLeft > window.innerWidth - 370) tooltipLeft = window.innerWidth - 370;
-            if (tooltipTop < 20) tooltipTop = 20;
+            if (tooltipLeft > window.innerWidth - tooltipWidth - 20) {
+                tooltipLeft = window.innerWidth - tooltipWidth - 20;
+            }
+            if (tooltipTop < 20) {
+                // If top position doesn't fit, move to bottom
+                tooltipTop = rect.bottom + 30;
+            }
+            if (tooltipTop > window.innerHeight - tooltipHeight - 20) {
+                // If bottom doesn't fit, move to top
+                tooltipTop = rect.top - tooltipHeight - 30;
+            }
             
             tooltip.style.left = tooltipLeft + 'px';
             tooltip.style.top = tooltipTop + 'px';
