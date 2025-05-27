@@ -618,13 +618,13 @@
         
         const tourSteps = [
             {
-                target: '.product-grid',
+                target: '.main-panel',
                 title: '🛍️ Discover Trending Products',
                 content: 'Start here! Browse our curated collection of top-selling Amazon products. Each product comes with optimized descriptions and high-quality images ready for promotion.',
                 position: 'bottom'
             },
             {
-                target: '.platform-status',
+                target: '.side-panel',
                 title: '📱 Connect Your Platforms',
                 content: 'Link your social media accounts like Discord, Slack, Reddit, and more. Once connected, you can post products with just one click!',
                 position: 'top'
@@ -636,19 +636,19 @@
                 position: 'bottom'
             },
             {
-                target: '.automation-panel',
+                target: '.automation-card',
                 title: '🤖 Let AI Work for You',
                 content: 'Our AI analyzes market trends and automatically promotes the highest-converting products. Set it and forget it!',
                 position: 'top'
             },
             {
-                target: '.stats-grid',
+                target: '.stats-overview',
                 title: '⚙️ Customize Everything',
                 content: 'Set up your Amazon affiliate ID, configure posting schedules, and manage your subscription preferences.',
                 position: 'bottom'
             },
             {
-                target: '.recent-posts',
+                target: '.quick-actions',
                 title: '🆘 We\'re Here to Help',
                 content: 'Access step-by-step guides, video tutorials, and get priority support. Success is just a click away!',
                 position: 'top'
@@ -742,7 +742,10 @@
         // Check if tour should start automatically
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
+            console.log('URL params:', urlParams.get('tour'));
             if (urlParams.get('tour') === 'start') {
+                console.log('Starting tour...');
+                alert('Tour starting!'); // Debug alert
                 setTimeout(() => {
                     startDashboardTour();
                 }, 1000);
