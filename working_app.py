@@ -1984,16 +1984,18 @@ def my_catalog():
             .page-title p {{ font-size: 1.2em; opacity: 0.9; margin: 10px 0; }}
             .catalog-stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }}
             .stat-card {{ background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center; color: white; }}
-            .products-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }}
-            .product-card {{ background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; color: white; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }}
-            .product-image {{ width: 100%; height: 200px; object-fit: contain; border-radius: 10px; margin-bottom: 15px; background: white; }}
-            .product-title {{ font-weight: bold; font-size: 1.1em; margin-bottom: 10px; line-height: 1.3; }}
-            .product-price {{ color: #4CAF50; font-size: 1.2em; font-weight: bold; margin-bottom: 10px; }}
-            .product-rating {{ color: #FFD700; margin-bottom: 15px; }}
-            .product-notes {{ background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-style: italic; }}
-            .product-actions {{ display: flex; gap: 10px; flex-wrap: wrap; }}
-            .btn {{ padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.9em; text-decoration: none; display: inline-block; text-align: center; }}
+            .products-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }}
+            .product-card {{ background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; color: white; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); height: fit-content; }}
+            .product-image {{ width: 100%; height: 150px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; background: white; }}
+            .product-title {{ font-weight: bold; font-size: 1em; margin-bottom: 8px; line-height: 1.3; height: 40px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }}
+            .product-price {{ color: #4CAF50; font-size: 1.1em; font-weight: bold; margin-bottom: 8px; }}
+            .product-rating {{ color: #FFD700; margin-bottom: 8px; font-size: 0.9em; }}
+            .product-meta {{ font-size: 0.8em; margin-bottom: 8px; opacity: 0.8; }}
+            .product-notes {{ background: rgba(0,0,0,0.2); padding: 8px; border-radius: 6px; margin-bottom: 12px; font-style: italic; font-size: 0.9em; max-height: 60px; overflow: hidden; }}
+            .product-actions {{ display: flex; gap: 8px; flex-wrap: wrap; }}
+            .btn {{ padding: 8px 12px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.8em; text-decoration: none; display: inline-block; text-align: center; flex: 1; min-width: 80px; }}
             .btn-primary {{ background: #4CAF50; color: white; }}
+            .btn-upload {{ background: #ff9500; color: white; }}
             .btn-danger {{ background: #f44336; color: white; }}
             .btn-secondary {{ background: rgba(255,255,255,0.2); color: white; }}
             .priority-high {{ border-left: 4px solid #ff4444; }}
@@ -2043,9 +2045,8 @@ def my_catalog():
                     <img src="{product.image_url}" alt="{product.product_title}" class="product-image">
                     <div class="product-title">{product.product_title}</div>
                     <div class="product-price">${product.price}</div>
-                    <div class="product-rating">Rating: {product.rating}/5</div>
-                    <div style="color: #FFD700; margin-bottom: 10px;">Category: {product.category}</div>
-                    <div style="color: #FFD700; margin-bottom: 10px;">Priority: {product.priority.title()}</div>
+                    <div class="product-rating">⭐ {product.rating}/5</div>
+                    <div class="product-meta">📁 {product.category} • 🎯 {product.priority.title()}</div>
                     {"<div class='product-notes'>Notes: " + product.notes + "</div>" if product.notes else ""}
                     <div class="product-actions">
                         <a href="/promote/{product.asin}" class="btn btn-primary">🚀 Promote Now</a>
