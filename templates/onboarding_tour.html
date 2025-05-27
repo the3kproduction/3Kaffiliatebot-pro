@@ -421,6 +421,7 @@
         function startTour() {
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('tourOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Disable scrolling during tour
             currentTourStep = 0;
             showTourStep();
             updateProgress();
@@ -430,6 +431,7 @@
         function skipTour() {
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('tourOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
             window.location.href = '/dashboard';
         }
         
@@ -612,6 +614,7 @@
         // Mark tour as completed
         function finishTour() {
             localStorage.setItem('tourCompleted', 'true');
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
             createConfetti();
             
             // Remove highlights
