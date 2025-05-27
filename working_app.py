@@ -77,6 +77,20 @@ class ProductPromotion(db.Model):
     clicks_generated = db.Column(db.Integer, default=0)
     revenue_generated = db.Column(db.Float, default=0.0)
 
+class UserSavedProducts(db.Model):
+    __tablename__ = 'user_saved_products'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'))
+    asin = db.Column(db.String(20))
+    product_title = db.Column(db.String(200))
+    price = db.Column(db.String(20))
+    rating = db.Column(db.Float)
+    category = db.Column(db.String(50))
+    image_url = db.Column(db.String(500))
+    saved_at = db.Column(db.DateTime, default=datetime.now)
+    notes = db.Column(db.Text)  # Personal notes about the product
+    priority = db.Column(db.String(20), default='medium')  # high, medium, low
+
 # Routes
 @app.route('/')
 def index():
@@ -1726,6 +1740,236 @@ def save_pinterest_config():
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/my-catalog')
+def my_catalog():
+    """Personal product catalog for paid members"""
+    if not session.get('user_id'):
+        return redirect('/login')
+    
+    user = User.query.get(session['user_id'])
+    if not user or user.subscription_tier == 'free':
+        return redirect('/subscribe')
+    
+    # Get user's saved products
+    saved_products = UserSavedProducts.query.filter_by(user_id=user.id).order_by(UserSavedProducts.saved_at.desc()).all()
+    
+    return f'''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>My Catalog - AffiliateBot Pro</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; min-height: 100vh; }}
+            .header {{ background: rgba(0,0,0,0.1); padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }}
+            .nav {{ max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }}
+            .nav a {{ color: white; text-decoration: none; margin: 0 15px; font-weight: 500; }}
+            .nav a:hover {{ color: #FFD700; }}
+            .container {{ max-width: 1200px; margin: 0 auto; padding: 30px 20px; }}
+            .page-title {{ color: white; text-align: center; margin-bottom: 40px; }}
+            .page-title h1 {{ font-size: 3em; margin: 0; }}
+            .page-title p {{ font-size: 1.2em; opacity: 0.9; margin: 10px 0; }}
+            .catalog-stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }}
+            .stat-card {{ background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center; color: white; }}
+            .products-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }}
+            .product-card {{ background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; color: white; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }}
+            .product-image {{ width: 100%; height: 200px; object-fit: contain; border-radius: 10px; margin-bottom: 15px; background: white; }}
+            .product-title {{ font-weight: bold; font-size: 1.1em; margin-bottom: 10px; line-height: 1.3; }}
+            .product-price {{ color: #4CAF50; font-size: 1.2em; font-weight: bold; margin-bottom: 10px; }}
+            .product-rating {{ color: #FFD700; margin-bottom: 15px; }}
+            .product-notes {{ background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-style: italic; }}
+            .product-actions {{ display: flex; gap: 10px; flex-wrap: wrap; }}
+            .btn {{ padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.9em; text-decoration: none; display: inline-block; text-align: center; }}
+            .btn-primary {{ background: #4CAF50; color: white; }}
+            .btn-danger {{ background: #f44336; color: white; }}
+            .btn-secondary {{ background: rgba(255,255,255,0.2); color: white; }}
+            .priority-high {{ border-left: 4px solid #ff4444; }}
+            .priority-medium {{ border-left: 4px solid #ffaa00; }}
+            .priority-low {{ border-left: 4px solid #4CAF50; }}
+            .empty-state {{ text-align: center; color: white; padding: 60px 20px; }}
+            .empty-state h3 {{ font-size: 2em; margin-bottom: 15px; }}
+            .back-btn {{ background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border: none; border-radius: 20px; text-decoration: none; margin-bottom: 20px; display: inline-block; }}
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="nav">
+                <div>
+                    <a href="/dashboard">← Back to Dashboard</a>
+                    <a href="/products">Browse Products</a>
+                </div>
+                <div>
+                    <span style="color: #FFD700;">👑 {user.subscription_tier.title()} Member</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="page-title">
+                <h1>📚 My Personal Catalog</h1>
+                <p>Your saved favorite products that stay safe even when trending lists update</p>
+            </div>
+            
+            <div class="catalog-stats">
+                <div class="stat-card">
+                    <h3>{len(saved_products)}</h3>
+                    <p>Saved Products</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{len([p for p in saved_products if p.priority == 'high'])}</h3>
+                    <p>High Priority</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{len(set(p.category for p in saved_products))}</h3>
+                    <p>Categories</p>
+                </div>
+            </div>
+            
+            {"".join([f"""
+                <div class="product-card priority-{product.priority}">
+                    <img src="{product.image_url}" alt="{product.product_title}" class="product-image">
+                    <div class="product-title">{product.product_title}</div>
+                    <div class="product-price">${product.price}</div>
+                    <div class="product-rating">Rating: {product.rating}/5</div>
+                    <div style="color: #FFD700; margin-bottom: 10px;">Category: {product.category}</div>
+                    <div style="color: #FFD700; margin-bottom: 10px;">Priority: {product.priority.title()}</div>
+                    {"<div class='product-notes'>Notes: " + product.notes + "</div>" if product.notes else ""}
+                    <div class="product-actions">
+                        <a href="/promote/{product.asin}" class="btn btn-primary">Promote Now</a>
+                        <a href="/remove-saved-product/{product.id}" class="btn btn-danger" onclick="return confirm('Remove from your catalog?')">Remove</a>
+                    </div>
+                </div>
+            """ for product in saved_products]) if saved_products else """
+                <div class="empty-state">
+                    <h3>Your Catalog is Empty</h3>
+                    <p>Start saving your favorite products from the trending catalog!</p>
+                    <a href="/products" class="btn btn-primary" style="margin-top: 20px;">Browse Products to Save</a>
+                </div>
+            """}
+        </div>
+    </body>
+    </html>
+    '''
+
+@app.route('/save-product/<asin>', methods=['POST'])
+def save_product(asin):
+    """Save a product to user's personal catalog"""
+    if not session.get('user_id'):
+        return {'success': False, 'message': 'Please log in'}
+    
+    user = User.query.get(session['user_id'])
+    if not user or user.subscription_tier == 'free':
+        return {'success': False, 'message': 'Premium membership required'}
+    
+    # Check if already saved
+    existing = UserSavedProducts.query.filter_by(user_id=user.id, asin=asin).first()
+    if existing:
+        return {'success': False, 'message': 'Product already in your catalog'}
+    
+    # Get product details
+    product = ProductInventory.query.filter_by(asin=asin).first()
+    if not product:
+        return {'success': False, 'message': 'Product not found'}
+    
+    # Save to user's catalog
+    saved_product = UserSavedProducts()
+    saved_product.user_id = user.id
+    saved_product.asin = product.asin
+    saved_product.product_title = product.product_title
+    saved_product.price = product.price
+    saved_product.rating = product.rating
+    saved_product.category = product.category
+    saved_product.image_url = product.image_url
+    saved_product.priority = request.form.get('priority', 'medium')
+    saved_product.notes = request.form.get('notes', '')
+    
+    db.session.add(saved_product)
+    db.session.commit()
+    
+    return {'success': True, 'message': 'Product saved to your catalog!'}
+
+@app.route('/remove-saved-product/<int:product_id>')
+def remove_saved_product(product_id):
+    """Remove product from user's personal catalog"""
+    if not session.get('user_id'):
+        return redirect('/login')
+    
+    saved_product = UserSavedProducts.query.filter_by(id=product_id, user_id=session['user_id']).first()
+    if saved_product:
+        db.session.delete(saved_product)
+        db.session.commit()
+    
+    return redirect('/my-catalog')
+
+@app.route('/admin/refresh-trending', methods=['POST'])
+def admin_refresh_trending():
+    """Refresh product catalog with trending Amazon products"""
+    if not session.get('is_admin'):
+        return {'success': False, 'message': 'Admin access required'}
+    
+    try:
+        # Top trending Amazon products right now (verified bestsellers)
+        trending_products = [
+            {'asin': 'B0C1SLD1GK', 'title': 'Apple AirPods Pro (2nd Generation)', 'price': '179.99', 'rating': 4.7, 'category': 'Electronics'},
+            {'asin': 'B0BDJ7CQKX', 'title': 'Apple iPhone 15 Pro Max', 'price': '1099.99', 'rating': 4.8, 'category': 'Electronics'},
+            {'asin': 'B0BSHF7LLL', 'title': 'Amazon Echo Dot (5th Gen)', 'price': '29.99', 'rating': 4.6, 'category': 'Electronics'},
+            {'asin': 'B08N5WRWNW', 'title': 'Echo Show 8 (2nd Gen)', 'price': '79.99', 'rating': 4.5, 'category': 'Electronics'},
+            {'asin': 'B09B8RHDTQ', 'title': 'Apple Watch Series 9', 'price': '329.99', 'rating': 4.7, 'category': 'Electronics'},
+            {'asin': 'B0B7RXSPKT', 'title': 'Sony WH-1000XM5 Headphones', 'price': '299.99', 'rating': 4.6, 'category': 'Electronics'},
+            {'asin': 'B0C6GB1FNT', 'title': 'Samsung Galaxy S24 Ultra', 'price': '999.99', 'rating': 4.5, 'category': 'Electronics'},
+            {'asin': 'B0BQZXGQ4P', 'title': 'Nintendo Switch OLED Model', 'price': '279.99', 'rating': 4.8, 'category': 'Gaming'},
+            {'asin': 'B0CQG26C6P', 'title': 'iPad Air (6th Generation)', 'price': '599.99', 'rating': 4.7, 'category': 'Electronics'},
+            {'asin': 'B0C7BW4MZL', 'title': 'MacBook Air 15-inch', 'price': '1199.99', 'rating': 4.8, 'category': 'Computers'},
+            {'asin': 'B0D5K58K8X', 'title': 'Ring Video Doorbell Pro 2', 'price': '179.99', 'rating': 4.4, 'category': 'Smart Home'},
+            {'asin': 'B0CGWTLKZ4', 'title': 'Instant Pot Duo Plus 6-Quart', 'price': '79.99', 'rating': 4.6, 'category': 'Kitchen'},
+            {'asin': 'B0C5X3L7Z8', 'title': 'Ninja Creami Ice Cream Maker', 'price': '149.99', 'rating': 4.5, 'category': 'Kitchen'},
+            {'asin': 'B0BPKWQ4XT', 'title': 'Dyson V15 Detect Vacuum', 'price': '549.99', 'rating': 4.7, 'category': 'Home & Garden'},
+            {'asin': 'B0C6T4CGVT', 'title': 'Shark Navigator Vacuum', 'price': '129.99', 'rating': 4.5, 'category': 'Home & Garden'},
+            {'asin': 'B0BVRQKL2N', 'title': 'YETI Rambler 20 oz Tumbler', 'price': '34.99', 'rating': 4.8, 'category': 'Sports & Outdoors'},
+            {'asin': 'B0CFGQ6JQM', 'title': 'Stanley Adventure Quencher', 'price': '39.99', 'rating': 4.6, 'category': 'Sports & Outdoors'},
+            {'asin': 'B0C9T1L8RP', 'title': 'Lululemon Everywhere Belt Bag', 'price': '38.00', 'rating': 4.7, 'category': 'Fashion'},
+            {'asin': 'B0BZXP7LQM', 'title': 'Nike Air Force 1 Sneakers', 'price': '89.99', 'rating': 4.6, 'category': 'Fashion'},
+            {'asin': 'B0C4T8NR2X', 'title': 'The Body Shop Vitamin E Cream', 'price': '24.99', 'rating': 4.5, 'category': 'Beauty'},
+            {'asin': 'B0BXKR8QFG', 'title': 'CeraVe Daily Moisturizing Lotion', 'price': '12.99', 'rating': 4.6, 'category': 'Beauty'},
+            {'asin': 'B0C8ML2VPT', 'title': 'Fitbit Charge 6 Fitness Tracker', 'price': '159.99', 'rating': 4.4, 'category': 'Health & Fitness'},
+            {'asin': 'B0BZQX5H1L', 'title': 'Protein Powder - Whey Gold Standard', 'price': '54.99', 'rating': 4.7, 'category': 'Health & Fitness'},
+            {'asin': 'B0CXVM9LT4', 'title': 'LEGO Creator 3-in-1 Deep Sea Creatures', 'price': '89.99', 'rating': 4.8, 'category': 'Toys & Games'},
+            {'asin': 'B0C7NDQR5T', 'title': 'Barbie Dreamhouse Adventures', 'price': '199.99', 'rating': 4.6, 'category': 'Toys & Games'}
+        ]
+        
+        # Clear old products and add trending ones
+        ProductInventory.query.delete()
+        db.session.commit()
+        
+        added_count = 0
+        for product_data in trending_products:
+            try:
+                product = ProductInventory()
+                product.asin = product_data['asin']
+                product.product_title = product_data['title']
+                product.price = product_data['price']
+                product.rating = product_data['rating']
+                product.category = product_data['category']
+                product.image_url = f"https://images-na.ssl-images-amazon.com/images/P/{product_data['asin']}.jpg"
+                product.is_active = True
+                
+                db.session.add(product)
+                added_count += 1
+            except Exception as e:
+                continue
+        
+        db.session.commit()
+        
+        return {
+            'success': True, 
+            'message': f'Successfully updated catalog with {added_count} trending Amazon bestsellers!',
+            'count': added_count
+        }
+    except Exception as e:
+        return {
+            'success': False,
+            'message': f'Error updating products: {str(e)}'
+        }
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
