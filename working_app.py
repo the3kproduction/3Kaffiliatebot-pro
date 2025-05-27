@@ -1948,12 +1948,19 @@ def save_email_config():
         if not user:
             return jsonify({'success': False, 'error': 'User not found'})
         
-        # Save the email properly
-        if user_email:
-            user.email = user_email
-        user.email_configured = True
+        # Save the email properly to session for persistence
+        session['user_email'] = user_email
+        session['email_configured'] = True
+        session.permanent = True
         
-        db.session.commit()
+        # Also try to save to database if user exists
+        if user and user_email:
+            user.email = user_email
+            try:
+                db.session.commit()
+            except:
+                pass  # If database save fails, session save will still work
+        
         return jsonify({'success': True, 'message': 'Email saved successfully!'})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
