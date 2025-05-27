@@ -1905,9 +1905,16 @@ def remove_saved_product(product_id):
 
 @app.route('/add-amazon-product', methods=['GET', 'POST'])
 def add_amazon_product():
-    """Add any Amazon product by URL - converts to affiliate link automatically"""
-    if not session.get('is_admin'):
-        return redirect('/admin-login')
+    """Add any Amazon product by URL - paid feature that adds to My Catalog and Products page"""
+    if not session.get('user_id'):
+        return redirect('/login')
+    
+    # Check if user has paid subscription or is admin
+    user_id = session.get('user_id')
+    if user_id != 'admin':
+        user = User.query.get(user_id)
+        if not user or user.subscription_tier == 'free':
+            return redirect('/subscribe')
     
     if request.method == 'POST':
         amazon_url = request.form.get('amazon_url', '').strip()
@@ -1959,20 +1966,34 @@ def add_amazon_product():
             if existing:
                 return f"Product already exists: {existing.product_title}"
             
-            # Add to inventory
+            # Add to public inventory (Products page)
             product = ProductInventory()
             product.asin = asin
-            product.product_title = title[:200]  # Truncate if too long
+            product.product_title = title[:200]
             product.price = price
-            product.rating = 4.5  # Default rating
+            product.rating = 4.5
             product.category = request.form.get('category', 'General')
             product.image_url = f"https://images-na.ssl-images-amazon.com/images/P/{asin}.jpg"
             product.is_active = True
             
             db.session.add(product)
+            
+            # Also add to user's personal catalog
+            saved_product = UserSavedProducts()
+            saved_product.user_id = user_id
+            saved_product.asin = asin
+            saved_product.product_title = title[:200]
+            saved_product.price = price
+            saved_product.rating = 4.5
+            saved_product.category = request.form.get('category', 'General')
+            saved_product.image_url = f"https://images-na.ssl-images-amazon.com/images/P/{asin}.jpg"
+            saved_product.priority = 'high'
+            saved_product.notes = 'Added via Amazon URL'
+            
+            db.session.add(saved_product)
             db.session.commit()
             
-            return f"Successfully added: {title}"
+            return f"Successfully added {title} to Products page and your My Catalog!"
             
         except Exception as e:
             return f"Error adding product: {str(e)}"
