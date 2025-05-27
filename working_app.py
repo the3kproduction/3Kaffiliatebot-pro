@@ -1053,8 +1053,8 @@ def dashboard():
     # Check if auto-posting is enabled
     auto_posting_enabled = session.get('auto_posting_enabled', False)
     
-    # Get featured products from real inventory
-    featured_products = ProductInventory.query.filter_by(is_active=True).limit(4).all()
+    # No featured products until members add them
+    featured_products = []
     
     return render_template('dashboard_working.html', 
                          is_admin=is_admin, 
