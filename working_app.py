@@ -3123,6 +3123,11 @@ def update_support_message_status(message_id):
     except Exception as e:
         return {"success": False, "error": str(e)}, 500
 
+@app.route('/onboarding-tour')
+def onboarding_tour():
+    """Interactive onboarding tour for new users"""
+    return render_template('onboarding_tour.html')
+
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     """Forgot password page"""
