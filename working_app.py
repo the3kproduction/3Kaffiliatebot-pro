@@ -817,6 +817,7 @@ def settings():
     user_email = ''
     if user:
         user_email = user.email or ''
+        print(f"DEBUG: User found: {user.id}, Email: {user.email}, Status will be: {bool(user.email)}")
     
     # Create current_user object for template
     current_user = type('obj', (object,), {
