@@ -988,25 +988,103 @@ def admin_email_blast():
     </form>
     '''
 
-@app.route('/admin/users')
-def admin_users():
-    """Admin user management"""
+# Removed duplicate route - using the one from routes.py instead
+
+@app.route('/admin')
+def admin_dashboard():
+    """Admin dashboard"""
     if not session.get('is_admin'):
         return redirect('/admin-login')
     
-    return '''
-    <h2>👥 User Management</h2>
-    <div style="max-width: 800px; margin: 50px auto; background: #f5f5f5; padding: 30px; border-radius: 10px;">
-        <h3>Platform Statistics</h3>
-        <p>Total Users: 0</p>
-        <p>Active Subscriptions: 0</p>
-        <p>Revenue This Month: $0</p>
-        <br>
-        <h3>Recent Signups</h3>
-        <p>No users registered yet.</p>
-        <br>
-        <a href="/dashboard" style="background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Back to Dashboard</a>
-    </div>
+    # Get real admin statistics
+    with app.app_context():
+        total_users = User.query.count()
+        total_posts = Post.query.count() 
+        total_products = ProductInventory.query.count()
+        
+    return f'''
+    <!DOCTYPE html>
+    <html><head><title>Admin Dashboard</title>
+    <style>
+        body {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; font-family: Arial; color: white; min-height: 100vh; }}
+        .container {{ max-width: 1200px; margin: 0 auto; padding: 30px; }}
+        .header {{ text-align: center; margin-bottom: 40px; }}
+        .stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }}
+        .stat-card {{ background: rgba(255,255,255,0.15); padding: 25px; border-radius: 15px; text-align: center; }}
+        .stat-number {{ font-size: 36px; font-weight: bold; margin-bottom: 10px; }}
+        .actions {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }}
+        .btn {{ background: #4CAF50; color: white; padding: 15px 25px; text-decoration: none; border-radius: 10px; text-align: center; display: block; }}
+        .btn:hover {{ background: #45a049; }}
+    </style></head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🔐 Admin Dashboard</h1>
+                <p>Manage your affiliate marketing platform</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">{total_users}</div>
+                    <div>Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{total_posts}</div>
+                    <div>Posts Made</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{total_products}</div>
+                    <div>Products Available</div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <a href="/admin/users" class="btn">👥 Manage Users</a>
+                <a href="/admin/email-blast" class="btn">📧 Email Blast</a>
+                <a href="/admin/product-catalog" class="btn">🛍️ Product Catalog</a>
+                <a href="/admin/analytics" class="btn">📊 Platform Analytics</a>
+                <a href="/dashboard" class="btn" style="background: #666;">← Back to Dashboard</a>
+            </div>
+        </div>
+    </body></html>
+    '''
+
+
+
+@app.route('/admin/product-catalog')
+def admin_product_catalog():
+    """Admin product catalog management"""
+    if not session.get('is_admin'):
+        return redirect('/admin-login')
+    
+    products = ProductInventory.query.all()
+    product_html = ""
+    for product in products:
+        product_html += f'''
+        <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px; margin: 10px 0;">
+            <h4>{product.product_title}</h4>
+            <p>ASIN: {product.asin} | Price: {product.price} | Rating: {product.rating}⭐</p>
+            <p>Times Promoted: {product.times_promoted} | Category: {product.category}</p>
+        </div>
+        '''
+    
+    return f'''
+    <!DOCTYPE html>
+    <html><head><title>Product Catalog</title>
+    <style>
+        body {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; font-family: Arial; color: white; }}
+        .container {{ max-width: 1200px; margin: 0 auto; padding: 30px; }}
+        .btn {{ background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; }}
+    </style></head>
+    <body>
+        <div class="container">
+            <h1>🛍️ Product Catalog Management</h1>
+            <p>Total Products: {len(products)}</p>
+            {product_html}
+            <br>
+            <a href="/admin" class="btn">← Back to Admin</a>
+        </div>
+    </body></html>
     '''
 
 @app.route('/admin/analytics')
