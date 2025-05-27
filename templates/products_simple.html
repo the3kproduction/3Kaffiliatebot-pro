@@ -29,6 +29,18 @@
         <div class="header">
             <h1>🛍️ Available Products</h1>
             <p>Choose products to promote and earn commissions</p>
+            
+            <!-- Amazon Product Search -->
+            <div style="background: rgba(255,255,255,0.15); padding: 25px; border-radius: 15px; margin: 30px 0; text-align: left;">
+                <h3>🔍 Search Amazon for New Products</h3>
+                <p style="margin: 10px 0; opacity: 0.8;">Find any product on Amazon to add to your promotions</p>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <input type="text" id="amazon-search" placeholder="Search Amazon products (e.g., 'wireless headphones', 'kitchen gadgets')" 
+                           style="flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; color: #333;">
+                    <button onclick="searchAmazonProducts()" class="promote-btn" style="width: auto; padding: 15px 30px;">🔍 Search</button>
+                </div>
+                <div id="search-results" style="margin-top: 20px;"></div>
+            </div>
         </div>
 
         <div class="products-grid">
@@ -75,6 +87,77 @@
     </div>
 
     <script>
+        async function searchAmazonProducts() {
+            const searchTerm = document.getElementById('amazon-search').value.trim();
+            const resultsDiv = document.getElementById('search-results');
+            
+            if (!searchTerm) {
+                alert('Please enter a search term');
+                return;
+            }
+            
+            resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><p>🔍 Searching Amazon for "' + searchTerm + '"...</p></div>';
+            
+            try {
+                const response = await fetch('/api/search-amazon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: searchTerm })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.products) {
+                    let html = '<h4>Found ' + data.products.length + ' products:</h4><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">';
+                    
+                    data.products.forEach(product => {
+                        html += `
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                                <img src="${product.image || 'https://via.placeholder.com/150'}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
+                                <h5 style="margin-bottom: 5px; font-size: 14px;">${product.title}</h5>
+                                <p style="color: #4CAF50; font-weight: bold; margin-bottom: 10px;">${product.price}</p>
+                                <button onclick="addToInventory('${product.asin}', '${product.title}', '${product.price}')" 
+                                        style="background: #4CAF50; color: white; padding: 8px 15px; border: none; border-radius: 5px; width: 100%; cursor: pointer;">
+                                    ➕ Add to Catalog
+                                </button>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    resultsDiv.innerHTML = html;
+                } else {
+                    resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #ffaa00;"><p>⚠️ No products found. Try a different search term.</p></div>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #ff6b6b;"><p>❌ Search failed. Please try again.</p></div>';
+            }
+        }
+        
+        async function addToInventory(asin, title, price) {
+            try {
+                const response = await fetch('/api/add-product', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ asin, title, price })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert('✅ Product added to catalog!');
+                    location.reload(); // Refresh to show new product
+                } else {
+                    alert('❌ Failed to add product: ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Error adding product');
+            }
+        }
+
         async function promoteProduct(asin, productTitle) {
             const button = event.target;
             const originalText = button.innerHTML;

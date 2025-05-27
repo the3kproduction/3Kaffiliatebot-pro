@@ -543,6 +543,61 @@ def ai_selected_products():
     </body></html>
     '''
 
+@app.route('/api/search-amazon', methods=['POST'])
+def api_search_amazon():
+    """Search Amazon for products"""
+    if not session.get('user_id'):
+        return {'success': False, 'message': 'Not authenticated'}, 401
+    
+    data = request.get_json()
+    query = data.get('query', '').strip()
+    
+    if not query:
+        return {'success': False, 'message': 'Search query required'}, 400
+    
+    # This would connect to Amazon's Product Advertising API
+    # For now, I'll set up the structure - would you like me to ask for your Amazon API credentials?
+    return {'success': False, 'message': 'Amazon API integration needed. Please provide your Amazon Product Advertising API credentials to enable real product search.'}, 400
+
+@app.route('/api/add-product', methods=['POST'])
+def api_add_product():
+    """Add a product to inventory"""
+    if not session.get('user_id'):
+        return {'success': False, 'message': 'Not authenticated'}, 401
+    
+    data = request.get_json()
+    asin = data.get('asin', '').strip()
+    title = data.get('title', '').strip()
+    price = data.get('price', '').strip()
+    
+    if not all([asin, title, price]):
+        return {'success': False, 'message': 'Missing required fields'}, 400
+    
+    # Check if product already exists
+    existing = ProductInventory.query.filter_by(asin=asin).first()
+    if existing:
+        return {'success': False, 'message': 'Product already exists in catalog'}, 400
+    
+    try:
+        new_product = ProductInventory(
+            asin=asin,
+            product_title=title,
+            price=price,
+            rating=4.5,
+            category='Electronics',
+            image_url=f'https://m.media-amazon.com/images/I/{asin}.jpg',
+            is_active=True
+        )
+        
+        db.session.add(new_product)
+        db.session.commit()
+        
+        return {'success': True, 'message': 'Product added successfully'}
+        
+    except Exception as e:
+        db.session.rollback()
+        return {'success': False, 'message': f'Database error: {str(e)}'}, 500
+
 @app.route('/campaigns')
 def campaigns():
     """Campaign management"""
