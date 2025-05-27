@@ -998,14 +998,27 @@ Don't miss out on this incredible deal!
             except Exception as e:
                 errors.append(f"Reddit: {str(e)}")
         
-        # Return success response
+        # Return beautiful success page instead of ugly JSON
         if platforms_posted:
-            success_msg = f"✅ Product posted successfully to: {', '.join(platforms_posted)}"
+            success_msg = f"Product posted successfully to: {', '.join(platforms_posted)}"
             if errors:
-                success_msg += f"\n⚠️ Some platforms failed: {', '.join(errors)}"
-            return {"success": True, "message": success_msg, "platforms": platforms_posted}
+                error_msg = f"Some platforms failed: {', '.join(errors)}"
+            else:
+                error_msg = None
+            return render_template('promote_success.html', 
+                                 product=product, 
+                                 success_msg=success_msg,
+                                 error_msg=error_msg,
+                                 platforms_posted=platforms_posted,
+                                 affiliate_url=affiliate_url)
         else:
-            return {"success": False, "message": f"❌ Failed to post to any platforms. Errors: {', '.join(errors)}"}
+            error_msg = f"Failed to post to any platforms. Errors: {', '.join(errors)}"
+            return render_template('promote_success.html', 
+                                 product=product, 
+                                 success_msg=None,
+                                 error_msg=error_msg,
+                                 platforms_posted=[],
+                                 affiliate_url=affiliate_url)
             
     except Exception as e:
         return {"success": False, "message": f"❌ Error: {str(e)}"}

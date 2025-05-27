@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promotion Complete - AffiliateBot Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            min-height: 100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 40px; 
+            text-align: center;
+        }
+        .success-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .success-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+        .product-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .product-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .platforms-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .platform-badge {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .error-msg {
+            background: rgba(255,87,87,0.2);
+            border: 2px solid #ff5757;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #ffcccb;
+        }
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .affiliate-link {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-card">
+            {% if success_msg %}
+                <div class="success-icon">🚀</div>
+                <h1 class="success-title">Promotion Complete!</h1>
+                <p style="font-size: 1.2em; margin-bottom: 20px;">{{ success_msg }}</p>
+                
+                {% if platforms_posted %}
+                <div class="platforms-list">
+                    {% for platform in platforms_posted %}
+                        <span class="platform-badge">✅ {{ platform }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="success-icon">❌</div>
+                <h1 class="success-title" style="color: #ff5757;">Promotion Failed</h1>
+            {% endif %}
+            
+            <div class="product-info">
+                <div class="product-title">{{ product.product_title }}</div>
+                <div style="color: #4CAF50; font-size: 1.1em; font-weight: bold;">{{ product.price }}</div>
+            </div>
+            
+            {% if error_msg %}
+            <div class="error-msg">
+                <strong>⚠️ Issues encountered:</strong><br>
+                {{ error_msg }}
+            </div>
+            {% endif %}
+            
+            <div class="affiliate-link">
+                <strong>🔗 Your Affiliate Link:</strong><br>
+                <a href="{{ affiliate_url }}" target="_blank" style="color: #4CAF50;">{{ affiliate_url }}</a>
+            </div>
+            
+            <div class="buttons">
+                <a href="/products" class="btn">← Back to Products</a>
+                <a href="/dashboard" class="btn btn-secondary">Dashboard</a>
+                <a href="{{ affiliate_url }}" target="_blank" class="btn">View on Amazon</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
