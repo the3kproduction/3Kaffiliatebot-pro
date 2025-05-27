@@ -179,7 +179,7 @@
                 <i>🚀</i>
                 <div>Post Now</div>
             </button>
-            {% if current_user.subscription_tier != 'free' %}
+            {% if current_user.subscription_tier != 'free' or is_admin %}
             <button class="action-btn" onclick="location.href='/my-catalog'">
                 <i>📚</i>
                 <div>My Catalog</div>
