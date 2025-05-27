@@ -304,12 +304,16 @@
             .then(data => {
                 if (data.success) {
                     // Update the email platform status to show it's configured
-                    const emailPlatform = document.querySelector('.platform-item:has(span:contains("📧 Email"))');
-                    if (emailPlatform) {
-                        emailPlatform.querySelector('.platform-status').className = 'platform-status status-connected';
-                        emailPlatform.querySelector('.platform-status').textContent = 'Configured';
-                        emailPlatform.querySelector('button').textContent = 'Update Email';
-                        emailPlatform.querySelector('button').className = 'btn btn-secondary';
+                    // Find email platform item by searching through all platform items
+                    const platformItems = document.querySelectorAll('.platform-item');
+                    for (let item of platformItems) {
+                        if (item.innerHTML.includes('📧 Email')) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Configured';
+                            item.querySelector('button').textContent = 'Update Email';
+                            item.querySelector('button').className = 'btn btn-secondary';
+                            break;
+                        }
                     }
                     hideEmailConfig();
                 } else {
@@ -539,11 +543,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const facebookPlatform = document.querySelector('.platform-item:has(span:contains("📘 Facebook"))');
-                    if (facebookPlatform) {
-                        facebookPlatform.querySelector('.platform-status').className = 'platform-status status-connected';
-                        facebookPlatform.querySelector('.platform-status').textContent = 'Connected';
-                        facebookPlatform.querySelector('button').textContent = 'Update Facebook';
+                    const platformItems = document.querySelectorAll('.platform-item');
+                    for (let item of platformItems) {
+                        if (item.innerHTML.includes('📘 Facebook')) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Connected';
+                            item.querySelector('button').textContent = 'Update Facebook';
+                            break;
+                        }
                     }
                     hideFacebookConfig();
                 } else {
