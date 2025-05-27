@@ -860,7 +860,7 @@ def get_product_image_with_backup(product):
     
     return fallback_image
 
-@app.route('/promote/<asin>', methods=['POST'])
+@app.route('/promote/<asin>', methods=['GET', 'POST'])
 def promote_product(asin):
     """Promote a specific product across ALL platforms with backup image support"""
     try:
@@ -1354,7 +1354,7 @@ def admin_dashboard():
             <div class="actions">
                 <a href="/admin/users" class="btn">👥 Manage Users</a>
                 <a href="/admin/email-blast" class="btn">📧 Email Blast</a>
-                <a href="/admin/product-catalog" class="btn">🛍️ Product Catalog</a>
+                <a href="/products" class="btn">🛍️ Product Catalog</a>
                 <a href="/admin/analytics" class="btn">📊 Platform Analytics</a>
                 <a href="/dashboard" class="btn" style="background: #666;">← Back to Dashboard</a>
             </div>
@@ -2106,7 +2106,31 @@ def add_amazon_product():
             db.session.add(saved_product)
             db.session.commit()
             
-            return f"Successfully added {title} to Products page and your My Catalog!"
+            return f'''
+            <!DOCTYPE html>
+            <html><head><title>Product Added Successfully</title>
+            <style>
+                body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; margin: 0; display: flex; align-items: center; justify-content: center; }}
+                .success-container {{ background: rgba(255,255,255,0.15); padding: 40px; border-radius: 20px; text-align: center; max-width: 500px; }}
+                .success-icon {{ font-size: 64px; margin-bottom: 20px; }}
+                .btn {{ background: #4CAF50; color: white; padding: 15px 25px; text-decoration: none; border-radius: 10px; display: inline-block; margin: 10px; font-weight: bold; }}
+                .btn-secondary {{ background: #2196F3; }}
+                .btn-catalog {{ background: #9C27B0; }}
+            </style></head>
+            <body>
+                <div class="success-container">
+                    <div class="success-icon">🎉</div>
+                    <h2>Product Added Successfully!</h2>
+                    <p><strong>{title}</strong> has been added to:</p>
+                    <p>✅ Public Products page<br>✅ Your personal catalog</p>
+                    <div style="margin-top: 30px;">
+                        <a href="/dashboard" class="btn">🏠 Back to Dashboard</a>
+                        <a href="/products" class="btn btn-secondary">🛍️ View Products</a>
+                        <a href="/my-catalog" class="btn btn-catalog">📋 My Catalog</a>
+                    </div>
+                </div>
+            </body></html>
+            '''
             
         except Exception as e:
             return f"Error adding product: {str(e)}"
