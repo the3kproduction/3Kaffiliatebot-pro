@@ -122,6 +122,13 @@ def create_checkout_session():
                 'quantity': 1,
             }],
             mode='subscription',
+            subscription_data={
+                'trial_period_days': 7,  # 7-day free trial
+                'metadata': {
+                    'plan': plan,
+                    'trial_days': '7'
+                }
+            },
             success_url=f'{domain}/success?session_id={{CHECKOUT_SESSION_ID}}',
             cancel_url=f'{domain}/subscribe',
             metadata={'plan': plan}

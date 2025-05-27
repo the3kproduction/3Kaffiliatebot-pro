@@ -91,97 +91,40 @@
         </div>
 
         <div class="campaigns-grid">
+            {% for campaign in campaigns %}
             <div class="campaign-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <div class="campaign-title">Electronics Promotion</div>
-                    <span class="status-active">ACTIVE</span>
+                    <div class="campaign-title">{{ campaign.name }}</div>
+                    <span class="status-{{ campaign.status }}">{{ campaign.status.upper() }}</span>
                 </div>
                 <div class="campaign-stats">
-                    <span>Products: 15</span>
-                    <span>Platforms: 3</span>
-                    <span>Started: May 20</span>
-                </div>
-                <div class="campaign-description">
-                    Promoting high-value electronics including wireless earbuds, smart watches, and phone accessories across Discord, Telegram, and Slack.
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <strong>Performance:</strong> $624 revenue, 1,247 clicks, 4.2% conversion
-                </div>
-                <div class="campaign-actions">
-                    <button class="btn btn-small">📊 View Details</button>
-                    <button class="btn btn-small btn-secondary">⏸️ Pause</button>
-                    <button class="btn btn-small btn-secondary">⚙️ Edit</button>
-                </div>
-            </div>
-
-            <div class="campaign-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <div class="campaign-title">Home & Kitchen</div>
-                    <span class="status-active">ACTIVE</span>
-                </div>
-                <div class="campaign-stats">
-                    <span>Products: 12</span>
+                    <span>Products: {{ campaign.products_count }}</span>
                     <span>Platforms: 2</span>
-                    <span>Started: May 18</span>
+                    <span>Started: {{ campaign.created_at }}</span>
                 </div>
                 <div class="campaign-description">
-                    Kitchen gadgets and home improvement products targeted at cooking enthusiasts and homeowners.
+                    {{ campaign.description }}
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <strong>Performance:</strong> $386 revenue, 892 clicks, 2.8% conversion
+                    <strong>Performance:</strong> ${{ "%.2f"|format(campaign.total_revenue) }} revenue, {{ campaign.total_clicks }} clicks, {{ campaign.total_posts }} posts
                 </div>
                 <div class="campaign-actions">
-                    <button class="btn btn-small">📊 View Details</button>
-                    <button class="btn btn-small btn-secondary">⏸️ Pause</button>
-                    <button class="btn btn-small btn-secondary">⚙️ Edit</button>
+                    <button class="btn btn-small" onclick="viewCampaignDetails({{ campaign.id }})">📊 View Details</button>
+                    <button class="btn btn-small btn-secondary" onclick="toggleCampaign({{ campaign.id }})">
+                        {% if campaign.status == 'active' %}⏸️ Pause{% else %}▶️ Resume{% endif %}
+                    </button>
+                    <button class="btn btn-small btn-secondary" onclick="editCampaign({{ campaign.id }})">⚙️ Edit</button>
                 </div>
             </div>
-
-            <div class="campaign-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <div class="campaign-title">Fitness & Health</div>
-                    <span class="status-paused">PAUSED</span>
-                </div>
-                <div class="campaign-stats">
-                    <span>Products: 8</span>
-                    <span>Platforms: 4</span>
-                    <span>Started: May 15</span>
-                </div>
-                <div class="campaign-description">
-                    Fitness trackers, workout equipment, and health supplements for fitness enthusiasts.
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <strong>Performance:</strong> $247 revenue, 654 clicks, 3.1% conversion
-                </div>
-                <div class="campaign-actions">
-                    <button class="btn btn-small">📊 View Details</button>
-                    <button class="btn btn-small">▶️ Resume</button>
-                    <button class="btn btn-small btn-secondary">⚙️ Edit</button>
-                </div>
+            {% endfor %}
+            
+            {% if not campaigns %}
+            <div class="campaign-card" style="text-align: center; opacity: 0.7;">
+                <h3>Ready to Start?</h3>
+                <p>Create your first campaign using your {{ electronics_count + home_kitchen_count + sports_count }}+ real Amazon products!</p>
+                <button class="btn" onclick="createCampaign()">🚀 Create First Campaign</button>
             </div>
-
-            <div class="campaign-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <div class="campaign-title">Tech Accessories</div>
-                    <span class="status-active">ACTIVE</span>
-                </div>
-                <div class="campaign-stats">
-                    <span>Products: 20</span>
-                    <span>Platforms: 5</span>
-                    <span>Started: May 12</span>
-                </div>
-                <div class="campaign-description">
-                    Phone cases, charging cables, laptop stands, and other essential tech accessories.
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <strong>Performance:</strong> $590 revenue, 1,456 clicks, 3.5% conversion
-                </div>
-                <div class="campaign-actions">
-                    <button class="btn btn-small">📊 View Details</button>
-                    <button class="btn btn-small btn-secondary">⏸️ Pause</button>
-                    <button class="btn btn-small btn-secondary">⚙️ Edit</button>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 
