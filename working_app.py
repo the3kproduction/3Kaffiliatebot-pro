@@ -958,5 +958,15 @@ with app.app_context():
 
 
 
+@app.route('/terms')
+def terms():
+    """Terms of Service page"""
+    return render_template('terms.html', current_date="May 27, 2025")
+
+@app.route('/privacy')
+def privacy():
+    """Privacy Policy page"""
+    return render_template('privacy.html', current_date="May 27, 2025")
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
