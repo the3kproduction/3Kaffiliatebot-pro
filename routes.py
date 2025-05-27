@@ -246,7 +246,6 @@ def setup():
     return render_template('setup.html', user=user)
 
 @app.route('/products')
-@require_login  
 def products():
     """Browse and manage products"""
     from models import ProductInventory
