@@ -253,43 +253,52 @@ def products():
     
     user = current_user
     
-    # Get all 16 real Amazon products from your database
+    # Get real Amazon products with pagination
+    page = request.args.get('page', 1, type=int)
+    per_page = 20  # Show 20 products per page
+    
     try:
-        from sqlalchemy import text
-        result = db.session.execute(text("""
-            SELECT asin, product_title, price, rating, category, image_url 
-            FROM product_inventory 
-            WHERE product_title IS NOT NULL 
-            AND product_title != 'Unknown Product' 
-            AND product_title != '' 
-            LIMIT 16
-        """))
+        from models import ProductInventory
+        
+        # Get products with proper names, paginated
+        query = ProductInventory.query.filter(
+            ProductInventory.product_title.isnot(None),
+            ProductInventory.product_title != 'Unknown Product',
+            ProductInventory.product_title != ''
+        )
+        
+        pagination = query.paginate(
+            page=page, 
+            per_page=per_page, 
+            error_out=False
+        )
         
         products = []
-        for row in result:
+        for product in pagination.items:
             products.append({
-                'asin': row[0],
-                'product_title': row[1],
-                'title': row[1],
-                'price': row[2],
-                'rating': float(row[3]) if row[3] else 4.5,
-                'category': row[4],
-                'image_url': row[5] or f'https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={row[0]}&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=luxoraconnect-20'
+                'asin': product.asin,
+                'product_title': product.product_title,
+                'title': product.product_title,
+                'price': product.price,
+                'rating': float(product.rating) if product.rating else 4.5,
+                'category': product.category,
+                'image_url': product.image_url or f'https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={product.asin}&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=luxoraconnect-20'
             })
         
-        print(f"Loaded {len(products)} real Amazon products from database")
+        print(f"Loaded {len(products)} real Amazon products from database (page {page})")
         
     except Exception as e:
         print(f"Error loading products: {e}")
-        # Fallback to ensure something displays
         products = []
+        pagination = None
     
     categories = ['Electronics', 'Kitchen', 'Health', 'Sports', 'Books']
     
     return render_template('products.html', 
                          products=products, 
                          categories=categories,
-                         current_category='all')
+                         current_category='all',
+                         pagination=pagination)
 
 @app.route('/post-product', methods=['POST'])
 @require_login
