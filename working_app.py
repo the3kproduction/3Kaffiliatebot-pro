@@ -1849,6 +1849,22 @@ def get_platform_status():
     
     return jsonify(status)
 
+@app.route('/promote-success')
+def promote_success():
+    """Promote success page"""
+    asin = request.args.get('asin', '')
+    product = ProductInventory.query.filter_by(asin=asin).first()
+    
+    return render_template('promote_success.html', 
+                         product=product,
+                         success_msg="🎉 Product promoted successfully!",
+                         platforms_posted=["Discord", "Slack"])
+
+@app.route('/how-to-guide')
+def how_to_guide():
+    """Complete how-to guide for getting started"""
+    return render_template('how_to_guide.html')
+
 @app.route('/api/promote-product', methods=['POST'])
 def api_promote_product_new():
     """API endpoint for promoting products"""
@@ -2032,8 +2048,10 @@ def my_catalog():
                     <div style="color: #FFD700; margin-bottom: 10px;">Priority: {product.priority.title()}</div>
                     {"<div class='product-notes'>Notes: " + product.notes + "</div>" if product.notes else ""}
                     <div class="product-actions">
-                        <a href="/promote/{product.asin}" class="btn btn-primary">Promote Now</a>
-                        <a href="/remove-saved-product/{product.id}" class="btn btn-danger" onclick="return confirm('Remove from your catalog?')">Remove</a>
+                        <a href="/promote/{product.asin}" class="btn btn-primary">🚀 Promote Now</a>
+                        <button onclick="document.getElementById('imageInput_{product.asin}').click()" class="btn btn-upload">📸 Upload Image</button>
+                        <input type="file" id="imageInput_{product.asin}" style="display: none;" accept="image/*" onchange="uploadImageFromCatalog('{product.asin}', this)">
+                        <a href="/remove-saved-product/{product.id}" class="btn btn-danger" onclick="return confirm('Remove from your catalog?')">❌ Remove</a>
                     </div>
                 </div>
             """ for product in saved_products]) if saved_products else """
