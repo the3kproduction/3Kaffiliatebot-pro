@@ -429,17 +429,14 @@
                 if (data.success) {
                     const platforms = data.platforms_posted.join(', ');
                     const errors = data.errors.length > 0 ? ` (Errors: ${data.errors.join(', ')})` : '';
-                    showNotification(`🚀 AffiliateBot Pro promoted to: ${platforms}${errors}`, 'success');
-                    
-                    // Show referral info popup
-                    showReferralPopup(data.referral_code, data.signup_url);
+                    alert(`🚀 SUCCESS! AffiliateBot Pro promoted to: ${platforms}${errors}\n\nYour referral code: ${data.referral_code}\nSignup URL: ${data.signup_url}\n\nEarn 6 months free when you get 10 signups!`);
                 } else {
-                    showNotification(`❌ ${data.error}`, 'error');
+                    alert(`❌ Error: ${data.error}`);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showNotification('❌ Network error occurred', 'error');
+                alert('❌ Network error occurred. Please try again.');
             });
         }
 
