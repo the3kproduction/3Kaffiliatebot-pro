@@ -50,7 +50,7 @@ args = "python run.py"
 waitForPort = 5000
 
 [deployment]
-run = ["sh", "-c", "pip install requests python-dotenv && python main.py"]
+run = ["sh", "-c", "python run.py"]
 
 [[ports]]
 localPort = 5000

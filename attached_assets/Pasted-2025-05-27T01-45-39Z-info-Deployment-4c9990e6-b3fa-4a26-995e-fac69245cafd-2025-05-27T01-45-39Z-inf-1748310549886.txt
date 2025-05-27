@@ -1,0 +1,94 @@
+2025-05-27T01:45:39Z info: Deployment: 4c9990e6-b3fa-4a26-995e-fac69245cafd
+2025-05-27T01:45:39Z info: Connecting to builder
+2025-05-27T01:45:44Z info: Builder connected
+2025-05-27T01:45:44Z info: Installing packages
+--> pip install -r requirements.txt
+
+Requirement already satisfied: Flask>=3.1.1 in ./.pythonlibs/lib/python3.11/site-packages (from -r requirements.txt (line 1)) (3.1.1)
+
+Requirement already satisfied: flask-sqlalchemy>=3.1.1 in ./.pythonlibs/lib/python3.11/site-packages (from -r requirements.txt (line 2)) (3.1.1)
+
+Requirement already satisfied: pyjwt>=2.10.1 in ./.pythonlibs/lib/python3.11/site-packages (from -r requirements.txt (line 10)) (2.10.1)
+
+Requirement already satisfied: idna<4,>=2.5 in ./.pythonlibs/lib/python3.11/site-packages (from requests>=2.32.3->-r requirements.txt (line 7)) (3.10)
+
+Requirement already satisfied: sniffio in ./.pythonlibs/lib/python3.11/site-packages (from openai>=1.82.0->-r requirements.txt (line 13)) (1.3.1)
+
+Requirement already satisfied: ecdsa<1,>=0.19.1 in ./.pythonlibs/lib/python3.11/site-packages (from sendgrid>=6.12.2->-r requirements.txt (line 14)) (0.19.1)
+
+Requirement already satisfied: greenlet>=1 in ./.pythonlibs/lib/python3.11/site-packages (from sqlalchemy>=2.0.41->-r requirements.txt (line 16)) (3.2.2)
+
+Requirement already satisfied: courlan>=1.3.2 in ./.pythonlibs/lib/python3.11/site-packages (from trafilatura>=2.0.0->-r requirements.txt (line 17)) (1.3.2)
+
+Requirement already satisfied: justext>=3.0.1 in ./.pythonlibs/lib/python3.11/site-packages (from trafilatura>=2.0.0->-r requirements.txt (line 17)) (3.0.2)
+
+Requirement already satisfied: frozenlist>=1.1.1 in ./.pythonlibs/lib/python3.11/site-packages (from aiohttp>=3.8.4->twilio>=9.6.1->-r requirements.txt (line 18)) (1.6.0)
+
+Requirement already satisfied: yarl<2.0,>=1.17.0 in ./.pythonlibs/lib/python3.11/site-packages (from aiohttp>=3.8.4->twilio>=9.6.1->-r requirements.txt (line 18)) (1.20.0)
+
+Requirement already satisfied: h11>=0.16 in ./.pythonlibs/lib/python3.11/site-packages (from httpcore==1.*->httpx<1,>=0.23.0->openai>=1.82.0->-r requirements.txt (line 13)) (0.16.0)
+
+Requirement already satisfied: typing-inspection>=0.4.0 in ./.pythonlibs/lib/python3.11/site-packages (from pydantic<3,>=1.9.0->openai>=1.82.0->-r requirements.txt (line 13)) (0.4.1)
+
+Requirement already satisfied: pytz>=2024.2 in ./.pythonlibs/lib/python3.11/site-packages (from dateparser>=1.1.2->htmldate>=1.9.2->trafilatura>=2.0.0->-r requirements.txt (line 17)) (2025.2)
+
+Requirement already satisfied: tzlocal>=0.2 in ./.pythonlibs/lib/python3.11/site-packages (from dateparser>=1.1.2->htmldate>=1.9.2->trafilatura>=2.0.0->-r requirements.txt (line 17)) (5.3.1)
+
+Requirement already satisfied: lxml_html_clean in ./.pythonlibs/lib/python3.11/site-packages (from lxml[html_clean]>=4.4.2->justext>=3.0.1->trafilatura>=2.0.0->-r requirements.txt (line 17)) (0.4.2)
+
+2025-05-27T01:45:50Z info: Skipping Build as no Build command set
+2025-05-27T01:45:50Z info: Pushing pid1 binary layer...
+2025-05-27T01:45:51Z info: Pushing hosting layer...
+2025-05-27T01:45:51Z info: Pushing Repl layer...
+2025-05-27T01:45:51Z info: Pushing nix-0 layer...
+2025-05-27T01:45:52Z info: Created hosting layer
+2025-05-27T01:45:52Z info: Created pid1 binary layer
+2025-05-27T01:46:08Z info: Pushing Repl (cache) layer...
+2025-05-27T01:46:09Z info: Created Repl (cache) layer
+2025-05-27T01:46:21Z info: uploading image for cached layer
+2025-05-27T01:46:21Z info: pushed cache image manifest
+2025-05-27T01:46:22Z info: pushed cache soci index manifest
+2025-05-27T01:46:22Z info: uploading cached layer
+2025-05-27T01:46:22Z info: successfully uploaded cached layer
+2025-05-27T01:46:23Z info: Pushed image manifest
+2025-05-27T01:46:24Z info: Pushed soci index manifest
+2025-05-27T01:46:24Z info: Pushed referrer manifest
+2025-05-27T01:48:45Z info: Creating virtual machine
+2025-05-27T01:49:19Z info: Virtual machine created
+2025-05-27T01:49:19Z info: Waiting for deployment to be ready
+retry request: failed. sleeping for 1.544354ms error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450" attempt=1
+starting up user application
+retry request: failed. sleeping for 1.478157273s error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450" attempt=9
+retry request: failed. sleeping for 1.807977777s attempt=11 error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450"
+retry request: failed. sleeping for 1.503058084s attempt=12 error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450"
+Requirement already satisfied: python-dotenv in ./.pythonlibs/lib/python3.11/site-packages (1.1.0)
+Requirement already satisfied: requests in ./.pythonlibs/lib/python3.11/site-packages (2.32.3)
+2025-05-27 01:49:44,031 - INFO - Timestamp: 2025-05-27T01:49:44.031165
+2025-05-27 01:49:44,031 - INFO - ✅ Configured platforms: Discord, Slack, Telegram
+2025-05-27 01:49:44,032 - INFO - 🚀 Posting product: Wireless Charging Pad
+command finished successfully with exit code 0
+retry request: failed. sleeping for 265.989777ms error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450" attempt=6
+retry request: failed. sleeping for 185.702808ms error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450" attempt=7
+2025-05-27 01:49:54,501 - ERROR - Telegram error: 400
+2025-05-27 01:49:53,762 - INFO - 🚀 Starting Multi-Platform Product Marketing Automation
+2025-05-27 01:49:54,814 - INFO - ✅ Multi-platform automation completed successfully
+retry request: failed. sleeping for 1.230339646s attempt=8 error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450"
+retry request: failed. sleeping for 1.167541526s error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450" attempt=9
+Requirement already satisfied: requests in ./.pythonlibs/lib/python3.11/site-packages (2.32.3)
+Requirement already satisfied: urllib3<3,>=1.21.1 in ./.pythonlibs/lib/python3.11/site-packages (from requests) (2.4.0)
+retry request: failed. sleeping for 60.208053ms error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450" attempt=4
+retry request: failed. sleeping for 61.708034ms attempt=5 error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450"
+Requirement already satisfied: idna<4,>=2.5 in ./.pythonlibs/lib/python3.11/site-packages (from requests) (3.10)
+Requirement already satisfied: certifi>=2017.4.17 in ./.pythonlibs/lib/python3.11/site-packages (from requests) (2025.4.26)
+retry request: failed. sleeping for 10.129102316s error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450" attempt=11
+main done, exiting
+Requirement already satisfied: requests in ./.pythonlibs/lib/python3.11/site-packages (2.32.3)
+retry request: failed. sleeping for 3.145642469s error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450" attempt=11
+forwarding local port 5000 to external port 80 (mapped as 1104)
+retry request: failed. sleeping for 2.256195ms error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450" attempt=1
+Requirement already satisfied: urllib3<3,>=1.21.1 in ./.pythonlibs/lib/python3.11/site-packages (from requests) (2.4.0)
+main done, exiting
+2025-05-27 01:50:49,899 - INFO - ✅ Posted to Slack
+retry request: failed. sleeping for 696.066µs attempt=1 error=failed to create identity daemon: failed to create signing authority: message replid mismatch. expected "any unique string, e.g., my-repl-id-001", got "6f5da69b-5806-47b6-b8d7-a70575e53450"
+Requirement already satisfied: idna<4,>=2.5 in ./.pythonlibs/lib/python3.11/site-packages (from requests) (3.10)
+main done, exiting
