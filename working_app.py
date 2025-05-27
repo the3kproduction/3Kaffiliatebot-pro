@@ -102,6 +102,21 @@ def products():
     products = ProductInventory.query.filter_by(is_active=True).limit(20).all()
     return render_template('products_simple.html', products=products)
 
+@app.route('/campaigns')
+def campaigns():
+    """Campaign management"""
+    return "<h1>📊 Campaigns</h1><p>Create and manage your affiliate campaigns here. Coming soon!</p><a href='/dashboard'>← Back to Dashboard</a>"
+
+@app.route('/analytics')
+def analytics():
+    """Analytics dashboard"""
+    return "<h1>📈 Analytics</h1><p>Track your earnings and performance metrics here. Coming soon!</p><a href='/dashboard'>← Back to Dashboard</a>"
+
+@app.route('/settings')
+def settings():
+    """User settings"""
+    return "<h1>⚙️ Settings</h1><p>Configure your platforms and affiliate settings here. Coming soon!</p><a href='/dashboard'>← Back to Dashboard</a>"
+
 @app.route('/login')
 def login():
     """Simple login page"""
@@ -109,8 +124,8 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    """User dashboard"""
-    return "<h1>Dashboard</h1><p>Welcome to your dashboard! Features coming soon.</p><a href='/products'>View Products</a> | <a href='/subscribe'>Upgrade Plan</a>"
+    """Professional affiliate marketing dashboard"""
+    return render_template('dashboard_working.html')
 
 # Create database tables
 with app.app_context():

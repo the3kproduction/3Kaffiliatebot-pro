@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AffiliateBot Pro Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        
+        .navbar { background: rgba(0,0,0,0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+        .logo { font-size: 24px; font-weight: bold; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; transition: all 0.3s; }
+        .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        .welcome-section { text-align: center; margin-bottom: 40px; }
+        .welcome-section h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .welcome-section p { font-size: 1.2rem; opacity: 0.9; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: rgba(255,255,255,0.15); border-radius: 15px; padding: 25px; backdrop-filter: blur(10px); text-align: center; }
+        .stat-value { font-size: 2.5rem; font-weight: bold; color: #4CAF50; margin-bottom: 10px; }
+        .stat-label { font-size: 1rem; opacity: 0.9; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 40px; }
+        .main-panel { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; backdrop-filter: blur(10px); }
+        .side-panel { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; backdrop-filter: blur(10px); }
+        
+        .section-title { font-size: 1.8rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: '🚀'; font-size: 1.5rem; }
+        
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .product-card { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center; }
+        .product-image { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.2); }
+        .product-title { font-size: 0.9rem; margin-bottom: 8px; }
+        .product-price { color: #4CAF50; font-weight: bold; margin-bottom: 10px; }
+        .promote-btn { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.8rem; width: 100%; }
+        .promote-btn:hover { transform: translateY(-2px); }
+        
+        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .action-btn { background: rgba(255,255,255,0.15); border: none; border-radius: 15px; padding: 20px; color: white; cursor: pointer; text-align: center; transition: all 0.3s; }
+        .action-btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-3px); }
+        .action-btn i { font-size: 2rem; display: block; margin-bottom: 10px; }
+        
+        .platform-status { margin-bottom: 30px; }
+        .platform-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 10px; }
+        .status-connected { color: #4CAF50; }
+        .status-disconnected { color: #f44336; }
+        
+        .recent-posts { max-height: 400px; overflow-y: auto; }
+        .post-item { padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 10px; }
+        .post-title { font-weight: bold; margin-bottom: 5px; }
+        .post-meta { font-size: 0.8rem; opacity: 0.7; }
+        
+        .upgrade-banner { background: linear-gradient(135deg, #ff6b6b, #ee5a24); border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 30px; }
+        .upgrade-btn { background: rgba(255,255,255,0.2); color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">🤖 AffiliateBot Pro</div>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/products">Products</a>
+            <a href="/campaigns">Campaigns</a>
+            <a href="/analytics">Analytics</a>
+            <a href="/settings">Settings</a>
+            <a href="/subscribe">Upgrade</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1>Welcome to Your Affiliate Empire</h1>
+            <p>Automate your success with AI-powered product promotion across 10+ platforms</p>
+        </div>
+
+        <div class="upgrade-banner">
+            <h3>🎯 Unlock Your Full Potential</h3>
+            <p>Upgrade to Premium or Pro for unlimited posts, advanced analytics, and AI automation</p>
+            <button class="upgrade-btn" onclick="location.href='/subscribe'">Upgrade Now - Start Free Trial</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">247</div>
+                <div class="stat-label">Total Posts</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$1,847</div>
+                <div class="stat-label">Estimated Earnings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">3.2%</div>
+                <div class="stat-label">Conversion Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">12,456</div>
+                <div class="stat-label">Total Clicks</div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <button class="action-btn" onclick="location.href='/products'">
+                <i>🛍️</i>
+                <div>Browse Products</div>
+            </button>
+            <button class="action-btn" onclick="autoPromote()">
+                <i>🤖</i>
+                <div>AI Auto-Promote</div>
+            </button>
+            <button class="action-btn" onclick="location.href='/campaigns'">
+                <i>📊</i>
+                <div>Create Campaign</div>
+            </button>
+            <button class="action-btn" onclick="location.href='/analytics'">
+                <i>📈</i>
+                <div>View Analytics</div>
+            </button>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="main-panel">
+                <h2 class="section-title">Featured Products</h2>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-image"></div>
+                        <div class="product-title">Premium Wireless Headphones</div>
+                        <div class="product-price">$89.99</div>
+                        <button class="promote-btn" onclick="promoteProduct('B08XYZ123')">🚀 Promote</button>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image"></div>
+                        <div class="product-title">Smart Fitness Watch</div>
+                        <div class="product-price">$199.99</div>
+                        <button class="promote-btn" onclick="promoteProduct('B08ABC456')">🚀 Promote</button>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image"></div>
+                        <div class="product-title">Laptop Stand Adjustable</div>
+                        <div class="product-price">$34.99</div>
+                        <button class="promote-btn" onclick="promoteProduct('B08DEF789')">🚀 Promote</button>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image"></div>
+                        <div class="product-title">Blue Light Glasses</div>
+                        <div class="product-price">$24.99</div>
+                        <button class="promote-btn" onclick="promoteProduct('B08GHI012')">🚀 Promote</button>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="promote-btn" onclick="location.href='/products'" style="width: auto; padding: 12px 30px;">View All Products</button>
+                </div>
+            </div>
+
+            <div class="side-panel">
+                <h3 class="section-title">Platform Status</h3>
+                <div class="platform-status">
+                    <div class="platform-item">
+                        <span>📱 Discord</span>
+                        <span class="status-connected">Connected</span>
+                    </div>
+                    <div class="platform-item">
+                        <span>📧 Telegram</span>
+                        <span class="status-connected">Connected</span>
+                    </div>
+                    <div class="platform-item">
+                        <span>💼 Slack</span>
+                        <span class="status-disconnected">Setup Required</span>
+                    </div>
+                    <div class="platform-item">
+                        <span>📧 Email</span>
+                        <span class="status-disconnected">Setup Required</span>
+                    </div>
+                    <div class="platform-item">
+                        <span>📌 Pinterest</span>
+                        <span class="status-disconnected">Setup Required</span>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Recent Activity</h3>
+                <div class="recent-posts">
+                    <div class="post-item">
+                        <div class="post-title">Posted: Wireless Earbuds</div>
+                        <div class="post-meta">Discord • 2 hours ago • 23 clicks</div>
+                    </div>
+                    <div class="post-item">
+                        <div class="post-title">Posted: Gaming Mouse</div>
+                        <div class="post-meta">Telegram • 4 hours ago • 18 clicks</div>
+                    </div>
+                    <div class="post-item">
+                        <div class="post-title">Posted: Phone Case</div>
+                        <div class="post-meta">Discord • 6 hours ago • 31 clicks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function promoteProduct(asin) {
+            if (confirm('Promote this product across all connected platforms?')) {
+                // In real implementation, this would send to your backend
+                alert('Product promotion started! Check your platforms for the new post.');
+            }
+        }
+
+        function autoPromote() {
+            if (confirm('Let AI select and promote the best products automatically?')) {
+                alert('AI Auto-Promotion activated! Your products will be posted automatically.');
+            }
+        }
+
+        // Add some dynamic effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stat cards
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.5s ease';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
