@@ -103,27 +103,20 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for product in top_products %}
                     <tr>
-                        <td>Wireless Bluetooth Earbuds</td>
-                        <td>1,247</td>
-                        <td>52</td>
-                        <td>$624.00</td>
-                        <td>4.2%</td>
+                        <td>{{ product.product_title }}</td>
+                        <td>{{ product.total_clicks or 0 }}</td>
+                        <td>{{ product.total_conversions or 0 }}</td>
+                        <td>${{ "%.2f"|format(product.total_revenue or 0) }}</td>
+                        <td>{{ "%.1f"|format((product.total_conversions/product.total_clicks*100) if product.total_clicks > 0 else 0) }}%</td>
                     </tr>
+                    {% endfor %}
+                    {% if not top_products %}
                     <tr>
-                        <td>Smart Fitness Tracker</td>
-                        <td>896</td>
-                        <td>31</td>
-                        <td>$496.00</td>
-                        <td>3.5%</td>
+                        <td colspan="5" style="text-align: center; color: #888;">No performance data yet - start promoting products to see results!</td>
                     </tr>
-                    <tr>
-                        <td>Phone Car Mount</td>
-                        <td>654</td>
-                        <td>28</td>
-                        <td>$112.00</td>
-                        <td>4.3%</td>
-                    </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

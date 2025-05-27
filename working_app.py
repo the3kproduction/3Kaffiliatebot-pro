@@ -875,7 +875,29 @@ def dashboard():
         'email': False  # Email not configured yet
     }
     
-    return render_template('dashboard_working.html', is_admin=is_admin, platform_status=platform_status)
+    # Get real statistics from database
+    user_id = session.get('user_id')
+    
+    # Calculate real stats from campaigns and promotions
+    user_campaigns = Campaign.query.filter_by(user_id=user_id).all()
+    total_posts = sum(campaign.total_posts for campaign in user_campaigns)
+    total_clicks = sum(campaign.total_clicks for campaign in user_campaigns)  
+    total_revenue = sum(campaign.total_revenue for campaign in user_campaigns)
+    
+    # Calculate conversion rate
+    conversion_rate = (total_revenue / total_clicks * 100) if total_clicks > 0 else 0
+    
+    real_stats = {
+        'total_posts': total_posts,
+        'total_clicks': total_clicks,
+        'total_revenue': total_revenue,
+        'conversion_rate': conversion_rate
+    }
+    
+    return render_template('dashboard_working.html', 
+                         is_admin=is_admin, 
+                         platform_status=platform_status,
+                         real_stats=real_stats)
 
 @app.route('/admin/email-blast', methods=['GET', 'POST'])
 def admin_email_blast():

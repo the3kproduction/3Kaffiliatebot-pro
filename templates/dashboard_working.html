@@ -111,19 +111,19 @@
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-value">247</div>
+                <div class="stat-value">{{ real_stats.total_posts or 0 }}</div>
                 <div class="stat-label">Total Posts</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">$1,847</div>
+                <div class="stat-value">${{ "%.2f"|format(real_stats.total_revenue or 0) }}</div>
                 <div class="stat-label">Estimated Earnings</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">3.2%</div>
+                <div class="stat-value">{{ "%.1f"|format(real_stats.conversion_rate or 0) }}%</div>
                 <div class="stat-label">Conversion Rate</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">12,456</div>
+                <div class="stat-value">{{ real_stats.total_clicks or 0 }}</div>
                 <div class="stat-label">Total Clicks</div>
             </div>
         </div>

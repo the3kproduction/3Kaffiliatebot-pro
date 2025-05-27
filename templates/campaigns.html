@@ -73,19 +73,19 @@
 
         <div class="stats-row">
             <div class="stat-card">
-                <div class="stat-value">4</div>
+                <div class="stat-value">{{ campaigns|length }}</div>
                 <div class="stat-label">Active Campaigns</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">$1,847</div>
+                <div class="stat-value">${{ "%.2f"|format(campaigns|sum(attribute='total_revenue') or 0) }}</div>
                 <div class="stat-label">Total Revenue</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">12,456</div>
+                <div class="stat-value">{{ campaigns|sum(attribute='total_clicks') or 0 }}</div>
                 <div class="stat-label">Total Clicks</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">3.2%</div>
+                <div class="stat-value">{{ "%.1f"|format((campaigns|sum(attribute='total_revenue')/campaigns|sum(attribute='total_clicks')*100) if campaigns|sum(attribute='total_clicks') > 0 else 0) }}%</div>
                 <div class="stat-label">Avg Conversion</div>
             </div>
         </div>
