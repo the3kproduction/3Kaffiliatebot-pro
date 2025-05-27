@@ -16,3 +16,6 @@ slack-sdk>=3.35.0
 sqlalchemy>=2.0.41
 trafilatura>=2.0.0
 twilio>=9.6.1
+beautifulsoup4
+schedule
+stripe
