@@ -386,13 +386,12 @@ def subscribe():
         return render_template('subscribe.html', user=None, show_signup=True)
 
 @app.route('/create-checkout-session', methods=['POST'])
-@require_login
 def create_checkout_session():
     """Create Stripe checkout session for subscription"""
     import stripe
     import os
     
-    # Set Stripe API key
+    # Allow non-logged-in users to purchase - redirect to signup after payment
     stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
     
     plan = request.form.get('plan')
