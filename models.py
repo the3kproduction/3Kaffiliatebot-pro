@@ -96,6 +96,20 @@ class Campaign(db.Model):
     # Relationships
     posts = db.relationship('Post', backref='campaign', lazy=True)
 
+# Support system for customer inquiries
+class SupportMessage(db.Model):
+    __tablename__ = 'support_messages'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=True)
+    user_email = db.Column(db.String, nullable=False)
+    user_name = db.Column(db.String, nullable=False)
+    subject = db.Column(db.String, nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    priority = db.Column(db.String, default='normal')  # normal, high, urgent
+    status = db.Column(db.String, default='open')  # open, in_progress, resolved
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    resolved_at = db.Column(db.DateTime, nullable=True)
+
 # Post tracking and analytics
 class Post(db.Model):
     __tablename__ = 'posts'
