@@ -46,11 +46,22 @@
         <div class="products-grid">
             {% for product in products %}
             <div class="product-card">
-                {% if product.image_url %}
-                    <img src="{{ product.image_url }}" alt="{{ product.product_title }}" class="product-image">
-                {% endif %}
+                <img src="{{ product.image_url or 'https://via.placeholder.com/200x200?text=Loading...' }}" 
+                     alt="{{ product.product_title }}" 
+                     class="product-image" 
+                     onerror="this.src='https://via.placeholder.com/200x200?text=Image+Error'">
+                
                 <div class="product-title">{{ product.product_title or 'Amazon Product' }}</div>
-                <div class="product-price">${{ product.price or '29.99' }}</div>
+                <div class="product-price">{{ product.price or '$29.99' }}</div>
+                
+                <!-- Amazon Verification Link -->
+                <div style="margin: 10px 0;">
+                    <a href="https://www.amazon.com/dp/{{ product.asin }}" target="_blank" 
+                       style="color: #FFD700; text-decoration: none; font-size: 12px; background: rgba(255,215,0,0.2); padding: 5px 10px; border-radius: 15px; display: inline-block;">
+                        🔗 Verify on Amazon ({{ product.asin }})
+                    </a>
+                </div>
+                
                 <button class="promote-btn" onclick="promoteProduct('{{ product.asin }}', '{{ product.product_title }}')">
                     🚀 Promote This Product
                 </button>
