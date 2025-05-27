@@ -93,10 +93,11 @@
             
             <div class="form-group">
                 <label for="password">Password:</label>
-                <div style="position: relative;">
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required style="padding-right: 60px;">
-                    <button type="button" onclick="togglePasswordVisibility()" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: #007bff; border: none; color: white; cursor: pointer; font-size: 11px; padding: 6px 10px; border-radius: 4px; font-weight: bold;">SHOW</button>
-                </div>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            
+            <div class="form-group">
+                <button type="button" onclick="togglePassword()" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-bottom: 10px;">👁️ Show Password</button>
             </div>
             
             <div class="form-group" style="display: flex; align-items: center; margin-bottom: 25px;">
@@ -117,16 +118,16 @@
     </div>
     
     <script>
-        function togglePasswordVisibility() {
+        function togglePassword() {
             var passwordField = document.getElementById('password');
             var button = event.target;
             
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
-                button.innerHTML = 'HIDE';
+                button.innerHTML = '🙈 Hide Password';
             } else {
                 passwordField.type = 'password';
-                button.innerHTML = 'SHOW';
+                button.innerHTML = '👁️ Show Password';
             }
         }
     </script>
