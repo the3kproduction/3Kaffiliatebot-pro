@@ -808,10 +808,16 @@ def settings():
         'reddit': bool(os.environ.get('REDDIT_CLIENT_ID') and os.environ.get('REDDIT_CLIENT_SECRET'))
     }
     
+    # Get user's saved email from database
+    user_email = ''
+    if user:
+        user_email = user.email or ''
+    
     # Create current_user object for template
     current_user = type('obj', (object,), {
         'subscription_tier': session.get('subscription_tier', 'free'),
-        'affiliate_id': session.get('affiliate_id', 'luxoraconnect-20')
+        'affiliate_id': session.get('affiliate_id', 'luxoraconnect-20'),
+        'email': user_email
     })()
     
     return render_template('settings.html', platform_status=platform_status, current_user=current_user)
