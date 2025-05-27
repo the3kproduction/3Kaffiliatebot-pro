@@ -112,9 +112,19 @@ def index():
             <h1>🤖 AffiliateBot Pro</h1>
             <h2>Automated Amazon Affiliate Marketing</h2>
             <p>Post products to 10+ platforms automatically. Increase your affiliate sales with AI-powered product selection.</p>
-            <a href="/subscribe" class="btn">🚀 Get Started</a>
+            
+            <a href="/create-free-account" class="btn" style="background: #00ff00; animation: pulse 2s infinite; font-weight: bold; font-size: 20px;">🆓 Create FREE Account</a>
+            <a href="/subscribe" class="btn">🚀 Get Premium</a>
             <a href="/subscribe" class="btn">💰 View Pricing</a>
             <a href="/admin-login" class="btn" style="background: rgba(255,255,255,0.2);">🔐 Login</a>
+            
+            <style>
+                @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                }
+            </style>
         </div>
     </body>
     </html>
@@ -337,10 +347,15 @@ def products():
     if not session.get('user_id'):
         return redirect('/subscribe')
     
-    # Check if user is paid member (Premium or Pro only)
-    user = User.query.get(session['user_id'])
-    if not user or user.subscription_tier not in ['premium', 'pro']:
-        return redirect('/subscribe')
+    # Allow admin access
+    is_admin = session.get('is_admin', False)
+    if is_admin:
+        user = None  # Admin doesn't need user object
+    else:
+        # Check if user is paid member (Premium or Pro only)
+        user = User.query.get(session['user_id'])
+        if not user or user.subscription_tier not in ['premium', 'pro']:
+            return redirect('/subscribe')
     
     page = request.args.get('page', 1, type=int)
     per_page = 12
