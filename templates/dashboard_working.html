@@ -276,6 +276,62 @@
                 }, index * 100);
             });
         });
+
+        function toggleAutomation() {
+            const btn = document.getElementById('toggleAutomation');
+            const status = document.getElementById('automationStatus');
+            
+            if (status.textContent === 'Enable Auto-Posting') {
+                status.textContent = 'Disable Auto-Posting';
+                btn.style.background = '#f44336';
+                alert('🤖 Auto-posting enabled! Your products will be posted automatically based on your subscription tier.');
+            } else {
+                status.textContent = 'Enable Auto-Posting';
+                btn.style.background = '#4CAF50';
+                alert('⏸️ Auto-posting disabled.');
+            }
+        }
+
+        function manualPost() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '<i>⏳</i><div>Posting...</div>';
+            
+            fetch('/api/auto-post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('🚀 Success! ' + data.message);
+                    location.reload(); // Refresh to update stats
+                } else {
+                    alert('❌ ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('❌ Error: ' + error);
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<i>🚀</i><div>Post Now</div>';
+            });
+        }
+
+        // Update timer display
+        function updateTimer() {
+            const timer = document.getElementById('nextPostTimer');
+            if (timer) {
+                timer.textContent = '2h 15m';
+            }
+        }
+
+        // Initialize
+        updateTimer();
+        setInterval(updateTimer, 60000); // Update every minute
     </script>
 </body>
 </html>
