@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Catalog - AffiliateBot Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .search-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .search-input {
+            width: 400px;
+            padding: 15px 20px;
+            border-radius: 25px;
+            border: none;
+            background: rgba(255,255,255,0.95);
+            font-size: 16px;
+            margin-right: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        .clear-btn {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .product-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+        
+        .product-image {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 10px;
+        }
+        
+        .product-category {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .product-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            height: 50px;
+            overflow: hidden;
+        }
+        
+        .product-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .product-rating {
+            color: #f39c12;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+        
+        .upload-btn:hover {
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+        }
+        
+        .no-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .pagination {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .pagination a, .pagination span {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 0 10px;
+            display: inline-block;
+        }
+        
+        .pagination span {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ Product Catalog</h1>
+            <p>AI-recommended products for your affiliate marketing</p>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="productSearch" class="search-input" placeholder="🔍 Search products on this website..." onkeyup="searchProducts(this.value)">
+            <button onclick="clearSearch()" class="clear-btn">Clear</button>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            {% for product in products %}
+            <div class="product-card" data-title="{{ product.product_title|lower }}" data-category="{{ product.category|lower }}">
+                <img src="{{ product.image_url }}" alt="{{ product.product_title }}" class="product-image" loading="lazy">
+                
+                <div class="product-category">{{ product.category }}</div>
+                <div class="product-title">{{ product.product_title }}</div>
+                <div class="product-price">${{ product.price }}</div>
+                
+                {% if product.rating %}
+                <div class="product-rating">
+                    {% for i in range(5) %}
+                        {% if i < product.rating %}⭐{% else %}☆{% endif %}
+                    {% endfor %}
+                    ({{ product.rating }}/5)
+                </div>
+                {% endif %}
+                
+                <a href="#" class="btn" onclick="promoteProduct('{{ product.asin }}')">🚀 Promote This Product</a>
+                
+                <!-- Image Upload Section -->
+                <div style="margin-top: 10px;">
+                    <input type="file" id="imageUpload{{ product.asin }}" accept="image/*" style="display: none;" onchange="uploadImage('{{ product.asin }}', this)">
+                    <button onclick="document.getElementById('imageUpload{{ product.asin }}').click()" class="btn upload-btn">📸 Upload Image</button>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if not products %}
+            <div class="no-products">
+                <h3>No Products Available</h3>
+                <p>Check back later for new products!</p>
+                <a href="/dashboard" class="btn" style="margin-top: 20px;">Back to Dashboard</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if pagination and pagination.pages > 1 %}
+        <div class="pagination">
+            {% if pagination.has_prev %}
+                <a href="/products?page={{ pagination.prev_num }}">← Previous</a>
+            {% endif %}
+            
+            <span>Page {{ pagination.page }} of {{ pagination.pages }}</span>
+            
+            {% if pagination.has_next %}
+                <a href="/products?page={{ pagination.next_num }}">Next →</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function promoteProduct(asin) {
+            fetch('/api/promote-product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ asin: asin })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect to success page instead of alert
+                    window.location.href = '/promote-success?asin=' + asin;
+                } else {
+                    alert('Error promoting product: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error);
+            });
+        }
+        
+        function uploadImage(asin, fileInput) {
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            // Find the upload button for this specific product
+            const uploadBtn = fileInput.parentElement.querySelector('button');
+            
+            // Show loading
+            const originalText = uploadBtn.textContent;
+            uploadBtn.textContent = '⏳ Uploading...';
+            uploadBtn.disabled = true;
+            
+            fetch(`/upload-image/${asin}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the image immediately
+                    const productCard = uploadBtn.closest('.product-card');
+                    const img = productCard.querySelector('.product-image');
+                    img.src = data.image_url + '?t=' + new Date().getTime();
+                    
+                    uploadBtn.textContent = '✅ Uploaded!';
+                    setTimeout(() => {
+                        uploadBtn.textContent = originalText;
+                        uploadBtn.disabled = false;
+                    }, 2000);
+                } else {
+                    uploadBtn.textContent = '❌ Failed';
+                    setTimeout(() => {
+                        uploadBtn.textContent = originalText;
+                        uploadBtn.disabled = false;
+                    }, 2000);
+                    alert('Upload failed: ' + data.message);
+                }
+            })
+            .catch(error => {
+                uploadBtn.textContent = '❌ Error';
+                setTimeout(() => {
+                    uploadBtn.textContent = originalText;
+                    uploadBtn.disabled = false;
+                }, 2000);
+                alert('Upload error: ' + error);
+            });
+        }
+        
+        function searchProducts(query) {
+            const cards = document.querySelectorAll('.product-card');
+            const searchTerm = query.toLowerCase().trim();
+            
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title') || '';
+                const category = card.getAttribute('data-category') || '';
+                
+                if (searchTerm === '' || title.includes(searchTerm) || category.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function clearSearch() {
+            document.getElementById('productSearch').value = '';
+            searchProducts('');
+        }
+    </script>
+</body>
+</html>

@@ -332,123 +332,29 @@ def user_dashboard():
 
 @app.route('/products')
 def products():
-    """Show available products with full details and save to catalog feature"""
+    """Show available products - PAID MEMBERS ONLY"""
     # Check if user is logged in
-    is_logged_in = session.get('user_id') or session.get('is_admin')
-    username = session.get('user_id', 'User')
+    if not session.get('user_id'):
+        return redirect('/subscribe')
+    
+    # Check if user is paid member (Premium or Pro only)
+    user = User.query.get(session['user_id'])
+    if not user or user.subscription_tier not in ['premium', 'pro']:
+        return redirect('/subscribe')
     
     page = request.args.get('page', 1, type=int)
-    per_page = 12  # Show 12 products per page
+    per_page = 12
     
     # Get all active products from inventory
-    all_products = ProductInventory.query.filter_by(is_active=True).all()
+    pagination = ProductInventory.query.filter_by(is_active=True).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    products = pagination.items
     
-    # Build product HTML with full details and save to catalog functionality
-    product_cards_html = ""
-    for product in all_products:
-        # Check if user already has this product saved
-        is_saved = False
-        if is_logged_in and session.get('user_id') != 'admin':
-            user = User.query.get(session['user_id'])
-            if user:
-                existing_save = UserSavedProducts.query.filter_by(
-                    user_id=user.id, 
-                    asin=product.asin
-                ).first()
-                is_saved = bool(existing_save)
-        
-        # Create save button based on user status
-        save_button = ""
-        if is_logged_in and session.get('user_id') != 'admin':
-            user = User.query.get(session['user_id'])
-            if user and user.subscription_tier in ['premium', 'pro']:
-                if is_saved:
-                    save_button = '<button class="save-btn saved" disabled>✅ Saved to Catalog</button>'
-                else:
-                    save_button = f'<button class="save-btn" onclick="saveToMyCatalog(\'{product.asin}\')">💾 Save to My Catalog</button>'
-            else:
-                save_button = '<button class="save-btn upgrade" onclick="location.href=\'/subscribe\'">🔒 Upgrade to Save</button>'
-        
-        product_cards_html += f'''
-        <div class="product-card">
-            <img src="{product.image_url or 'https://via.placeholder.com/200x200?text=Product+Image'}" 
-                 alt="{product.product_title}" 
-                 class="product-image" 
-                 onerror="this.src='https://via.placeholder.com/200x200/4CAF50/white?text=Product'">
-            
-            <div class="product-category">{product.category or 'General'}</div>
-            <div class="product-title">{product.product_title or 'Amazon Product'}</div>
-            <div class="product-price">{product.price or 'Price varies'}</div>
-            
-            {'<div class="product-rating">⭐ ' + str(product.rating) + '/5</div>' if product.rating else ''}
-            
-            <div class="product-actions">
-                {save_button}
-                <a href="/promote/{product.asin}" class="promote-btn">🚀 Promote Now</a>
-            </div>
-        </div>
-        '''
-    
-    return f'''
-    <!DOCTYPE html>
-    <html><head><title>Product Catalog - AffiliateBot Pro</title>
-    <style>
-        body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; margin: 0; }}
-        .navbar {{ background: rgba(0,0,0,0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }}
-        .container {{ max-width: 1200px; margin: 0 auto; padding: 30px; }}
-        .header {{ text-align: center; margin-bottom: 40px; }}
-        .products-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }}
-        .product-card {{ background: rgba(255,255,255,0.15); border-radius: 15px; padding: 20px; text-align: center; }}
-        .product-image {{ width: 100%; height: 200px; object-fit: contain; border-radius: 10px; margin-bottom: 15px; }}
-        .product-category {{ background: #4CAF50; color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block; }}
-        .product-title {{ font-weight: bold; margin: 10px 0; min-height: 40px; }}
-        .product-price {{ font-size: 18px; color: #4CAF50; font-weight: bold; margin: 10px 0; }}
-        .product-rating {{ color: #ffd700; margin: 5px 0; }}
-        .product-actions {{ margin-top: 15px; }}
-        .save-btn, .promote-btn {{ padding: 8px 15px; margin: 5px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; }}
-        .save-btn {{ background: #2196F3; color: white; }}
-        .save-btn.saved {{ background: #4CAF50; }}
-        .save-btn.upgrade {{ background: #FF9800; }}
-        .promote-btn {{ background: #E91E63; color: white; }}
-        .btn {{ background: #4CAF50; color: white; padding: 12px 25px; text-decoration: none; border-radius: 10px; display: inline-block; }}
-    </style>
-    <script>
-        function saveToMyCatalog(asin) {{
-            fetch('/save-product/' + asin, {{
-                method: 'POST',
-                headers: {{ 'Content-Type': 'application/json' }}
-            }})
-            .then(response => response.json())
-            .then(data => {{
-                if (data.success) {{
-                    alert('Product saved to your catalog!');
-                    location.reload();
-                }} else {{
-                    alert('Error: ' + data.message);
-                }}
-            }});
-        }}
-    </script>
-    </head>
-    <body>
-        <div class="navbar">
-            <div style="font-size: 24px; font-weight: bold;">🛍️ Product Catalog</div>
-            <div><a href="/dashboard" style="color: white;">← Back to Dashboard</a></div>
-        </div>
-        
-        <div class="container">
-            <div class="header">
-                <h1>🛍️ Amazon Product Catalog</h1>
-                <p>Discover high-converting products perfect for affiliate marketing</p>
-                <p><strong>Total Products:</strong> {len(all_products)}</p>
-            </div>
-            
-            <div class="products-grid">
-                {product_cards_html if all_products else '<div style="text-align: center; padding: 50px; grid-column: 1 / -1;"><h3>No products available yet</h3><p>Add your first Amazon product to get started!</p><a href="/add-amazon-product" class="btn">➕ Add Amazon Product</a></div>'}
-            </div>
-        </div>
-    </body></html>
-    '''
+    return render_template('products_new.html', 
+                         products=products, 
+                         pagination=pagination,
+                         user=user)
 
 @app.route('/analytics')
 def analytics():
