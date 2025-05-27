@@ -2040,6 +2040,7 @@ def my_catalog():
                 </div>
             </div>
             
+            <div class="products-grid">
             {"".join([f"""
                 <div class="product-card priority-{product.priority}">
                     <img src="{product.image_url}" alt="{product.product_title}" class="product-image">
@@ -2047,12 +2048,12 @@ def my_catalog():
                     <div class="product-price">${product.price}</div>
                     <div class="product-rating">⭐ {product.rating}/5</div>
                     <div class="product-meta">📁 {product.category} • 🎯 {product.priority.title()}</div>
-                    {"<div class='product-notes'>Notes: " + product.notes + "</div>" if product.notes else ""}
+                    {"<div class='product-notes'>📝 " + product.notes + "</div>" if product.notes else ""}
                     <div class="product-actions">
-                        <a href="/promote/{product.asin}" class="btn btn-primary">🚀 Promote Now</a>
-                        <button onclick="document.getElementById('imageInput_{product.asin}').click()" class="btn btn-upload">📸 Upload Image</button>
+                        <a href="/promote/{product.asin}" class="btn btn-primary">🚀</a>
+                        <button onclick="document.getElementById('imageInput_{product.asin}').click()" class="btn btn-upload">📸</button>
                         <input type="file" id="imageInput_{product.asin}" style="display: none;" accept="image/*" onchange="uploadImageFromCatalog('{product.asin}', this)">
-                        <a href="/remove-saved-product/{product.id}" class="btn btn-danger" onclick="return confirm('Remove from your catalog?')">❌ Remove</a>
+                        <a href="/remove-saved-product/{product.id}" class="btn btn-danger" onclick="return confirm('Remove?')">❌</a>
                     </div>
                 </div>
             """ for product in saved_products]) if saved_products else """
@@ -2061,7 +2062,62 @@ def my_catalog():
                     <p>Start saving your favorite products from the trending catalog!</p>
                     <a href="/products" class="btn btn-primary" style="margin-top: 20px;">Browse Products to Save</a>
                 </div>
+            </div>
             """}
+        
+        <script>
+        function uploadImageFromCatalog(asin, fileInput) {{
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            // Show loading state
+            const button = fileInput.parentNode.querySelector('.btn-upload');
+            const originalText = button.textContent;
+            button.textContent = '⏳';
+            button.disabled = true;
+            
+            fetch(`/upload-image/${{asin}}`, {{
+                method: 'POST',
+                body: formData
+            }})
+            .then(response => response.json())
+            .then(data => {{
+                if (data.success) {{
+                    // Update the image immediately
+                    const productCard = fileInput.closest('.product-card');
+                    const img = productCard.querySelector('.product-image');
+                    img.src = data.image_url + '?t=' + new Date().getTime();
+                    
+                    // Reset button
+                    button.textContent = '✅';
+                    setTimeout(() => {{
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }}, 2000);
+                }} else {{
+                    button.textContent = '❌';
+                    setTimeout(() => {{
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }}, 2000);
+                }}
+            }})
+            .catch(error => {{
+                button.textContent = '❌';
+                setTimeout(() => {{
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }}, 2000);
+            }});
+            
+            // Clear the file input
+            fileInput.value = '';
+        }}
+        </script>
         </div>
     </body>
     </html>
