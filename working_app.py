@@ -443,10 +443,12 @@ def products():
                 <p><strong>Total Products:</strong> {len(all_products)}</p>
             </div>
             
-            {'<div class="products-grid">' + product_cards_html + '</div>' if all_products else '<div style="text-align: center; padding: 50px;"><h3>No products available yet</h3><p>Add your first Amazon product to get started!</p><a href="/add-amazon-product" class="btn">➕ Add Amazon Product</a></div>'}
+            <div class="products-grid">
+                {product_cards_html if all_products else '<div style="text-align: center; padding: 50px; grid-column: 1 / -1;"><h3>No products available yet</h3><p>Add your first Amazon product to get started!</p><a href="/add-amazon-product" class="btn">➕ Add Amazon Product</a></div>'}
+            </div>
         </div>
     </body></html>
-    '''ame=username)
+    '''
 
 @app.route('/analytics')
 def analytics():
