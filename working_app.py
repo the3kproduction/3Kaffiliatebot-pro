@@ -988,7 +988,108 @@ def admin_email_blast():
     </form>
     '''
 
-# Removed duplicate route - using the one from routes.py instead
+@app.route('/admin/users')
+def admin_users_working():
+    """Admin user management with email list for marketing"""
+    if not session.get('is_admin'):
+        return redirect('/admin-login')
+    
+    # Get all users organized by subscription tier
+    free_users = User.query.filter_by(subscription_tier='free').all()
+    premium_users = User.query.filter_by(subscription_tier='premium').all()
+    pro_users = User.query.filter_by(subscription_tier='pro').all()
+    
+    def build_user_table(users, tier_name):
+        if not users:
+            return f"<p>No {tier_name} users yet.</p>"
+        
+        table_html = f'''
+        <h3>{tier_name.title()} Users ({len(users)})</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; background: white; border-radius: 10px; overflow: hidden;">
+            <thead style="background: #333; color: white;">
+                <tr>
+                    <th style="padding: 12px; text-align: left;">Email</th>
+                    <th style="padding: 12px; text-align: left;">Joined</th>
+                    <th style="padding: 12px; text-align: left;">User ID</th>
+                </tr>
+            </thead>
+            <tbody>
+        '''
+        
+        for user in users:
+            table_html += f'''
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px; color: #333;">{user.email or 'No email'}</td>
+                <td style="padding: 12px; color: #666;">{user.created_at.strftime('%m/%d/%Y') if user.created_at else 'N/A'}</td>
+                <td style="padding: 12px; color: #666; font-size: 12px;">{user.id[:12]}...</td>
+            </tr>
+            '''
+        
+        table_html += "</tbody></table>"
+        return table_html
+    
+    # Build email lists for easy copying
+    all_emails = []
+    for user in User.query.all():
+        if user.email:
+            all_emails.append(user.email)
+    
+    return f'''
+    <!DOCTYPE html>
+    <html><head><title>User Email Management</title>
+    <style>
+        body {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; font-family: Arial; color: white; min-height: 100vh; }}
+        .container {{ max-width: 1200px; margin: 0 auto; padding: 30px; }}
+        .email-box {{ background: rgba(255,255,255,0.95); color: #333; padding: 20px; border-radius: 10px; margin: 20px 0; }}
+        .btn {{ background: #4CAF50; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: inline-block; margin: 5px; border: none; cursor: pointer; }}
+        .copy-btn {{ background: #2196F3; }}
+        .stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }}
+        .stat-card {{ background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; text-align: center; }}
+        .stat-number {{ font-size: 32px; font-weight: bold; }}
+    </style></head>
+    <body>
+        <div class="container">
+            <h1>👥 User Email Management</h1>
+            <p>Manage user emails for marketing campaigns and communication</p>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">{len(free_users)}</div>
+                    <div>Free Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{len(premium_users)}</div>
+                    <div>Premium Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{len(pro_users)}</div>
+                    <div>Pro Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{len(all_emails)}</div>
+                    <div>Total Emails</div>
+                </div>
+            </div>
+            
+            <div class="email-box">
+                <h3>📧 All Email Addresses (Copy for Marketing)</h3>
+                <textarea style="width: 100%; height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" readonly>
+{', '.join(all_emails)}
+                </textarea>
+                <button class="btn copy-btn" onclick="navigator.clipboard.writeText('{', '.join(all_emails)}')">📋 Copy All Emails</button>
+            </div>
+            
+            {build_user_table(free_users, 'free')}
+            {build_user_table(premium_users, 'premium')}
+            {build_user_table(pro_users, 'pro')}
+            
+            <div style="margin-top: 30px;">
+                <a href="/admin" class="btn">← Back to Admin Dashboard</a>
+                <a href="/admin/email-blast" class="btn">📧 Send Email Campaign</a>
+            </div>
+        </div>
+    </body></html>
+    '''
 
 @app.route('/admin')
 def admin_dashboard():
@@ -999,7 +1100,7 @@ def admin_dashboard():
     # Get real admin statistics
     with app.app_context():
         total_users = User.query.count()
-        total_posts = Post.query.count() 
+        total_posts = 0  # Will implement when Post model is available
         total_products = ProductInventory.query.count()
         
     return f'''
@@ -1064,7 +1165,7 @@ def admin_product_catalog():
         <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px; margin: 10px 0;">
             <h4>{product.product_title}</h4>
             <p>ASIN: {product.asin} | Price: {product.price} | Rating: {product.rating}⭐</p>
-            <p>Times Promoted: {product.times_promoted} | Category: {product.category}</p>
+            <p>Category: {product.category} | Active: {'Yes' if product.is_active else 'No'}</p>
         </div>
         '''
     
