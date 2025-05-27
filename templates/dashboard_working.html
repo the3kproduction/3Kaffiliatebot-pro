@@ -177,6 +177,7 @@
                 <i>🚀</i>
                 <div>Post Now</div>
             </button>
+            {% if current_user.subscription_tier != 'free' %}
             <button class="action-btn" onclick="location.href='/campaigns'">
                 <i>📊</i>
                 <div>Create Campaign</div>
@@ -185,6 +186,16 @@
                 <i>📈</i>
                 <div>View Analytics</div>
             </button>
+            {% else %}
+            <button class="action-btn" onclick="alert('Upgrade to Premium to access Campaign Management!')" style="background: #666; opacity: 0.7;">
+                <i>📊🔒</i>
+                <div>Campaigns (Premium)</div>
+            </button>
+            <button class="action-btn" onclick="alert('Upgrade to Premium to access Advanced Analytics!')" style="background: #666; opacity: 0.7;">
+                <i>📈🔒</i>
+                <div>Analytics (Premium)</div>
+            </button>
+            {% endif %}
         </div>
 
         <div class="dashboard-grid">
