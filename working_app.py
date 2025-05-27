@@ -37,6 +37,21 @@ class User(db.Model):
     affiliate_id = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
+class Campaign(db.Model):
+    __tablename__ = 'campaigns'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'))
+    name = db.Column(db.String(200))
+    description = db.Column(db.Text)
+    category = db.Column(db.String(50))
+    status = db.Column(db.String(20), default='active')
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    
+    # Performance tracking
+    total_posts = db.Column(db.Integer, default=0)
+    total_clicks = db.Column(db.Integer, default=0)
+    total_revenue = db.Column(db.Float, default=0.0)
+
 # Product model
 class ProductInventory(db.Model):
     __tablename__ = 'product_inventory'
@@ -957,20 +972,44 @@ with app.app_context():
 
 @app.route('/campaigns')
 def campaigns():
-    """View and manage campaigns"""
+    """View and manage campaigns with REAL data"""
     if not session.get('user_id'):
         return redirect('/')
     
     user_id = session.get('user_id')
-    user_campaigns = []
     
-    try:
-        from models import Campaign
-        user_campaigns = Campaign.query.filter_by(user_id=user_id).all()
-    except:
-        pass
+    # Get real campaigns from database
+    user_campaigns = Campaign.query.filter_by(user_id=user_id).all()
     
-    return render_template('campaigns.html', campaigns=user_campaigns)
+    # Get real product data by category for campaign stats
+    electronics_count = ProductInventory.query.filter_by(category='Electronics').count()
+    home_kitchen_count = ProductInventory.query.filter_by(category='Home & Kitchen').count()
+    sports_count = ProductInventory.query.filter_by(category='Sports & Outdoors').count()
+    
+    # Real campaign data structure
+    real_campaigns = []
+    for campaign in user_campaigns:
+        # Calculate real performance metrics
+        category_products = ProductInventory.query.filter_by(category=campaign.category).count()
+        
+        real_campaigns.append({
+            'id': campaign.id,
+            'name': campaign.name,
+            'category': campaign.category,
+            'description': campaign.description,
+            'status': campaign.status,
+            'products_count': category_products,
+            'total_posts': campaign.total_posts,
+            'total_clicks': campaign.total_clicks,
+            'total_revenue': campaign.total_revenue,
+            'created_at': campaign.created_at.strftime('%b %d')
+        })
+    
+    return render_template('campaigns.html', 
+                         campaigns=real_campaigns,
+                         electronics_count=electronics_count,
+                         home_kitchen_count=home_kitchen_count,
+                         sports_count=sports_count)
 
 @app.route('/create-campaign', methods=['GET', 'POST'])
 def create_campaign():
@@ -1076,6 +1115,87 @@ def create_campaign():
         </div>
     </body>
     </html>
+    '''
+
+@app.route('/campaign/<int:campaign_id>/details')
+def campaign_details(campaign_id):
+    """View real campaign performance details"""
+    if not session.get('user_id'):
+        return redirect('/')
+    
+    campaign = Campaign.query.get_or_404(campaign_id)
+    if campaign.user_id != session.get('user_id'):
+        return redirect('/campaigns')
+    
+    # Get real products in this campaign's category
+    category_products = ProductInventory.query.filter_by(category=campaign.category).all()
+    
+    return f'''
+    <h2>📊 {campaign.name} - Campaign Details</h2>
+    <p><strong>Category:</strong> {campaign.category}</p>
+    <p><strong>Status:</strong> {campaign.status.upper()}</p>
+    <p><strong>Description:</strong> {campaign.description}</p>
+    <p><strong>Products Available:</strong> {len(category_products)}</p>
+    <p><strong>Total Posts:</strong> {campaign.total_posts}</p>
+    <p><strong>Total Clicks:</strong> {campaign.total_clicks}</p>
+    <p><strong>Total Revenue:</strong> ${campaign.total_revenue:.2f}</p>
+    <p><strong>Created:</strong> {campaign.created_at.strftime('%B %d, %Y')}</p>
+    <br>
+    <a href="/campaigns">← Back to Campaigns</a>
+    '''
+
+@app.route('/campaign/<int:campaign_id>/toggle', methods=['POST'])
+def toggle_campaign(campaign_id):
+    """Pause/Resume campaign"""
+    if not session.get('user_id'):
+        return redirect('/')
+    
+    campaign = Campaign.query.get_or_404(campaign_id)
+    if campaign.user_id != session.get('user_id'):
+        return redirect('/campaigns')
+    
+    # Toggle status
+    campaign.status = 'paused' if campaign.status == 'active' else 'active'
+    db.session.commit()
+    
+    return redirect('/campaigns')
+
+@app.route('/campaign/<int:campaign_id>/edit', methods=['GET', 'POST'])
+def edit_campaign(campaign_id):
+    """Edit campaign details"""
+    if not session.get('user_id'):
+        return redirect('/')
+    
+    campaign = Campaign.query.get_or_404(campaign_id)
+    if campaign.user_id != session.get('user_id'):
+        return redirect('/campaigns')
+    
+    if request.method == 'POST':
+        campaign.name = request.form.get('name')
+        campaign.description = request.form.get('description')
+        campaign.category = request.form.get('category')
+        db.session.commit()
+        return redirect('/campaigns')
+    
+    return f'''
+    <h2>✏️ Edit Campaign</h2>
+    <form method="POST" style="max-width: 500px; margin: 50px auto;">
+        <p><label>Name:</label><br>
+        <input type="text" name="name" value="{campaign.name}" style="width: 100%; padding: 10px;" required></p>
+        
+        <p><label>Description:</label><br>
+        <textarea name="description" style="width: 100%; padding: 10px;" required>{campaign.description}</textarea></p>
+        
+        <p><label>Category:</label><br>
+        <select name="category" style="width: 100%; padding: 10px;" required>
+            <option value="Electronics" {"selected" if campaign.category == "Electronics" else ""}>Electronics</option>
+            <option value="Home & Kitchen" {"selected" if campaign.category == "Home & Kitchen" else ""}>Home & Kitchen</option>
+            <option value="Sports & Outdoors" {"selected" if campaign.category == "Sports & Outdoors" else ""}>Sports & Outdoors</option>
+        </select></p>
+        
+        <button type="submit" style="background: #4CAF50; color: white; padding: 15px 30px; border: none; border-radius: 5px;">Save Changes</button>
+        <a href="/campaigns" style="margin-left: 15px;">Cancel</a>
+    </form>
     '''
 
 @app.route('/terms')

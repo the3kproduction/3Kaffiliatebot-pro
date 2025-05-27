@@ -190,19 +190,21 @@
             window.location.href = '/create-campaign';
         }
 
-        // Add click handlers for campaign actions
-        document.querySelectorAll('.btn-small').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const action = this.textContent.trim();
-                if (action.includes('View Details')) {
-                    alert('Campaign analytics and detailed performance metrics coming soon!');
-                } else if (action.includes('Pause') || action.includes('Resume')) {
-                    alert('Campaign pause/resume functionality coming soon!');
-                } else if (action.includes('Edit')) {
-                    alert('Campaign editing interface coming soon!');
-                }
-            });
-        });
+        // Real campaign actions - no more fake alerts!
+        function viewCampaignDetails(campaignId) {
+            window.location.href = `/campaign/${campaignId}/details`;
+        }
+        
+        function toggleCampaign(campaignId) {
+            if (confirm('Are you sure you want to change the campaign status?')) {
+                fetch(`/campaign/${campaignId}/toggle`, { method: 'POST' })
+                    .then(() => location.reload());
+            }
+        }
+        
+        function editCampaign(campaignId) {
+            window.location.href = `/campaign/${campaignId}/edit`;
+        }
     </script>
 </body>
 </html>
