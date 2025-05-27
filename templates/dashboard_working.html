@@ -204,9 +204,9 @@
                 <i>💰</i>
                 <div>Promote AffiliateBot Pro<br><small style="font-size: 10px;">Earn 6 Months FREE!</small></div>
             </button>
-            <button class="action-btn" onclick="location.href='/onboarding-tour'" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+            <button class="action-btn" onclick="startSimpleTour()" style="background: linear-gradient(135deg, #667eea, #764ba2);">
                 <i>🎯</i>
-                <div>Take Tour<br><small style="font-size: 10px;">Interactive Guide</small></div>
+                <div>Take Tour<br><small style="font-size: 10px;">Quick Guide</small></div>
             </button>
             {% if current_user.subscription_tier != 'free' or is_admin %}
             <button class="action-btn" onclick="location.href='/my-catalog'">
@@ -487,270 +487,41 @@
         </p>
     </div>
 
-    <!-- Tour Overlay for Onboarding -->
-    <div class="tour-overlay" id="tourOverlay" style="display: none;">
-        <div class="tour-backdrop"></div>
-        <div class="tour-spotlight" id="tourSpotlight"></div>
-        <div class="tour-tooltip" id="tourTooltip">
-            <h3 id="tooltipTitle">Welcome!</h3>
-            <p id="tooltipContent">Let's get started with your tour.</p>
-            <div class="tour-controls">
-                <div class="tour-step-counter">
-                    Step <span id="currentStep">1</span> of <span id="totalSteps">6</span>
-                </div>
-                <div class="tour-buttons">
-                    <button class="tour-btn tour-btn-skip" onclick="skipTour()">Skip Tour</button>
-                    <button class="tour-btn tour-btn-prev" onclick="previousStep()" id="prevBtn">Previous</button>
-                    <button class="tour-btn tour-btn-next" onclick="nextStep()" id="nextBtn">Next</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <style>
-        .tour-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10000;
-            pointer-events: all;
-        }
-        
-        .tour-backdrop {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10001;
-        }
-        
-        .tour-spotlight {
-            position: absolute;
-            background: transparent;
-            border: 4px solid #4CAF50;
-            border-radius: 8px;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
-            z-index: 10001;
-            transition: all 0.5s ease;
-            pointer-events: none;
-        }
-        
-        .tour-tooltip {
-            position: absolute;
-            background: white;
-            color: #333;
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 350px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 10002;
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 0.3s ease;
-        }
-        
-        .tour-tooltip h3 {
-            color: #4CAF50;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-        
-        .tour-tooltip p {
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        
-        .tour-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
-        
-        .tour-step-counter {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .tour-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .tour-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        .tour-btn-prev {
-            background: #ddd;
-            color: #666;
-        }
-        
-        .tour-btn-next {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .tour-btn-skip {
-            background: transparent;
-            color: #666;
-            text-decoration: underline;
-        }
-        
-        .tour-btn:hover {
-            transform: translateY(-2px);
-        }
-    </style>
-
     <script>
-        // Tour functionality
-        let currentTourStep = 0;
-        const totalTourSteps = 6;
-        
-        const tourSteps = [
-            {
-                target: '.main-panel',
-                title: '🛍️ Discover Trending Products',
-                content: 'Start here! Browse our curated collection of top-selling Amazon products. Each product comes with optimized descriptions and high-quality images ready for promotion.',
-                position: 'bottom'
-            },
-            {
-                target: '.side-panel',
-                title: '📱 Connect Your Platforms',
-                content: 'Link your social media accounts like Discord, Slack, Reddit, and more. Once connected, you can post products with just one click!',
-                position: 'top'
-            },
-            {
-                target: '.quick-actions',
-                title: '📊 Track Your Success',
-                content: 'Monitor clicks, conversions, and earnings in real-time. See which products and platforms perform best for your audience.',
-                position: 'bottom'
-            },
-            {
-                target: '.automation-card',
-                title: '🤖 Let AI Work for You',
-                content: 'Our AI analyzes market trends and automatically promotes the highest-converting products. Set it and forget it!',
-                position: 'top'
-            },
-            {
-                target: '.stats-overview',
-                title: '⚙️ Customize Everything',
-                content: 'Set up your Amazon affiliate ID, configure posting schedules, and manage your subscription preferences.',
-                position: 'bottom'
-            },
-            {
-                target: '.quick-actions',
-                title: '🆘 We\'re Here to Help',
-                content: 'Access step-by-step guides, video tutorials, and get priority support. Success is just a click away!',
-                position: 'top'
-            }
-        ];
-        
-        function startDashboardTour() {
-            document.getElementById('tourOverlay').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            currentTourStep = 0;
-            showTourStep();
-        }
-        
-        function showTourStep() {
-            const step = tourSteps[currentTourStep];
-            const target = document.querySelector(step.target);
-            if (!target) return;
+        function startSimpleTour() {
+            let step = 1;
             
-            const spotlight = document.getElementById('tourSpotlight');
-            const tooltip = document.getElementById('tourTooltip');
-            
-            // Position spotlight
-            const rect = target.getBoundingClientRect();
-            spotlight.style.left = (rect.left - 10) + 'px';
-            spotlight.style.top = (rect.top - 10) + 'px';
-            spotlight.style.width = (rect.width + 20) + 'px';
-            spotlight.style.height = (rect.height + 20) + 'px';
-            
-            // Position tooltip
-            let tooltipTop, tooltipLeft;
-            if (step.position === 'bottom') {
-                tooltipTop = rect.bottom + 30;
-                tooltipLeft = rect.left + (rect.width / 2) - 175;
-            } else {
-                tooltipTop = rect.top - 200;
-                tooltipLeft = rect.left + (rect.width / 2) - 175;
+            function showStep(stepNum) {
+                switch(stepNum) {
+                    case 1:
+                        if (confirm("🎯 Welcome to AffiliateBot Pro!\n\nStep 1/5: This dashboard is your command center for affiliate marketing success.\n\nReady to see how to make money with Amazon products?\n\n[OK = Continue] [Cancel = Skip Tour]")) {
+                            showStep(2);
+                        }
+                        break;
+                    case 2:
+                        if (confirm("🛍️ Featured Products Section\n\nStep 2/5: Here you'll find hand-picked trending Amazon products ready to promote. Each product has been optimized for maximum conversions.\n\nTip: Look for products with high ratings and good descriptions!\n\n[OK = Continue] [Cancel = Skip Tour]")) {
+                            showStep(3);
+                        }
+                        break;
+                    case 3:
+                        if (confirm("📱 Platform Connections\n\nStep 3/5: Connect your social media accounts (Discord, Slack, Reddit, etc.) to automatically post products to your audience.\n\nThe more platforms you connect, the more money you can make!\n\n[OK = Continue] [Cancel = Skip Tour]")) {
+                            showStep(4);
+                        }
+                        break;
+                    case 4:
+                        if (confirm("🤖 Automation Controls\n\nStep 4/5: Use the Auto-Post feature to let our AI automatically promote the best products for you. Set your posting frequency and let the system work!\n\nPro members can post up to 24 times per day!\n\n[OK = Continue] [Cancel = Skip Tour]")) {
+                            showStep(5);
+                        }
+                        break;
+                    case 5:
+                        alert("🎉 Tour Complete!\n\nStep 5/5: You're now ready to start earning with affiliate marketing!\n\nNext steps:\n1. Connect your platforms in Settings\n2. Set up your Amazon affiliate ID\n3. Enable auto-posting\n4. Watch your earnings grow!\n\nGood luck!");
+                        break;
+                }
             }
             
-            // Keep tooltip in viewport
-            if (tooltipLeft < 20) tooltipLeft = 20;
-            if (tooltipLeft > window.innerWidth - 370) tooltipLeft = window.innerWidth - 370;
-            if (tooltipTop < 20) tooltipTop = 20;
-            
-            tooltip.style.left = tooltipLeft + 'px';
-            tooltip.style.top = tooltipTop + 'px';
-            
-            // Update tooltip content
-            document.getElementById('tooltipTitle').textContent = step.title;
-            document.getElementById('tooltipContent').textContent = step.content;
-            document.getElementById('currentStep').textContent = currentTourStep + 1;
-            document.getElementById('totalSteps').textContent = totalTourSteps;
-            
-            // Update button states
-            document.getElementById('prevBtn').disabled = currentTourStep === 0;
-            document.getElementById('nextBtn').textContent = currentTourStep === totalTourSteps - 1 ? 'Finish Tour' : 'Next';
-            
-            // Scroll target into view
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            showStep(1);
         }
-        
-        function nextStep() {
-            if (currentTourStep === totalTourSteps - 1) {
-                finishTour();
-                return;
-            }
-            
-            currentTourStep++;
-            showTourStep();
-        }
-        
-        function previousStep() {
-            if (currentTourStep > 0) {
-                currentTourStep--;
-                showTourStep();
-            }
-        }
-        
-        function skipTour() {
-            document.getElementById('tourOverlay').style.display = 'none';
-            document.body.style.overflow = 'auto';
-            localStorage.setItem('tourCompleted', 'true');
-        }
-        
-        function finishTour() {
-            localStorage.setItem('tourCompleted', 'true');
-            document.body.style.overflow = 'auto';
-            document.getElementById('tourOverlay').style.display = 'none';
-            alert('🎉 Tour Complete! You\'re now ready to start earning with affiliate marketing!');
-        }
-        
-        // Check if tour should start automatically
-        window.addEventListener('load', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            console.log('URL params:', urlParams.get('tour'));
-            if (urlParams.get('tour') === 'start') {
-                console.log('Starting tour...');
-                alert('Tour starting!'); // Debug alert
-                setTimeout(() => {
-                    startDashboardTour();
-                }, 1000);
-            }
-        });
     </script>
+
 </body>
 </html>
