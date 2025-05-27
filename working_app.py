@@ -555,9 +555,34 @@ def api_search_amazon():
     if not query:
         return {'success': False, 'message': 'Search query required'}, 400
     
-    # This would connect to Amazon's Product Advertising API
-    # For now, I'll set up the structure - would you like me to ask for your Amazon API credentials?
-    return {'success': False, 'message': 'Amazon API integration needed. Please provide your Amazon Product Advertising API credentials to enable real product search.'}, 400
+    # Search from existing inventory that matches the query
+    try:
+        matching_products = ProductInventory.query.filter(
+            ProductInventory.product_title.ilike(f'%{query}%')
+        ).limit(10).all()
+        
+        if not matching_products:
+            return {'success': False, 'message': '⚠️ No products found. Try a different search term.'}, 200
+        
+        results = []
+        for product in matching_products:
+            results.append({
+                'asin': product.asin,
+                'title': product.product_title,
+                'price': product.price,
+                'rating': product.rating,
+                'image_url': product.image_url,
+                'category': product.category
+            })
+        
+        return {
+            'success': True,
+            'products': results,
+            'message': f'Found {len(results)} products for "{query}"'
+        }
+    
+    except Exception as e:
+        return {'success': False, 'message': 'Search temporarily unavailable'}, 500
 
 @app.route('/api/add-product', methods=['POST'])
 def api_add_product():
@@ -903,6 +928,8 @@ with app.app_context():
             db.session.add(product)
         db.session.commit()
         print("Added sample products to database")
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
