@@ -303,16 +303,23 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Show success without popup
-                    document.querySelector('.platform-item span:contains("📧 Email")').nextElementSibling.innerHTML = 
-                        '<span class="platform-status status-connected">Configured</span><button class="btn btn-secondary" style="margin-left: 10px;" onclick="showEmailConfig()">Update Email</button>';
+                    // Update the email platform status to show it's configured
+                    const emailPlatform = document.querySelector('.platform-item:has(span:contains("📧 Email"))');
+                    if (emailPlatform) {
+                        emailPlatform.querySelector('.platform-status').className = 'platform-status status-connected';
+                        emailPlatform.querySelector('.platform-status').textContent = 'Configured';
+                        emailPlatform.querySelector('button').textContent = 'Update Email';
+                        emailPlatform.querySelector('button').className = 'btn btn-secondary';
+                    }
                     hideEmailConfig();
                 } else {
                     console.error('Error: ' + data.error);
+                    alert('Error saving email: ' + data.error);
                 }
             })
             .catch(error => {
                 console.error('Error saving email settings:', error);
+                alert('Error saving email settings');
             });
         }
         

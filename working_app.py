@@ -1808,6 +1808,105 @@ def save_reddit_config():
     
     return jsonify({'success': True, 'message': 'Reddit configuration saved successfully'})
 
+@app.route('/api/save-facebook-config', methods=['POST'])
+def save_facebook_config():
+    """Save Facebook configuration for user"""
+    if not session.get('user_id'):
+        return jsonify({'success': False, 'error': 'Not authenticated'}), 401
+    
+    page_access_token = request.form.get('page_access_token', '').strip()
+    page_id = request.form.get('page_id', '').strip()
+    
+    if not all([page_access_token, page_id]):
+        return jsonify({'success': False, 'error': 'All Facebook credentials required'}), 400
+    
+    session['facebook_page_access_token'] = page_access_token
+    session['facebook_page_id'] = page_id
+    session['facebook_configured'] = True
+    session.permanent = True
+    
+    return jsonify({'success': True, 'message': 'Facebook configuration saved successfully'})
+
+@app.route('/api/save-twitter-config', methods=['POST'])
+def save_twitter_config():
+    """Save Twitter/X configuration for user"""
+    if not session.get('user_id'):
+        return jsonify({'success': False, 'error': 'Not authenticated'}), 401
+    
+    api_key = request.form.get('api_key', '').strip()
+    api_secret = request.form.get('api_secret', '').strip()
+    access_token = request.form.get('access_token', '').strip()
+    access_token_secret = request.form.get('access_token_secret', '').strip()
+    
+    if not all([api_key, api_secret, access_token, access_token_secret]):
+        return jsonify({'success': False, 'error': 'All Twitter/X credentials required'}), 400
+    
+    session['twitter_api_key'] = api_key
+    session['twitter_api_secret'] = api_secret
+    session['twitter_access_token'] = access_token
+    session['twitter_access_token_secret'] = access_token_secret
+    session['twitter_configured'] = True
+    session.permanent = True
+    
+    return jsonify({'success': True, 'message': 'Twitter/X configuration saved successfully'})
+
+@app.route('/api/save-instagram-config', methods=['POST'])
+def save_instagram_config():
+    """Save Instagram configuration for user"""
+    if not session.get('user_id'):
+        return jsonify({'success': False, 'error': 'Not authenticated'}), 401
+    
+    access_token = request.form.get('access_token', '').strip()
+    user_id = request.form.get('user_id', '').strip()
+    
+    if not all([access_token, user_id]):
+        return jsonify({'success': False, 'error': 'All Instagram credentials required'}), 400
+    
+    session['instagram_access_token'] = access_token
+    session['instagram_user_id'] = user_id
+    session['instagram_configured'] = True
+    session.permanent = True
+    
+    return jsonify({'success': True, 'message': 'Instagram configuration saved successfully'})
+
+@app.route('/api/save-linkedin-config', methods=['POST'])
+def save_linkedin_config():
+    """Save LinkedIn configuration for user"""
+    if not session.get('user_id'):
+        return jsonify({'success': False, 'error': 'Not authenticated'}), 401
+    
+    access_token = request.form.get('access_token', '').strip()
+    person_id = request.form.get('person_id', '').strip()
+    
+    if not all([access_token, person_id]):
+        return jsonify({'success': False, 'error': 'All LinkedIn credentials required'}), 400
+    
+    session['linkedin_access_token'] = access_token
+    session['linkedin_person_id'] = person_id
+    session['linkedin_configured'] = True
+    session.permanent = True
+    
+    return jsonify({'success': True, 'message': 'LinkedIn configuration saved successfully'})
+
+@app.route('/api/save-telegram-config', methods=['POST'])
+def save_telegram_config():
+    """Save Telegram configuration for user"""
+    if not session.get('user_id'):
+        return jsonify({'success': False, 'error': 'Not authenticated'}), 401
+    
+    bot_token = request.form.get('bot_token', '').strip()
+    chat_id = request.form.get('chat_id', '').strip()
+    
+    if not all([bot_token, chat_id]):
+        return jsonify({'success': False, 'error': 'All Telegram credentials required'}), 400
+    
+    session['telegram_bot_token'] = bot_token
+    session['telegram_chat_id'] = chat_id
+    session['telegram_configured'] = True
+    session.permanent = True
+    
+    return jsonify({'success': True, 'message': 'Telegram configuration saved successfully'})
+
 @app.route('/api/save-email-config', methods=['POST'])
 def save_email_config():
     """Save email configuration for user"""
