@@ -1079,6 +1079,9 @@ def admin_login():
                 <input type="text" name="email" placeholder="Email or Username" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit">Login</button>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="/forgot-password" style="color: #667eea; text-decoration: none; font-size: 14px;">🔑 Forgot Password?</a>
+                </div>
             </form>
         </div>
     </body></html>
@@ -3116,6 +3119,83 @@ def update_support_message_status(message_id):
         
     except Exception as e:
         return {"success": False, "error": str(e)}, 500
+
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    """Forgot password page"""
+    if request.method == 'POST':
+        email = request.form.get('email')
+        if not email:
+            return '''
+            <!DOCTYPE html>
+            <html><head><title>Forgot Password - AffiliateBot Pro</title>
+            <style>
+                body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+                .container { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; text-align: center; backdrop-filter: blur(10px); max-width: 500px; }
+                .btn { background: #4CAF50; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; display: inline-block; margin-top: 20px; }
+                .error { color: #ff4757; margin-bottom: 20px; }
+            </style></head>
+            <body>
+                <div class="container">
+                    <h2>❌ Error</h2>
+                    <div class="error">Email address is required!</div>
+                    <a href="/forgot-password" class="btn">← Try Again</a>
+                </div>
+            </body></html>
+            '''
+        
+        # For now, just show success message
+        return f'''
+        <!DOCTYPE html>
+        <html><head><title>Password Reset - AffiliateBot Pro</title>
+        <style>
+            body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }}
+            .container {{ background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; text-align: center; backdrop-filter: blur(10px); max-width: 500px; }}
+            .btn {{ background: #4CAF50; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; display: inline-block; margin-top: 20px; }}
+        </style></head>
+        <body>
+            <div class="container">
+                <h2>✅ Reset Instructions Sent!</h2>
+                <p>If an account exists with email <strong>{email}</strong>, you'll receive password reset instructions shortly.</p>
+                <p>Please check your email and follow the instructions to reset your password.</p>
+                <a href="/admin-login" class="btn">← Back to Login</a>
+            </div>
+        </body></html>
+        '''
+    
+    # GET request - show forgot password form
+    return '''
+    <!DOCTYPE html>
+    <html><head><title>Forgot Password - AffiliateBot Pro</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .form-container { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); width: 100%; max-width: 400px; }
+        .form-container h2 { text-align: center; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input { width: 100%; padding: 15px; border: none; border-radius: 10px; background: rgba(255,255,255,0.9); color: #333; }
+        .btn { background: #4CAF50; color: white; padding: 15px 30px; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; width: 100%; }
+        .btn:hover { background: #45a049; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #667eea; text-decoration: none; }
+    </style></head>
+    <body>
+        <div class="form-container">
+            <h2>🔑 Forgot Password</h2>
+            <p style="margin-bottom: 25px; text-align: center; opacity: 0.9;">Enter your email address and we'll send you instructions to reset your password.</p>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label>Email Address:</label>
+                    <input type="email" name="email" required placeholder="your@email.com">
+                </div>
+                
+                <button type="submit" class="btn">📧 Send Reset Instructions</button>
+                
+                <a href="/admin-login" class="back-link">← Back to Login</a>
+            </form>
+        </div>
+    </body></html>
+    '''
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

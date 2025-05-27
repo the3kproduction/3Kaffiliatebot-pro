@@ -46,6 +46,30 @@
             opacity: 0.9;
         }
         
+        .nav-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
         .content {
             padding: 40px;
         }
@@ -178,6 +202,12 @@
         <div class="header">
             <h1>🚀 Complete How-To Guide</h1>
             <p>Everything you need to start making money with affiliate marketing</p>
+            
+            <div class="nav-buttons">
+                <a href="/dashboard" class="nav-btn">🎯 Go to Dashboard</a>
+                <a href="/products" class="nav-btn">🛍️ Browse Products</a>
+                <a href="/subscribe" class="nav-btn">⭐ Upgrade Plan</a>
+            </div>
         </div>
         
         <div class="content">
