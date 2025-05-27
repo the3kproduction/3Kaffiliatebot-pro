@@ -2489,6 +2489,135 @@ def upload_product_image(asin):
     
     return {"success": False, "message": "Invalid file type"}
 
+@app.route('/promote-platform')
+def promote_platform():
+    """Promote AffiliateBot Pro platform to earn referrals and free months"""
+    if 'user_id' not in session:
+        return redirect('/admin-login')
+    
+    user_id = session['user_id']
+    referral_code = f"AFFILIATE{user_id}"
+    
+    # Create promotion message for the platform
+    domain = request.headers.get('Host', 'localhost:5000')
+    signup_url = f"https://{domain}/register?ref={referral_code}"
+    
+    platform_message = f"""🚀 **AffiliateBot Pro - Automate Your Amazon Affiliate Marketing!**
+
+Turn your social media into a money-making machine! 💰
+
+✅ Auto-posts trending Amazon products 24/7
+✅ Works on Discord, Slack, Telegram, Pinterest, Reddit & more
+✅ AI selects best-performing products for maximum profit
+✅ Free tier available - start earning immediately!
+✅ Premium features for serious affiliate marketers
+
+Join thousands making passive income: {signup_url}
+
+#AffiliateMarketing #AmazonAffiliate #PassiveIncome #AutomatedMarketing"""
+    
+    platforms_posted = []
+    errors = []
+    
+    try:
+        # 1. POST TO DISCORD
+        discord_webhook = session.get('discord_webhook_url')
+        if discord_webhook:
+            try:
+                import requests
+                discord_data = {
+                    "embeds": [{
+                        "title": "🚀 AffiliateBot Pro - Automate Your Amazon Affiliate Marketing!",
+                        "description": "Turn your social media into a money-making machine!",
+                        "color": 0x00ff00,
+                        "fields": [
+                            {"name": "✅ Benefits", "value": "• Auto-posts trending Amazon products 24/7\n• Works on 8+ platforms simultaneously\n• AI selects best-performing products\n• Free tier available!", "inline": False},
+                            {"name": "🎯 Join Now", "value": f"[Start Earning Today]({signup_url})", "inline": False}
+                        ],
+                        "footer": {"text": "AffiliateBot Pro - Your Automated Marketing Solution"}
+                    }]
+                }
+                response = requests.post(discord_webhook, json=discord_data, timeout=10)
+                if response.status_code == 204:
+                    platforms_posted.append("Discord")
+                else:
+                    errors.append(f"Discord: {response.status_code}")
+            except Exception as e:
+                errors.append(f"Discord: {str(e)}")
+
+        # 2. POST TO SLACK
+        slack_token = session.get('slack_bot_token')
+        slack_channel = session.get('slack_channel_id')
+        if slack_token and slack_channel:
+            try:
+                slack_url = "https://slack.com/api/chat.postMessage"
+                slack_headers = {"Authorization": f"Bearer {slack_token}"}
+                slack_data = {
+                    "channel": slack_channel,
+                    "attachments": [{
+                        "color": "good",
+                        "title": "🚀 AffiliateBot Pro - Automate Your Amazon Affiliate Marketing!",
+                        "text": "Turn your social media into a money-making machine! Auto-posts trending Amazon products, works on 8+ platforms, AI-powered product selection.",
+                        "fields": [
+                            {"title": "Join Now", "value": f"<{signup_url}|Start Earning Today>", "short": False}
+                        ],
+                        "footer": "AffiliateBot Pro"
+                    }]
+                }
+                response = requests.post(slack_url, headers=slack_headers, json=slack_data, timeout=10)
+                if response.status_code == 200 and response.json().get("ok"):
+                    platforms_posted.append("Slack")
+                else:
+                    error_details = response.json() if response.status_code == 200 else f"Status: {response.status_code}"
+                    errors.append(f"Slack: {error_details}")
+            except Exception as e:
+                errors.append(f"Slack: {str(e)}")
+
+        # 3. POST TO TELEGRAM
+        telegram_token = session.get('telegram_bot_token')
+        telegram_chat = session.get('telegram_chat_id')
+        if telegram_token and telegram_chat:
+            try:
+                telegram_url = f"https://api.telegram.org/bot{telegram_token}/sendMessage"
+                telegram_data = {
+                    "chat_id": telegram_chat,
+                    "text": platform_message,
+                    "parse_mode": "Markdown",
+                    "disable_web_page_preview": False
+                }
+                response = requests.post(telegram_url, json=telegram_data, timeout=10)
+                if response.status_code == 200:
+                    platforms_posted.append("Telegram")
+                else:
+                    errors.append(f"Telegram: {response.status_code}")
+            except Exception as e:
+                errors.append(f"Telegram: {str(e)}")
+
+        # Track referral promotion
+        try:
+            from datetime import datetime
+            promotion = ReferralPromotion()
+            promotion.user_id = user_id
+            promotion.referral_code = referral_code
+            promotion.platforms_posted = ', '.join(platforms_posted)
+            promotion.created_at = datetime.now()
+            db.session.add(promotion)
+            db.session.commit()
+        except:
+            pass  # Don't fail if tracking doesn't work
+
+        return jsonify({
+            'success': True,
+            'platforms_posted': platforms_posted,
+            'errors': errors,
+            'referral_code': referral_code,
+            'signup_url': signup_url,
+            'message': f'Platform promoted to {len(platforms_posted)} platforms! Share your referral link to earn 6 months free when you get 10 signups.'
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 def allowed_file(filename):
     """Check if file type is allowed"""
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}

@@ -198,6 +198,10 @@
                 <i>🚀</i>
                 <div>Post Now</div>
             </button>
+            <button class="action-btn" onclick="promotePlatform()" style="background: linear-gradient(135deg, #ff6b6b, #4ecdc4); border: 2px solid #ffd700; animation: pulse 2s infinite;">
+                <i>💰</i>
+                <div>Promote AffiliateBot Pro<br><small style="font-size: 10px;">Earn 6 Months FREE!</small></div>
+            </button>
             {% if current_user.subscription_tier != 'free' or is_admin %}
             <button class="action-btn" onclick="location.href='/my-catalog'">
                 <i>📚</i>
