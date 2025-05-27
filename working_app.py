@@ -1039,13 +1039,16 @@ def dashboard():
     # Check if auto-posting is enabled
     auto_posting_enabled = session.get('auto_posting_enabled', False)
     
+    # Get featured products from real inventory
+    featured_products = ProductInventory.query.filter_by(is_active=True).limit(4).all()
+    
     return render_template('dashboard_working.html', 
                          is_admin=is_admin, 
                          platform_status=platform_status,
-                         real_stats=real_stats,
                          current_user=current_user,
-                         recent_posts=recent_posts,
-                         auto_posting_enabled=auto_posting_enabled)
+                         real_stats=real_stats,
+                         auto_posting_enabled=auto_posting_enabled,
+                         featured_products=featured_products)
 
 @app.route('/admin/email-blast', methods=['GET', 'POST'])
 def admin_email_blast():
@@ -1641,11 +1644,14 @@ def api_auto_post():
         slack_webhook = os.environ.get('SLACK_BOT_TOKEN')
         if slack_webhook:
             try:
+                # Add description for Slack
+                product_dict['description'] = f"Amazing deal on {product_dict['title']}! High quality product with {product_dict['rating']} star rating."
                 from marketing_automation import MultiPlatformPoster
                 poster = MultiPlatformPoster(user)
                 poster.post_to_slack(product_dict)
                 result['posted_to'].append('Slack')
-            except:
+            except Exception as e:
+                print(f"Slack posting failed: {e}")
                 pass
         
         if result['success']:

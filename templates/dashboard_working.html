@@ -203,30 +203,14 @@
             <div class="main-panel">
                 <h2 class="section-title">Featured Products</h2>
                 <div class="product-grid">
+                    {% for product in featured_products[:4] %}
                     <div class="product-card">
-                        <img src="https://m.media-amazon.com/images/I/713bfTZ2mrL._AC_UY218_.jpg" class="product-image" alt="Wireless Bluetooth Earbuds">
-                        <div class="product-title">Wireless Bluetooth Earbuds</div>
-                        <div class="product-price">$199.99</div>
-                        <button class="promote-btn" onclick="promoteProduct('B0F42Q8FRJ')">🚀 Promote</button>
+                        <img src="{{ product.image_url }}" class="product-image" alt="{{ product.product_title }}">
+                        <div class="product-title">{{ product.product_title }}</div>
+                        <div class="product-price">${{ product.price }}</div>
+                        <button class="promote-btn" onclick="promoteRealProduct('{{ product.asin }}')">🚀 Promote</button>
                     </div>
-                    <div class="product-card">
-                        <img src="https://m.media-amazon.com/images/I/71lm7niYBOL._AC_UY218_.jpg" class="product-image" alt="Smart Fitness Tracker">
-                        <div class="product-title">Smart Fitness Tracker</div>
-                        <div class="product-price">$159.99</div>
-                        <button class="promote-btn" onclick="promoteProduct('B0DZ3LTCPM')">🚀 Promote</button>
-                    </div>
-                    <div class="product-card">
-                        <img src="https://m.media-amazon.com/images/I/71Ilitn6B+L._AC_UY218_.jpg" class="product-image" alt="Phone Car Mount Holder">
-                        <div class="product-title">Phone Car Mount Holder</div>
-                        <div class="product-price">$13.99</div>
-                        <button class="promote-btn" onclick="promoteProduct('B09FT58QQP')">🚀 Promote</button>
-                    </div>
-                    <div class="product-card">
-                        <img src="https://m.media-amazon.com/images/I/41v-TeJ5WTL._AC_UY218_.jpg" class="product-image" alt="Blue Light Blocking Glasses">
-                        <div class="product-title">Blue Light Blocking Glasses</div>
-                        <div class="product-price">$19.98</div>
-                        <button class="promote-btn" onclick="promoteProduct('B0BTYCJXBK')">🚀 Promote</button>
-                    </div>
+                    {% endfor %}
                 </div>
                 <div style="text-align: center; margin-top: 20px;">
                     <button class="promote-btn" onclick="location.href='/products'" style="width: auto; padding: 12px 30px;">View All Products</button>
