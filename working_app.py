@@ -156,6 +156,7 @@ def promote_product(asin):
         # Create affiliate URL with your Amazon affiliate ID
         affiliate_id = "luxoraconnect-20"
         affiliate_url = f"https://www.amazon.com/dp/{asin}?tag={affiliate_id}"
+        print(f"DEBUG: Creating affiliate URL: {affiliate_url}")
         
         # Format promotion message
         message = f"""🔥 DEAL ALERT! 🔥
