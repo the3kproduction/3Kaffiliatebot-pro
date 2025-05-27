@@ -53,7 +53,29 @@ class ProductInventory(db.Model):
 @app.route('/')
 def index():
     """Landing page"""
-    return render_template('landing.html')
+    return '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>AffiliateBot Pro</title>
+        <style>
+            body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 50px; }
+            .hero { max-width: 800px; margin: 0 auto; }
+            .btn { background: #4CAF50; color: white; padding: 15px 30px; border: none; border-radius: 25px; font-size: 18px; margin: 10px; text-decoration: none; display: inline-block; }
+            .btn:hover { background: #45a049; }
+        </style>
+    </head>
+    <body>
+        <div class="hero">
+            <h1>🤖 AffiliateBot Pro</h1>
+            <h2>Automated Amazon Affiliate Marketing</h2>
+            <p>Post products to 10+ platforms automatically. Increase your affiliate sales with AI-powered product selection.</p>
+            <a href="/dashboard" class="btn">🚀 Get Started</a>
+            <a href="/subscribe" class="btn">💰 View Pricing</a>
+        </div>
+    </body>
+    </html>
+    '''
 
 @app.route('/subscribe')
 def subscribe():
@@ -127,9 +149,27 @@ def dashboard():
     """Professional affiliate marketing dashboard"""
     return render_template('dashboard_working.html')
 
-# Create database tables
+# Create database tables and add sample products
 with app.app_context():
     db.create_all()
+    
+    # Add sample products if none exist
+    if ProductInventory.query.count() == 0:
+        sample_products = [
+            ProductInventory(asin='B08N5WRWNW', product_title='Echo Dot (4th Gen) Smart Speaker', category='Electronics', price='$49.99', rating=4.7, image_url='https://m.media-amazon.com/images/I/61Ub2RjgZkL._AC_SL1000_.jpg'),
+            ProductInventory(asin='B08D6T6BKS', product_title='Fire TV Stick 4K Max', category='Electronics', price='$54.99', rating=4.6, image_url='https://m.media-amazon.com/images/I/51TjJOTfslL._AC_SL1000_.jpg'),
+            ProductInventory(asin='B0863TXGM3', product_title='Jabra Elite 75t Wireless Earbuds', category='Electronics', price='$149.99', rating=4.4, image_url='https://m.media-amazon.com/images/I/61TEFj1MJZL._AC_SL1500_.jpg'),
+            ProductInventory(asin='B081FPL9XY', product_title='Ring Video Doorbell', category='Home & Garden', price='$99.99', rating=4.5, image_url='https://m.media-amazon.com/images/I/51DYQQyQPgL._AC_SL1000_.jpg'),
+            ProductInventory(asin='B07FZ8S74R', product_title='Instant Pot Duo 7-in-1', category='Kitchen', price='$79.95', rating=4.7, image_url='https://m.media-amazon.com/images/I/71%2BddX7HfXL._AC_SL1500_.jpg'),
+            ProductInventory(asin='B07PYQCVJX', product_title='Apple AirPods Pro', category='Electronics', price='$249.00', rating=4.5, image_url='https://m.media-amazon.com/images/I/71zny7BTRlL._AC_SL1500_.jpg'),
+            ProductInventory(asin='B08KRB6Z9X', product_title='Fitbit Charge 5 Fitness Tracker', category='Health & Fitness', price='$149.95', rating=4.3, image_url='https://m.media-amazon.com/images/I/61W7VhhpdQL._AC_SL1500_.jpg'),
+            ProductInventory(asin='B086QZM8WF', product_title='Sony WH-1000XM4 Wireless Headphones', category='Electronics', price='$348.00', rating=4.6, image_url='https://m.media-amazon.com/images/I/71o8Q5XJS5L._AC_SL1500_.jpg'),
+        ]
+        
+        for product in sample_products:
+            db.session.add(product)
+        db.session.commit()
+        print("Added sample products to database")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
