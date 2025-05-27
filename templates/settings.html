@@ -522,6 +522,56 @@
     </div>
 
     <script>
+        // Check and display existing configurations when page loads
+        window.onload = function() {
+            checkExistingConfigurations();
+        };
+        
+        function checkExistingConfigurations() {
+            fetch('/api/get-platform-status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const platformItems = document.querySelectorAll('.platform-item');
+                    
+                    // Update each platform based on stored configuration
+                    for (let item of platformItems) {
+                        if (item.innerHTML.includes('📧 Email') && data.email_configured) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Configured';
+                            item.querySelector('button').textContent = 'Update Email';
+                        }
+                        if (item.innerHTML.includes('📘 Facebook') && data.facebook_configured) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Connected';
+                            item.querySelector('button').textContent = 'Update Facebook';
+                        }
+                        if (item.innerHTML.includes('🐦 Twitter/X') && data.twitter_configured) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Connected';
+                            item.querySelector('button').textContent = 'Update Twitter/X';
+                        }
+                        if (item.innerHTML.includes('📸 Instagram') && data.instagram_configured) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Connected';
+                            item.querySelector('button').textContent = 'Update Instagram';
+                        }
+                        if (item.innerHTML.includes('💼 LinkedIn') && data.linkedin_configured) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Connected';
+                            item.querySelector('button').textContent = 'Update LinkedIn';
+                        }
+                        if (item.innerHTML.includes('📱 Telegram') && data.telegram_configured) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Connected';
+                            item.querySelector('button').textContent = 'Update Telegram';
+                        }
+                    }
+                }
+            })
+            .catch(error => console.log('Could not check platform status:', error));
+        }
+        
         // Facebook Configuration Functions
         function showFacebookConfig() {
             document.getElementById('facebookModal').style.display = 'block';

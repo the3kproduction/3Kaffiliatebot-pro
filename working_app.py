@@ -1907,6 +1907,29 @@ def save_telegram_config():
     
     return jsonify({'success': True, 'message': 'Telegram configuration saved successfully'})
 
+@app.route('/api/get-platform-status', methods=['GET'])
+def get_platform_status():
+    """Get the status of all platform configurations for the current user"""
+    if not session.get('user_id'):
+        return jsonify({'success': False, 'error': 'Not authenticated'}), 401
+    
+    user_id = session.get('user_id')
+    
+    # Check if user has configured platforms
+    status = {
+        'success': True,
+        'email_configured': bool(session.get('email_configured') or (user_id != 'admin' and User.query.get(user_id) and User.query.get(user_id).email_configured)),
+        'facebook_configured': bool(session.get('facebook_configured')),
+        'twitter_configured': bool(session.get('twitter_configured')),
+        'instagram_configured': bool(session.get('instagram_configured')),
+        'linkedin_configured': bool(session.get('linkedin_configured')),
+        'telegram_configured': bool(session.get('telegram_configured')),
+        'reddit_configured': bool(session.get('reddit_client_id')),
+        'pinterest_configured': bool(session.get('pinterest_access_token'))
+    }
+    
+    return jsonify(status)
+
 @app.route('/api/save-email-config', methods=['POST'])
 def save_email_config():
     """Save email configuration for user"""
