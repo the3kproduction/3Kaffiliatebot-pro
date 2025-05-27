@@ -107,6 +107,11 @@ def login():
     """Simple login page"""
     return "<h1>Login Page</h1><p>Admin can login here</p>"
 
+@app.route('/dashboard')
+def dashboard():
+    """User dashboard"""
+    return "<h1>Dashboard</h1><p>Welcome to your dashboard! Features coming soon.</p><a href='/products'>View Products</a> | <a href='/subscribe'>Upgrade Plan</a>"
+
 # Create database tables
 with app.app_context():
     db.create_all()
