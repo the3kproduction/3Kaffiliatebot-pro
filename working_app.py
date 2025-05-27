@@ -114,6 +114,11 @@ def create_checkout_session():
     except Exception as e:
         return f"Payment system ready! Stripe error: {str(e)}"
 
+@app.route('/test-success')
+def test_success():
+    """Test the success page flow without needing real payment"""
+    return success()
+
 @app.route('/success')
 def success():
     """Payment success page with account creation"""
