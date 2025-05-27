@@ -62,6 +62,29 @@
             </div>
             {% endif %}
         </div>
+        
+        <!-- Pagination Navigation -->
+        {% if pagination and pagination.pages > 1 %}
+        <div style="text-align: center; margin-top: 40px;">
+            <div style="display: inline-flex; gap: 20px; align-items: center;">
+                {% if pagination.has_prev %}
+                    <a href="/products?page={{ pagination.prev_num }}" style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none;">
+                        ← Previous
+                    </a>
+                {% endif %}
+                
+                <span style="color: white; font-weight: bold; background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 20px;">
+                    Page {{ pagination.page }} of {{ pagination.pages }}
+                </span>
+                
+                {% if pagination.has_next %}
+                    <a href="/products?page={{ pagination.next_num }}" style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none;">
+                        Next →
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <script>
