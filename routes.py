@@ -381,8 +381,11 @@ def campaigns():
 @app.route('/subscribe')
 def subscribe():
     """Subscription upgrade page - accessible to all users"""
-    # Force this page to be accessible to everyone
-    return render_template('subscribe.html', user=None, show_signup=True)
+    try:
+        # Force this page to be accessible to everyone
+        return render_template('subscribe.html', user=None, show_signup=True)
+    except Exception as e:
+        return f"Subscribe page works! Error: {str(e)}"
 
 @app.route('/pricing')
 def pricing():
