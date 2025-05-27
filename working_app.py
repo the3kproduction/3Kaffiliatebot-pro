@@ -1637,5 +1637,61 @@ def api_auto_post():
             'error': f'Auto-posting failed: {str(e)}'
         }), 500
 
+@app.route('/api/save-email-config', methods=['POST'])
+def save_email_config():
+    """Save email configuration for user"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if user_id == 'admin':
+            # For admin, store in session or environment
+            session['email_sendgrid_key'] = data.get('sendgrid_key')
+            session['email_from_address'] = data.get('from_email')
+            session['email_list'] = data.get('email_list')
+            return jsonify({'success': True})
+        
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'success': False, 'error': 'User not found'})
+        
+        # Store email settings in user profile
+        user.email_sendgrid_key = data.get('sendgrid_key')
+        user.email_from_address = data.get('from_email')
+        user.email_list = data.get('email_list')
+        user.email_configured = True
+        
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/save-pinterest-config', methods=['POST'])
+def save_pinterest_config():
+    """Save Pinterest configuration for user"""
+    try:
+        data = request.get_json()
+        user_id = session.get('user_id')
+        
+        if user_id == 'admin':
+            # For admin, store in session or environment
+            session['pinterest_access_token'] = data.get('access_token')
+            session['pinterest_board_id'] = data.get('board_id')
+            return jsonify({'success': True})
+        
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'success': False, 'error': 'User not found'})
+        
+        # Store Pinterest settings in user profile
+        user.pinterest_access_token = data.get('access_token')
+        user.pinterest_board_id = data.get('board_id')
+        user.pinterest_configured = True
+        
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

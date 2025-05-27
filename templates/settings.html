@@ -171,15 +171,111 @@
         </div>
     </div>
 
+    <!-- Email Configuration Modal -->
+    <div id="emailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; width: 500px; color: #333;">
+            <h3>📧 Email Configuration</h3>
+            <div style="margin: 15px 0;">
+                <label>SendGrid API Key:</label>
+                <input type="password" id="sendgridKey" placeholder="Enter your SendGrid API key" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>From Email:</label>
+                <input type="email" id="fromEmail" placeholder="noreply@yourdomain.com" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Email List (comma separated):</label>
+                <textarea id="emailList" placeholder="email1@example.com, email2@example.com" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px; height: 80px;"></textarea>
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveEmailConfig()" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Email Settings</button>
+                <button onclick="hideEmailConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pinterest Configuration Modal -->
+    <div id="pinterestModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; width: 500px; color: #333;">
+            <h3>📌 Pinterest Configuration</h3>
+            <div style="margin: 15px 0;">
+                <label>Pinterest Access Token:</label>
+                <input type="password" id="pinterestToken" placeholder="Enter your Pinterest access token" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Board ID:</label>
+                <input type="text" id="boardId" placeholder="Enter your Pinterest board ID" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="font-size: 14px; color: #666; margin: 10px 0;">
+                Need help? Visit <a href="https://developers.pinterest.com/tools/access_token/" target="_blank">Pinterest Developer Tools</a> to get your access token.
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="savePinterestConfig()" style="background: #E60023; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Pinterest Settings</button>
+                <button onclick="hidePinterestConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Add some interactivity
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (this.textContent.includes('Save') || this.textContent.includes('Connect')) {
-                    alert('Feature coming soon! Your settings will be saved.');
-                }
+        function showEmailConfig() {
+            document.getElementById('emailModal').style.display = 'block';
+        }
+        
+        function hideEmailConfig() {
+            document.getElementById('emailModal').style.display = 'none';
+        }
+        
+        function saveEmailConfig() {
+            const sendgridKey = document.getElementById('sendgridKey').value;
+            const fromEmail = document.getElementById('fromEmail').value;
+            const emailList = document.getElementById('emailList').value;
+            
+            fetch('/api/save-email-config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    sendgrid_key: sendgridKey,
+                    from_email: fromEmail,
+                    email_list: emailList
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideEmailConfig();
+                location.reload();
             });
-        });
+        }
+        
+        function showPinterestConfig() {
+            document.getElementById('pinterestModal').style.display = 'block';
+        }
+        
+        function hidePinterestConfig() {
+            document.getElementById('pinterestModal').style.display = 'none';
+        }
+        
+        function savePinterestConfig() {
+            const pinterestToken = document.getElementById('pinterestToken').value;
+            const boardId = document.getElementById('boardId').value;
+            
+            fetch('/api/save-pinterest-config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    access_token: pinterestToken,
+                    board_id: boardId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hidePinterestConfig();
+                location.reload();
+            });
+        }
     </script>
 </body>
 </html>
