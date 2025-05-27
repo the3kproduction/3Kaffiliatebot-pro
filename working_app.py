@@ -887,11 +887,20 @@ def dashboard():
     # Calculate conversion rate
     conversion_rate = (total_revenue / total_clicks * 100) if total_clicks > 0 else 0
     
+    # Calculate posts today
+    from datetime import date
+    today = date.today()
+    posts_today = ProductPromotion.query.filter(
+        ProductPromotion.user_id == user_id,
+        ProductPromotion.promoted_at >= today
+    ).count()
+    
     real_stats = {
         'total_posts': total_posts,
         'total_clicks': total_clicks,
         'total_revenue': total_revenue,
-        'conversion_rate': conversion_rate
+        'conversion_rate': conversion_rate,
+        'posts_today': posts_today
     }
     
     return render_template('dashboard_working.html', 
