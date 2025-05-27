@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - AffiliateBot Pro</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: none !important; animation: none !important; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; overflow-x: hidden; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .header { text-align: center; margin-bottom: 40px; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .product-card { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; backdrop-filter: blur(10px); }
+        .product-card { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; backdrop-filter: blur(10px); position: relative; }
         .product-image { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; transition: none; opacity: 1; }
         .product-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
-        .product-price { font-size: 24px; color: #4CAF50; font-weight: bold; margin-bottom: 15px; }
+        .product-price { font-size: 24px; color: #FFD700; font-weight: bold; margin-bottom: 15px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
         .promote-btn { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; width: 100%; }
         .back-btn { position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.2); color: white; padding: 12px 25px; border: none; border-radius: 25px; text-decoration: none; }
     </style>
