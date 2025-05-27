@@ -102,6 +102,7 @@
         <div class="admin-panel">
             <h3>🔐 Admin Panel</h3>
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <button onclick="location.href='/add-amazon-product'" style="background: #ff9800; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">🔗 Add Amazon Product</button>
                 <button onclick="location.href='/admin/email-blast'" style="background: #ff4444; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">📧 Send Email Blast</button>
                 <button onclick="location.href='/admin/users'" style="background: #4444ff; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">👥 Manage Users</button>
                 <button onclick="location.href='/admin'" style="background: #44ff44; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">📊 Admin Dashboard</button>
@@ -179,6 +180,10 @@
                 <div>Post Now</div>
             </button>
             {% if current_user.subscription_tier != 'free' %}
+            <button class="action-btn" onclick="location.href='/my-catalog'">
+                <i>📚</i>
+                <div>My Catalog</div>
+            </button>
             <button class="action-btn" onclick="location.href='/campaigns'">
                 <i>📊</i>
                 <div>Create Campaign</div>
