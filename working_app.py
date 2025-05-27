@@ -796,7 +796,12 @@ def settings():
         return redirect('/admin-login')
     
     user_id = session['user_id']
-    user = User.query.get(user_id) if user_id != 'admin' else None
+    
+    # Handle admin login - get the real admin user record
+    if user_id == 'admin':
+        user = User.query.get('43018417')  # Your actual user ID
+    else:
+        user = User.query.get(user_id)
     
     # Get real platform connection status
     platform_status = {
