@@ -904,6 +904,29 @@ def api_promote_product(asin):
     """API endpoint for promoting products"""
     return promote_product(asin)
 
+@app.route('/api/toggle-automation', methods=['POST'])
+def toggle_automation():
+    """Save automation setting to keep it enabled permanently"""
+    if not session.get('user_id'):
+        return {"success": False, "error": "Not logged in"}
+    
+    try:
+        data = request.get_json()
+        enabled = data.get('enabled', False)
+        user_id = session.get('user_id')
+        
+        # For admin user, save to session (could be database in the future)
+        session['auto_posting_enabled'] = enabled
+        session.permanent = True
+        
+        return {
+            "success": True, 
+            "message": f"Auto-posting {'enabled' if enabled else 'disabled'} successfully",
+            "enabled": enabled
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
 @app.route('/admin-login', methods=['GET', 'POST'])
 def admin_login():
     """Admin login page"""
@@ -1013,12 +1036,16 @@ def dashboard():
     # Get recent posts (real data only)
     recent_posts = []  # Empty list shows "No recent posts yet" message
     
+    # Check if auto-posting is enabled
+    auto_posting_enabled = session.get('auto_posting_enabled', False)
+    
     return render_template('dashboard_working.html', 
                          is_admin=is_admin, 
                          platform_status=platform_status,
                          real_stats=real_stats,
                          current_user=current_user,
-                         recent_posts=recent_posts)
+                         recent_posts=recent_posts,
+                         auto_posting_enabled=auto_posting_enabled)
 
 @app.route('/admin/email-blast', methods=['GET', 'POST'])
 def admin_email_blast():
