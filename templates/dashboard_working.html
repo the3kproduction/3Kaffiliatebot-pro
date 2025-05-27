@@ -144,9 +144,19 @@
                     <span id="automationStatus">Enable Auto-Posting</span>
                 </button>
             </div>
-            <div style="display: flex; gap: 15px; font-size: 14px;">
-                <div>⏰ Next post in: <span id="nextPostTimer">--</span></div>
+            <div style="display: flex; gap: 15px; font-size: 14px; margin-bottom: 10px;">
+                <div>⏰ Next post in: <span id="nextPostTimer">Ready now</span></div>
                 <div>📊 Posts today: <span id="postsToday">{{ real_stats.posts_today or 0 }}</span></div>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; font-size: 14px;">
+                <label>Auto-post every:</label>
+                <select id="postingFrequency" style="padding: 5px; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="60" selected>1 hour</option>
+                    <option value="120">2 hours</option>
+                    <option value="240">4 hours</option>
+                </select>
             </div>
         </div>
 

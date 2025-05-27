@@ -1301,10 +1301,20 @@ def api_auto_post():
         return jsonify({'success': False, 'error': 'Not logged in'}), 401
     
     user_id = session['user_id']
-    user = User.query.get(user_id) if user_id != 'admin' else None
     
-    if not user:
-        return jsonify({'success': False, 'error': 'User not found'}), 404
+    # Handle admin users who don't need database lookup
+    if user_id == 'admin':
+        user = type('AdminUser', (), {
+            'id': 'admin',
+            'username': 'admin',
+            'subscription_tier': 'admin',
+            'affiliate_id': 'luxoraconnect-20',
+            'amazon_affiliate_id': 'luxoraconnect-20'
+        })()
+    else:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'success': False, 'error': 'User not found'}), 404
     
     try:
         # Get products available for promotion
