@@ -70,7 +70,7 @@ def index():
             <h1>🤖 AffiliateBot Pro</h1>
             <h2>Automated Amazon Affiliate Marketing</h2>
             <p>Post products to 10+ platforms automatically. Increase your affiliate sales with AI-powered product selection.</p>
-            <a href="/dashboard" class="btn">🚀 Get Started</a>
+            <a href="/subscribe" class="btn">🚀 Get Started</a>
             <a href="/subscribe" class="btn">💰 View Pricing</a>
         </div>
     </body>

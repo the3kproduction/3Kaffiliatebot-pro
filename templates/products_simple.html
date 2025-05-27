@@ -41,6 +41,33 @@
             </div>
             {% endfor %}
         </div>
+
+        <!-- Pagination Controls -->
+        {% if pagination %}
+        <div style="text-align: center; margin-top: 40px;">
+            <div style="display: inline-flex; gap: 10px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 25px; backdrop-filter: blur(10px);">
+                {% if pagination.has_prev %}
+                    <a href="{{ url_for('products', page=pagination.prev_num) }}" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+                        ← Previous
+                    </a>
+                {% endif %}
+                
+                <span style="color: white; padding: 10px 20px; font-weight: bold;">
+                    Page {{ pagination.page }} of {{ pagination.pages }}
+                </span>
+                
+                {% if pagination.has_next %}
+                    <a href="{{ url_for('products', page=pagination.next_num) }}" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+                        Next →
+                    </a>
+                {% endif %}
+            </div>
+            
+            <div style="margin-top: 15px; color: rgba(255,255,255,0.8);">
+                Showing {{ pagination.per_page * (pagination.page - 1) + 1 }} - {{ pagination.per_page * pagination.page if pagination.page < pagination.pages else pagination.total }} of {{ pagination.total }} products
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <script>
