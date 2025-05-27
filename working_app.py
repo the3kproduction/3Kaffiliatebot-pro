@@ -1690,27 +1690,29 @@ def api_auto_post():
 def save_email_config():
     """Save email configuration for user"""
     try:
-        data = request.get_json()
+        # Get form data instead of JSON
+        user_email = request.form.get('user_email') or request.form.get('email')
+        email_list = request.form.get('email_list', '')
         user_id = session.get('user_id')
         
         if user_id == 'admin':
             # For admin, store in session 
-            session['user_email'] = data.get('user_email')
-            session['email_list'] = data.get('email_list')
+            session['user_email'] = user_email
+            session['email_list'] = email_list
             session['email_configured'] = True
-            return jsonify({'success': True})
+            return jsonify({'success': True, 'message': 'Email settings saved!'})
         
         user = User.query.get(user_id)
         if not user:
             return jsonify({'success': False, 'error': 'User not found'})
         
-        # Store email settings in user profile
-        user.user_email = data.get('user_email')
-        user.email_list = data.get('email_list')
+        # Save the email properly
+        if user_email:
+            user.email = user_email
         user.email_configured = True
         
         db.session.commit()
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'message': 'Email saved successfully!'})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
