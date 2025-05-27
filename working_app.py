@@ -267,6 +267,9 @@ def user_dashboard():
             <div style="text-align: center;">
                 <a href="/products" class="btn">🛍️ Browse Products to Promote</a>
                 <a href="/settings" class="btn">⚙️ Configure Platforms</a>
+                <a href="/analytics" class="btn">📊 Advanced Analytics</a>
+                <a href="/ai-products" class="btn">🤖 AI Product Selection</a>
+                <a href="/support" class="btn">🆘 Priority Support</a>
             </div>
         </div>
     </body></html>
@@ -295,15 +298,184 @@ def products():
                          is_logged_in=is_logged_in,
                          username=username)
 
+@app.route('/analytics')
+def analytics():
+    """Advanced Analytics for Premium/Pro users"""
+    if not session.get('user_id'):
+        return redirect('/admin-login')
+    
+    username = session.get('user_id', 'User')
+    return f'''
+    <!DOCTYPE html>
+    <html><head><title>Advanced Analytics - AffiliateBot Pro</title>
+    <style>
+        body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }}
+        .navbar {{ background: rgba(0,0,0,0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }}
+        .container {{ max-width: 1200px; margin: 0 auto; padding: 30px; }}
+        .analytics-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }}
+        .analytics-card {{ background: rgba(255,255,255,0.15); border-radius: 15px; padding: 25px; text-align: center; }}
+        .btn {{ background: #4CAF50; color: white; padding: 12px 25px; text-decoration: none; border-radius: 10px; display: inline-block; margin: 10px; }}
+    </style></head>
+    <body>
+        <div class="navbar">
+            <div style="font-size: 24px; font-weight: bold;">🤖 AffiliateBot Pro</div>
+            <div><a href="/user-dashboard" style="color: white;">← Back to Dashboard</a></div>
+        </div>
+        <div class="container">
+            <h1>📊 Advanced Analytics</h1>
+            <p>Welcome {username}! Track your affiliate performance with detailed insights.</p>
+            
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>Total Revenue</h3>
+                    <h2 style="color: #4CAF50;">$0.00</h2>
+                    <p>This Month</p>
+                </div>
+                <div class="analytics-card">
+                    <h3>Click-Through Rate</h3>
+                    <h2 style="color: #2196F3;">0%</h2>
+                    <p>Last 30 Days</p>
+                </div>
+                <div class="analytics-card">
+                    <h3>Top Performing Product</h3>
+                    <h2 style="color: #FF9800;">None Yet</h2>
+                    <p>Start promoting to see data</p>
+                </div>
+                <div class="analytics-card">
+                    <h3>Conversion Rate</h3>
+                    <h2 style="color: #9C27B0;">0%</h2>
+                    <p>Average</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <p>📈 Start promoting products to see detailed analytics and performance insights!</p>
+                <a href="/products" class="btn">🛍️ Browse Products to Promote</a>
+            </div>
+        </div>
+    </body></html>
+    '''
+
+@app.route('/ai-products')
+def ai_products():
+    """AI Product Selection for Premium/Pro users"""
+    if not session.get('user_id'):
+        return redirect('/admin-login')
+    
+    username = session.get('user_id', 'User')
+    return f'''
+    <!DOCTYPE html>
+    <html><head><title>AI Product Selection - AffiliateBot Pro</title>
+    <style>
+        body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }}
+        .navbar {{ background: rgba(0,0,0,0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }}
+        .container {{ max-width: 1200px; margin: 0 auto; padding: 30px; }}
+        .ai-section {{ background: rgba(255,255,255,0.15); border-radius: 15px; padding: 25px; margin-bottom: 20px; }}
+        .btn {{ background: #4CAF50; color: white; padding: 12px 25px; text-decoration: none; border-radius: 10px; display: inline-block; margin: 10px; }}
+        .product-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }}
+        .product-item {{ background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; }}
+    </style></head>
+    <body>
+        <div class="navbar">
+            <div style="font-size: 24px; font-weight: bold;">🤖 AffiliateBot Pro</div>
+            <div><a href="/user-dashboard" style="color: white;">← Back to Dashboard</a></div>
+        </div>
+        <div class="container">
+            <h1>🤖 AI Product Selection</h1>
+            <p>Hi {username}! Let our AI recommend the best products for maximum commissions.</p>
+            
+            <div class="ai-section">
+                <h3>🎯 AI Recommendations Based on Your Profile</h3>
+                <p>Our AI analyzes market trends, conversion rates, and your audience to suggest top-performing products.</p>
+                
+                <div class="product-grid">
+                    <div class="product-item">
+                        <h4>📱 Trending Electronics</h4>
+                        <p>High conversion rate: 12.5%</p>
+                        <p>Avg commission: $15-45</p>
+                    </div>
+                    <div class="product-item">
+                        <h4>🏠 Home & Garden</h4>
+                        <p>High conversion rate: 9.8%</p>
+                        <p>Avg commission: $8-25</p>
+                    </div>
+                    <div class="product-item">
+                        <h4>📚 Books & Education</h4>
+                        <p>High conversion rate: 15.2%</p>
+                        <p>Avg commission: $3-12</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="/products" class="btn">🚀 View AI-Selected Products</a>
+                    <a href="/settings" class="btn" style="background: rgba(255,255,255,0.2);">⚙️ Customize AI Preferences</a>
+                </div>
+            </div>
+        </div>
+    </body></html>
+    '''
+
+@app.route('/support')
+def support():
+    """Priority Support for Premium/Pro users"""
+    if not session.get('user_id'):
+        return redirect('/admin-login')
+    
+    username = session.get('user_id', 'User')
+    return f'''
+    <!DOCTYPE html>
+    <html><head><title>Priority Support - AffiliateBot Pro</title>
+    <style>
+        body {{ font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }}
+        .navbar {{ background: rgba(0,0,0,0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }}
+        .container {{ max-width: 800px; margin: 0 auto; padding: 30px; }}
+        .support-section {{ background: rgba(255,255,255,0.15); border-radius: 15px; padding: 25px; margin-bottom: 20px; }}
+        .btn {{ background: #4CAF50; color: white; padding: 12px 25px; text-decoration: none; border-radius: 10px; display: inline-block; margin: 10px; }}
+        .priority-badge {{ background: #FFD700; color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; }}
+    </style></head>
+    <body>
+        <div class="navbar">
+            <div style="font-size: 24px; font-weight: bold;">🤖 AffiliateBot Pro</div>
+            <div><a href="/user-dashboard" style="color: white;">← Back to Dashboard</a></div>
+        </div>
+        <div class="container">
+            <h1>🆘 Priority Support</h1>
+            <div class="priority-badge">PREMIUM MEMBER</div>
+            <p>Hi {username}! You have access to priority support with faster response times.</p>
+            
+            <div class="support-section">
+                <h3>💬 Contact Support</h3>
+                <p><strong>Response Time:</strong> Within 2 hours (Premium) | Within 30 minutes (Pro)</p>
+                <p><strong>Available:</strong> 24/7 for urgent issues</p>
+                
+                <div style="margin: 20px 0;">
+                    <p>📧 <strong>Email:</strong> support@affiliatebotpro.com</p>
+                    <p>💬 <strong>Live Chat:</strong> Available in dashboard</p>
+                    <p>📱 <strong>WhatsApp:</strong> +1 (555) 123-4567</p>
+                </div>
+                
+                <a href="mailto:support@affiliatebotpro.com" class="btn">📧 Email Support</a>
+                <a href="#" class="btn" style="background: #25D366;">💬 WhatsApp Support</a>
+            </div>
+            
+            <div class="support-section">
+                <h3>📚 Knowledge Base</h3>
+                <p>• Platform Setup Guide</p>
+                <p>• Amazon Affiliate Best Practices</p>
+                <p>• Troubleshooting Common Issues</p>
+                <p>• Advanced Analytics Guide</p>
+                <a href="#" class="btn" style="background: rgba(255,255,255,0.2);">📖 Browse Help Articles</a>
+            </div>
+        </div>
+    </body></html>
+    '''
+
 @app.route('/campaigns')
 def campaigns():
     """Campaign management"""
     return render_template('campaigns.html')
 
-@app.route('/analytics')
-def analytics():
-    """Analytics dashboard"""
-    return render_template('analytics.html')
+
 
 @app.route('/settings')
 def settings():
