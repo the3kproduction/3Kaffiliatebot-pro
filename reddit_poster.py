@@ -27,15 +27,19 @@ class RedditPoster:
             }
             headers = {'User-Agent': self.user_agent}
             
+            print(f"🔑 Attempting Reddit authentication...")
             response = requests.post('https://www.reddit.com/api/v1/access_token',
                                    auth=auth, data=data, headers=headers)
             
+            print(f"Auth response: {response.status_code}")
             if response.status_code == 200:
                 token_data = response.json()
                 self.access_token = token_data.get('access_token')
+                print(f"✅ Reddit authentication successful!")
                 return True
             else:
-                print(f"Reddit auth failed: {response.status_code}")
+                print(f"❌ Reddit auth failed: {response.status_code}")
+                print(f"Response: {response.text}")
                 return False
                 
         except Exception as e:
@@ -80,6 +84,9 @@ Rating: {'⭐' * int(float(product.get('rating', 4.5)))}
             
             response = requests.post('https://oauth.reddit.com/api/submit',
                                    headers=headers, data=data)
+            
+            print(f"Post response: {response.status_code}")
+            print(f"Response content: {response.text}")
             
             if response.status_code == 200:
                 result = response.json()
