@@ -51,7 +51,7 @@ class ProductInventory(db.Model):
 
 # Routes
 @app.route('/')
-def home():
+def index():
     """Landing page"""
     return render_template('landing.html')
 
