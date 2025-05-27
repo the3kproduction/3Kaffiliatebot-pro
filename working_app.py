@@ -1749,12 +1749,22 @@ def my_catalog():
     if not session.get('user_id'):
         return redirect('/login')
     
-    user = User.query.get(session['user_id'])
-    if not user or user.subscription_tier == 'free':
-        return redirect('/subscribe')
+    user_id = session.get('user_id')
+    is_admin = session.get('is_admin', False)
+    
+    # Convert admin session to real user ID if needed
+    if user_id == 'admin':
+        user_id = '43018417'
+        session['user_id'] = user_id
+    
+    # Admin users have full access, others need paid subscription
+    if not is_admin:
+        user = User.query.get(user_id)
+        if not user or user.subscription_tier == 'free':
+            return redirect('/subscribe')
     
     # Get user's saved products
-    saved_products = UserSavedProducts.query.filter_by(user_id=user.id).order_by(UserSavedProducts.saved_at.desc()).all()
+    saved_products = UserSavedProducts.query.filter_by(user_id=user_id).order_by(UserSavedProducts.saved_at.desc()).all()
     
     return f'''
     <!DOCTYPE html>
