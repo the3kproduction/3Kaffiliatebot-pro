@@ -76,8 +76,11 @@
             <a href="/campaigns">Campaigns</a>
             <a href="/analytics">Analytics</a>
             <a href="/settings">Settings</a>
-            <a href="/subscribe">Upgrade</a>
+            {% if is_admin %}
             <a href="/logout" class="logout-btn">🚪 Logout</a>
+            {% else %}
+            <a href="/subscribe">Upgrade</a>
+            {% endif %}
         </div>
     </nav>
 

@@ -72,6 +72,7 @@ def index():
             <p>Post products to 10+ platforms automatically. Increase your affiliate sales with AI-powered product selection.</p>
             <a href="/subscribe" class="btn">🚀 Get Started</a>
             <a href="/subscribe" class="btn">💰 View Pricing</a>
+            <a href="/admin-login" class="btn" style="background: rgba(255,255,255,0.2);">🔐 Admin Login</a>
         </div>
     </body>
     </html>
