@@ -26,7 +26,11 @@
 </head>
 <body>
     <div class="container">
+        {% if session.get('user_id') %}
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        {% else %}
         <a href="/" class="back-btn">← Back to Home</a>
+        {% endif %}
         
         <div class="header">
             <h1>🚀 Upgrade Your Plan</h1>
