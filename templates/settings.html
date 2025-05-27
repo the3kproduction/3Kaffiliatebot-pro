@@ -125,6 +125,13 @@
                         <button class="btn" style="margin-left: 10px;" onclick="showPinterestConfig()">Configure Pinterest</button>
                     </div>
                 </div>
+                <div class="platform-item">
+                    <span>🔴 Reddit</span>
+                    <div>
+                        <span class="platform-status status-disconnected">Setup Required</span>
+                        <button class="btn" style="margin-left: 10px;" onclick="showRedditConfig()">Configure Reddit</button>
+                    </div>
+                </div>
             </div>
 
             <div class="settings-panel">
@@ -261,16 +268,16 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Email settings saved successfully!');
+                    // Show success without popup
+                    document.querySelector('.platform-item span:contains("📧 Email")').nextElementSibling.innerHTML = 
+                        '<span class="platform-status status-connected">Configured</span><button class="btn btn-secondary" style="margin-left: 10px;" onclick="showEmailConfig()">Update Email</button>';
+                    hideEmailConfig();
                 } else {
-                    alert('Error: ' + data.error);
+                    console.error('Error: ' + data.error);
                 }
-                hideEmailConfig();
-                location.reload();
             })
             .catch(error => {
-                alert('Error saving email settings');
-                console.error(error);
+                console.error('Error saving email settings:', error);
             });
         }
         
@@ -302,6 +309,67 @@
                 location.reload();
             });
         }
+        
+        function showRedditConfig() {
+            document.getElementById('redditModal').style.display = 'block';
+        }
+        
+        function hideRedditConfig() {
+            document.getElementById('redditModal').style.display = 'none';
+        }
+        
+        function saveRedditConfig() {
+            const clientId = document.getElementById('redditClientId').value;
+            const clientSecret = document.getElementById('redditClientSecret').value;
+            const username = document.getElementById('redditUsername').value;
+            const password = document.getElementById('redditPassword').value;
+            
+            const formData = new FormData();
+            formData.append('client_id', clientId);
+            formData.append('client_secret', clientSecret);
+            formData.append('username', username);
+            formData.append('password', password);
+            
+            fetch('/api/save-reddit-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideRedditConfig();
+                location.reload();
+            });
+        }
     </script>
+
+    <!-- Reddit Configuration Modal -->
+    <div id="redditModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; width: 500px; color: #333;">
+            <h3>🔴 Reddit Configuration</h3>
+            <div style="margin: 15px 0;">
+                <label>Reddit Client ID:</label>
+                <input type="text" id="redditClientId" placeholder="Your Reddit app client ID" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Reddit Client Secret:</label>
+                <input type="password" id="redditClientSecret" placeholder="Your Reddit app client secret" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Reddit Username:</label>
+                <input type="text" id="redditUsername" placeholder="Your Reddit username" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Reddit Password:</label>
+                <input type="password" id="redditPassword" placeholder="Your Reddit password" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="font-size: 14px; color: #666; margin: 10px 0;">
+                Create a Reddit app at reddit.com/prefs/apps to get your credentials.
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveRedditConfig()" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Reddit Settings</button>
+                <button onclick="hideRedditConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
