@@ -46,12 +46,18 @@
         <div class="products-grid">
             {% for product in products %}
             <div class="product-card">
-                <img src="{{ product.image_url or 'https://via.placeholder.com/200x200?text=Loading...' }}" 
-                     alt="{{ product.product_title }}" 
-                     class="product-image" 
-                     loading="lazy"
-                     style="display: block; min-height: 200px;"
-                     onerror="this.style.opacity='0.5'; this.src='https://via.placeholder.com/200x200?text=Image+Error'">
+                <div style="height: 200px; background: #f0f0f0; border-radius: 10px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: #666;">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" 
+                             alt="{{ product.product_title }}" 
+                             class="product-image" 
+                             loading="lazy"
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
+                             onerror="this.style.display='none'; this.parentNode.innerHTML='<span>📦 Product Image</span>'">
+                    {% else %}
+                        <span>📦 Product Image</span>
+                    {% endif %}
+                </div>
                 
                 <div class="product-title">{{ product.product_title or 'Amazon Product' }}</div>
                 <div class="product-price">{{ product.price or '$29.99' }}</div>
