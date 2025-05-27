@@ -400,6 +400,67 @@
             }
         }
 
+        function promotePlatform() {
+            fetch('/promote-platform')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const platforms = data.platforms_posted.join(', ');
+                    const errors = data.errors.length > 0 ? ` (Errors: ${data.errors.join(', ')})` : '';
+                    showNotification(`🚀 AffiliateBot Pro promoted to: ${platforms}${errors}`, 'success');
+                    
+                    // Show referral info popup
+                    showReferralPopup(data.referral_code, data.signup_url);
+                } else {
+                    showNotification(`❌ ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('❌ Network error occurred', 'error');
+            });
+        }
+
+        function showReferralPopup(referralCode, signupUrl) {
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white; padding: 30px; border-radius: 15px; z-index: 1000;
+                max-width: 600px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            `;
+            
+            popup.innerHTML = `
+                <h3 style="margin: 0 0 20px 0; text-align: center;">🎯 Referral Program - Earn 6 Months FREE!</h3>
+                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <div style="font-size: 18px; font-weight: bold;">Get 10 people to sign up = 6 MONTHS FREE!</div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 14px; margin-bottom: 8px;">Your Referral Link:</div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 8px; font-family: monospace; word-break: break-all; font-size: 14px;">
+                            ${signupUrl}
+                        </div>
+                        <button onclick="copyToClipboard('${signupUrl}')" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 10px; width: 100%;">
+                            📋 Copy Referral Link
+                        </button>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: #ff4757; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">
+                        Close
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(popup);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('📋 Referral link copied to clipboard!', 'success');
+            });
+        }
+
         // Initialize
         updateTimer();
         setInterval(updateTimer, 60000); // Update every minute

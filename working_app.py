@@ -2489,6 +2489,76 @@ def upload_product_image(asin):
     
     return {"success": False, "message": "Invalid file type"}
 
+@app.route('/create-free-account')
+def create_free_account():
+    """Free account creation page"""
+    return '''
+    <!DOCTYPE html>
+    <html><head><title>Create Free Account - AffiliateBot Pro</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .form-container { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); width: 500px; text-align: center; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 10px; }
+        button { background: #28a745; color: white; padding: 15px; border: none; border-radius: 10px; width: 100%; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .free-badge { background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; margin-bottom: 20px; }
+    </style></head>
+    <body>
+        <div class="form-container">
+            <h2>🆓 Create Your FREE Account</h2>
+            <div class="free-badge">Forever Free • No Credit Card Required</div>
+            <p>Start earning with Amazon affiliate marketing today!</p>
+            
+            <form action="/register-free-user" method="POST">
+                <input type="text" name="username" placeholder="Choose a username" required>
+                <input type="email" name="email" placeholder="Your email address" required>
+                <input type="password" name="password" placeholder="Create a password" required>
+                <input type="text" name="affiliate_id" placeholder="Amazon Affiliate ID (e.g., yourname-20)" required>
+                
+                <div style="font-size: 14px; margin: 15px 0; opacity: 0.8;">
+                    Free Account Includes:
+                    <br>• 2 automated posts per day
+                    <br>• Access to 6 trending products
+                    <br>• Basic platform connections
+                </div>
+                
+                <button type="submit">Create FREE Account</button>
+            </form>
+            
+            <p style="margin-top: 20px; font-size: 14px;">
+                Already have an account? <a href="/admin-login" style="color: #FFD700;">Login here</a>
+            </p>
+        </div>
+    </body>
+    </html>
+    '''
+
+@app.route('/register-free-user', methods=['POST'])
+def register_free_user():
+    """Register a new free user"""
+    try:
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        affiliate_id = request.form.get('affiliate_id')
+        
+        if not all([username, email, password, affiliate_id]):
+            return "All fields are required!"
+        
+        # Create user in session (simplified for now)
+        user_id = f"free_{username}_{len(str(hash(email)))}"
+        
+        session['user_id'] = user_id
+        session['username'] = username
+        session['email'] = email
+        session['subscription_tier'] = 'free'
+        session['amazon_affiliate_id'] = affiliate_id
+        session['is_admin'] = False
+        
+        return redirect('/dashboard')
+        
+    except Exception as e:
+        return f"Error creating account: {str(e)}"
+
 @app.route('/promote-platform')
 def promote_platform():
     """Promote AffiliateBot Pro platform to earn referrals and free months"""
