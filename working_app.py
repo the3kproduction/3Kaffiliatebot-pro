@@ -2118,6 +2118,14 @@ def my_catalog():
             fileInput.value = '';
         }}
         </script>
+        
+        <div style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6);">
+            <p>
+                <a href="/terms" style="color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 15px;">Terms of Service</a>
+                <a href="/privacy" style="color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 15px;">Privacy Policy</a>
+                <a href="/how-to-guide" style="color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 15px;">How-To Guide</a>
+            </p>
+        </div>
         </div>
     </body>
     </html>
