@@ -49,7 +49,9 @@
                 <img src="{{ product.image_url or 'https://via.placeholder.com/200x200?text=Loading...' }}" 
                      alt="{{ product.product_title }}" 
                      class="product-image" 
-                     onerror="this.src='https://via.placeholder.com/200x200?text=Image+Error'">
+                     loading="lazy"
+                     style="display: block; min-height: 200px;"
+                     onerror="this.style.opacity='0.5'; this.src='https://via.placeholder.com/200x200?text=Image+Error'">
                 
                 <div class="product-title">{{ product.product_title or 'Amazon Product' }}</div>
                 <div class="product-price">{{ product.price or '$29.99' }}</div>
