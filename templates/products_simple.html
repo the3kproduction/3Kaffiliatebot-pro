@@ -20,7 +20,11 @@
 </head>
 <body>
     <div class="container">
-        <a href="/" class="back-btn">← Back to Home</a>
+        {% if is_logged_in %}
+            <a href="/user-dashboard" class="back-btn">← Back to Dashboard</a>
+        {% else %}
+            <a href="/" class="back-btn">← Back to Home</a>
+        {% endif %}
         
         <div class="header">
             <h1>🛍️ Available Products</h1>

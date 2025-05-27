@@ -259,6 +259,10 @@ def user_dashboard():
 @app.route('/products')
 def products():
     """Show available products with pagination"""
+    # Check if user is logged in (either admin or regular user)
+    is_logged_in = session.get('user_id') or session.get('is_admin')
+    username = session.get('user_id', 'User')
+    
     page = request.args.get('page', 1, type=int)
     per_page = 12  # Show 12 products per page
     
@@ -271,7 +275,9 @@ def products():
     
     return render_template('products_simple.html', 
                          products=products_pagination.items,
-                         pagination=products_pagination)
+                         pagination=products_pagination,
+                         is_logged_in=is_logged_in,
+                         username=username)
 
 @app.route('/campaigns')
 def campaigns():
