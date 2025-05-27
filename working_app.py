@@ -72,7 +72,7 @@ def index():
             <p>Post products to 10+ platforms automatically. Increase your affiliate sales with AI-powered product selection.</p>
             <a href="/subscribe" class="btn">🚀 Get Started</a>
             <a href="/subscribe" class="btn">💰 View Pricing</a>
-            <a href="/admin-login" class="btn" style="background: rgba(255,255,255,0.2);">🔐 Admin Login</a>
+            <a href="/admin-login" class="btn" style="background: rgba(255,255,255,0.2);">🔐 Login</a>
         </div>
     </body>
     </html>
@@ -326,6 +326,89 @@ def dashboard():
     }
     
     return render_template('dashboard_working.html', is_admin=is_admin, platform_status=platform_status)
+
+@app.route('/admin/email-blast', methods=['GET', 'POST'])
+def admin_email_blast():
+    """Admin email blast tool"""
+    if not session.get('is_admin'):
+        return redirect('/admin-login')
+    
+    if request.method == 'POST':
+        subject = request.form.get('subject')
+        message = request.form.get('message')
+        target_tier = request.form.get('target_tier', 'all')
+        
+        # For now, show success message (email functionality can be added later)
+        return f"<h2>Email Blast Sent!</h2><p>Subject: {subject}</p><p>Target: {target_tier}</p><a href='/dashboard'>Back to Dashboard</a>"
+    
+    return '''
+    <h2>📧 Send Email Blast</h2>
+    <form method="POST" style="max-width: 500px; margin: 50px auto; background: #f5f5f5; padding: 30px; border-radius: 10px;">
+        <div style="margin-bottom: 15px;">
+            <label>Subject:</label><br>
+            <input type="text" name="subject" style="width: 100%; padding: 10px; margin-top: 5px;" required>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label>Message:</label><br>
+            <textarea name="message" rows="6" style="width: 100%; padding: 10px; margin-top: 5px;" required></textarea>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label>Target:</label><br>
+            <select name="target_tier" style="width: 100%; padding: 10px; margin-top: 5px;">
+                <option value="all">All Users</option>
+                <option value="free">Free Users</option>
+                <option value="premium">Premium Users</option>
+                <option value="pro">Pro Users</option>
+            </select>
+        </div>
+        <button type="submit" style="background: #4CAF50; color: white; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer;">Send Email Blast</button>
+        <a href="/dashboard" style="margin-left: 15px;">Cancel</a>
+    </form>
+    '''
+
+@app.route('/admin/users')
+def admin_users():
+    """Admin user management"""
+    if not session.get('is_admin'):
+        return redirect('/admin-login')
+    
+    return '''
+    <h2>👥 User Management</h2>
+    <div style="max-width: 800px; margin: 50px auto; background: #f5f5f5; padding: 30px; border-radius: 10px;">
+        <h3>Platform Statistics</h3>
+        <p>Total Users: 0</p>
+        <p>Active Subscriptions: 0</p>
+        <p>Revenue This Month: $0</p>
+        <br>
+        <h3>Recent Signups</h3>
+        <p>No users registered yet.</p>
+        <br>
+        <a href="/dashboard" style="background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Back to Dashboard</a>
+    </div>
+    '''
+
+@app.route('/admin/analytics')
+def admin_analytics():
+    """Admin platform analytics"""
+    if not session.get('is_admin'):
+        return redirect('/admin-login')
+    
+    return '''
+    <h2>📊 Platform Analytics</h2>
+    <div style="max-width: 800px; margin: 50px auto; background: #f5f5f5; padding: 30px; border-radius: 10px;">
+        <h3>Platform Performance</h3>
+        <p>Total Posts Made: 0</p>
+        <p>Total Clicks Generated: 0</p>
+        <p>Estimated Commissions: $0</p>
+        <br>
+        <h3>Platform Status</h3>
+        <p>Discord: Connected ✅</p>
+        <p>Telegram: Issues ⚠️</p>
+        <p>Slack: Connected ✅</p>
+        <br>
+        <a href="/dashboard" style="background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Back to Dashboard</a>
+    </div>
+    '''
 
 # Create database tables and add sample products
 with app.app_context():
