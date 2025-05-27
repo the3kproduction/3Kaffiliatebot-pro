@@ -81,10 +81,10 @@
                     <div>
                         {% if platform_status.discord %}
                         <span class="platform-status status-connected">Connected</span>
-                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                        <button class="btn btn-secondary" style="margin-left: 10px;" onclick="showDiscordConfig()">Configure</button>
                         {% else %}
                         <span class="platform-status status-disconnected">Not Connected</span>
-                        <button class="btn" style="margin-left: 10px;">Connect</button>
+                        <button class="btn" style="margin-left: 10px;" onclick="showDiscordConfig()">Connect</button>
                         {% endif %}
                     </div>
                 </div>
@@ -93,10 +93,10 @@
                     <div>
                         {% if platform_status.telegram %}
                         <span class="platform-status status-connected">Connected</span>
-                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                        <button class="btn btn-secondary" style="margin-left: 10px;" onclick="showTelegramConfig()">Configure</button>
                         {% else %}
                         <span class="platform-status status-disconnected">Not Connected</span>
-                        <button class="btn" style="margin-left: 10px;">Connect</button>
+                        <button class="btn" style="margin-left: 10px;" onclick="showTelegramConfig()">Connect</button>
                         {% endif %}
                     </div>
                 </div>
@@ -105,10 +105,10 @@
                     <div>
                         {% if platform_status.slack %}
                         <span class="platform-status status-connected">Connected</span>
-                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                        <button class="btn btn-secondary" style="margin-left: 10px;" onclick="showSlackConfig()">Configure</button>
                         {% else %}
                         <span class="platform-status status-disconnected">Not Connected</span>
-                        <button class="btn" style="margin-left: 10px;">Connect</button>
+                        <button class="btn" style="margin-left: 10px;" onclick="showSlackConfig()">Connect</button>
                         {% endif %}
                     </div>
                 </div>
@@ -276,6 +276,68 @@
             <div style="display: flex; gap: 15px; margin-top: 20px;">
                 <button onclick="savePinterestConfig()" style="background: #E60023; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Pinterest Settings</button>
                 <button onclick="hidePinterestConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discord Configuration Modal -->
+    <div id="discordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; width: 500px; color: #333;">
+            <h3>📱 Discord Configuration</h3>
+            <div style="margin: 15px 0;">
+                <label>Discord Webhook URL:</label>
+                <input type="url" id="discordWebhook" placeholder="https://discord.com/api/webhooks/..." style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="font-size: 14px; color: #666; margin: 10px 0;">
+                Get your webhook URL from Discord Server Settings → Integrations → Webhooks
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveDiscordConfig()" style="background: #5865F2; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Discord Settings</button>
+                <button onclick="hideDiscordConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Telegram Configuration Modal -->
+    <div id="telegramModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; width: 500px; color: #333;">
+            <h3>📧 Telegram Configuration</h3>
+            <div style="margin: 15px 0;">
+                <label>Bot Token:</label>
+                <input type="password" id="telegramToken" placeholder="Enter your Telegram bot token" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Chat ID:</label>
+                <input type="text" id="telegramChatId" placeholder="Enter chat ID (e.g., @username or -1001234567890)" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="font-size: 14px; color: #666; margin: 10px 0;">
+                Create a bot with @BotFather and get your chat ID by messaging @userinfobot
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveTelegramConfig()" style="background: #0088cc; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Telegram Settings</button>
+                <button onclick="hideTelegramConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slack Configuration Modal -->
+    <div id="slackModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; width: 500px; color: #333;">
+            <h3>💼 Slack Configuration</h3>
+            <div style="margin: 15px 0;">
+                <label>Bot Token:</label>
+                <input type="password" id="slackToken" placeholder="xoxb-..." style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Channel ID:</label>
+                <input type="text" id="slackChannelId" placeholder="C1234567890" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="font-size: 14px; color: #666; margin: 10px 0;">
+                Create a Slack app and get bot token from OAuth & Permissions. Get channel ID from channel details.
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="saveSlackConfig()" style="background: #4A154B; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Save Slack Settings</button>
+                <button onclick="hideSlackConfig()" style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
             </div>
         </div>
     </div>
