@@ -2494,5 +2494,49 @@ def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/api/save-discord-config', methods=['POST'])
+def save_discord_config_new():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'error': 'Not logged in'})
+    
+    webhook_url = request.form.get('webhook_url')
+    if not webhook_url:
+        return jsonify({'success': False, 'error': 'Discord webhook URL required'})
+    
+    session['discord_webhook_url'] = webhook_url
+    return jsonify({'success': True})
+
+@app.route('/api/save-slack-config', methods=['POST'])
+def save_slack_config_new():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'error': 'Not logged in'})
+    
+    bot_token = request.form.get('bot_token')
+    channel_id = request.form.get('channel_id')
+    
+    if not bot_token or not channel_id:
+        return jsonify({'success': False, 'error': 'Both Bot Token and Channel ID required'})
+    
+    session['slack_bot_token'] = bot_token
+    session['slack_channel_id'] = channel_id
+    return jsonify({'success': True})
+
+@app.route('/api/save-telegram-config', methods=['POST'])
+def save_telegram_config_new():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'error': 'Not logged in'})
+    
+    bot_token = request.form.get('bot_token')
+    chat_id = request.form.get('chat_id')
+    
+    if not bot_token or not chat_id:
+        return jsonify({'success': False, 'error': 'Both Bot Token and Chat ID required'})
+    
+    session['telegram_bot_token'] = bot_token
+    session['telegram_chat_id'] = chat_id
+    return jsonify({'success': True})
+
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

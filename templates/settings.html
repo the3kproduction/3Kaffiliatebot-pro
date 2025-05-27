@@ -572,6 +572,136 @@
             .catch(error => console.log('Could not check platform status:', error));
         }
         
+        // Discord Configuration Functions
+        function showDiscordConfig() {
+            document.getElementById('discordModal').style.display = 'block';
+        }
+        
+        function hideDiscordConfig() {
+            document.getElementById('discordModal').style.display = 'none';
+        }
+        
+        function saveDiscordConfig() {
+            const webhookUrl = document.getElementById('discordWebhook').value;
+            
+            const formData = new FormData();
+            formData.append('webhook_url', webhookUrl);
+            
+            fetch('/api/save-discord-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const platformItems = document.querySelectorAll('.platform-item');
+                    for (let item of platformItems) {
+                        if (item.innerHTML.includes('📱 Discord')) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Connected';
+                            item.querySelector('button').textContent = 'Update Discord';
+                            item.querySelector('button').className = 'btn btn-secondary';
+                            break;
+                        }
+                    }
+                    hideDiscordConfig();
+                } else {
+                    alert('Error saving Discord settings: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Error saving Discord settings');
+            });
+        }
+
+        // Slack Configuration Functions
+        function showSlackConfig() {
+            document.getElementById('slackModal').style.display = 'block';
+        }
+        
+        function hideSlackConfig() {
+            document.getElementById('slackModal').style.display = 'none';
+        }
+        
+        function saveSlackConfig() {
+            const botToken = document.getElementById('slackToken').value;
+            const channelId = document.getElementById('slackChannel').value;
+            
+            const formData = new FormData();
+            formData.append('bot_token', botToken);
+            formData.append('channel_id', channelId);
+            
+            fetch('/api/save-slack-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const platformItems = document.querySelectorAll('.platform-item');
+                    for (let item of platformItems) {
+                        if (item.innerHTML.includes('💼 Slack')) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Connected';
+                            item.querySelector('button').textContent = 'Update Slack';
+                            item.querySelector('button').className = 'btn btn-secondary';
+                            break;
+                        }
+                    }
+                    hideSlackConfig();
+                } else {
+                    alert('Error saving Slack settings: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Error saving Slack settings');
+            });
+        }
+
+        // Telegram Configuration Functions
+        function showTelegramConfig() {
+            document.getElementById('telegramModal').style.display = 'block';
+        }
+        
+        function hideTelegramConfig() {
+            document.getElementById('telegramModal').style.display = 'none';
+        }
+        
+        function saveTelegramConfig() {
+            const botToken = document.getElementById('telegramToken').value;
+            const chatId = document.getElementById('telegramChatId').value;
+            
+            const formData = new FormData();
+            formData.append('bot_token', botToken);
+            formData.append('chat_id', chatId);
+            
+            fetch('/api/save-telegram-config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const platformItems = document.querySelectorAll('.platform-item');
+                    for (let item of platformItems) {
+                        if (item.innerHTML.includes('📱 Telegram')) {
+                            item.querySelector('.platform-status').className = 'platform-status status-connected';
+                            item.querySelector('.platform-status').textContent = 'Connected';
+                            item.querySelector('button').textContent = 'Update Telegram';
+                            item.querySelector('button').className = 'btn btn-secondary';
+                            break;
+                        }
+                    }
+                    hideTelegramConfig();
+                } else {
+                    alert('Error saving Telegram settings: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Error saving Telegram settings');
+            });
+        }
+
         // Facebook Configuration Functions
         function showFacebookConfig() {
             document.getElementById('facebookModal').style.display = 'block';
