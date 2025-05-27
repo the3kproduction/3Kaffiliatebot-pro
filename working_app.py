@@ -239,8 +239,15 @@ def user_dashboard():
     if not session.get('user_id'):
         return redirect('/admin-login')
     
+    # If admin, redirect to admin dashboard
+    if session.get('is_admin'):
+        return redirect('/dashboard')
+    
     username = session.get('user_id', 'User')
-    affiliate_id = session.get('affiliate_id', 'Not set')
+    
+    # Get affiliate ID from database
+    user = User.query.filter_by(id=username).first()
+    affiliate_id = user.affiliate_id if user and user.affiliate_id else 'Not set'
     
     return f'''
     <!DOCTYPE html>
@@ -683,8 +690,8 @@ def settings():
 
 @app.route('/login')
 def login():
-    """Simple login page"""
-    return "<h1>Login Page</h1><p>Admin can login here</p>"
+    """Redirect to proper admin login"""
+    return redirect('/admin-login')
 
 @app.route('/promote/<asin>', methods=['POST'])
 def promote_product(asin):
