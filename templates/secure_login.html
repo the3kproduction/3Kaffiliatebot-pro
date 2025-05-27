@@ -94,8 +94,8 @@
             <div class="form-group">
                 <label for="password">Password:</label>
                 <div style="position: relative;">
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                    <button type="button" id="togglePassword" style="position: absolute; right: 5px; top: 5px; bottom: 5px; background: rgba(255,255,255,0.3); border: none; color: white; cursor: pointer; font-size: 12px; padding: 5px 8px; border-radius: 5px; font-weight: bold;">SHOW</button>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required style="padding-right: 60px;">
+                    <button type="button" onclick="togglePasswordVisibility()" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: #007bff; border: none; color: white; cursor: pointer; font-size: 11px; padding: 6px 10px; border-radius: 4px; font-weight: bold;">SHOW</button>
                 </div>
             </div>
             
@@ -117,31 +117,18 @@
     </div>
     
     <script>
-        // Wait for page to load completely
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleButton = document.getElementById('togglePassword');
-            const passwordField = document.getElementById('password');
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById('password');
+            var button = event.target;
             
-            if (toggleButton && passwordField) {
-                // Toggle password visibility
-                toggleButton.addEventListener('click', function(e) {
-                    e.preventDefault(); // Prevent form submission
-                    
-                    if (passwordField.type === 'password') {
-                        passwordField.type = 'text';
-                        toggleButton.innerHTML = 'HIDE';
-                        toggleButton.title = 'Hide password';
-                    } else {
-                        passwordField.type = 'password';
-                        toggleButton.innerHTML = 'SHOW';
-                        toggleButton.title = 'Show password';
-                    }
-                });
-                
-                // Set initial tooltip
-                toggleButton.title = 'Show password';
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                button.innerHTML = 'HIDE';
+            } else {
+                passwordField.type = 'password';
+                button.innerHTML = 'SHOW';
             }
-        });
+        }
     </script>
 </body>
 </html>
