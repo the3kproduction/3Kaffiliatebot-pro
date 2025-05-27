@@ -273,8 +273,8 @@ def admin_login():
         email = request.form.get('email')
         password = request.form.get('password')
         
-        # Check admin credentials
-        if email == 'the3kproduction@gmail.com' and password == 'Password123':
+        # Check admin credentials (accept both email and username)
+        if (email in ['the3kproduction@gmail.com', '3Kloudz'] and password == 'Password123'):
             session['user_id'] = 'admin'
             session['is_admin'] = True
             return redirect('/dashboard')
