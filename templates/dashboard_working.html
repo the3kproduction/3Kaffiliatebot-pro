@@ -208,6 +208,17 @@
                 <i>🎯</i>
                 <div>Take Tour<br><small style="font-size: 10px;">Quick Guide</small></div>
             </button>
+            {% if is_admin %}
+            <button class="action-btn support-btn {{ 'has-tickets' if open_tickets > 0 else '' }}" onclick="location.href='/admin/support-messages'" style="background: linear-gradient(135deg, #ff4757, #ff3838);">
+                <i>🆘</i>
+                <div>Support Panel<br><small style="font-size: 10px;">{{ open_tickets or 0 }} New Tickets</small></div>
+            </button>
+            {% else %}
+            <button class="action-btn" onclick="location.href='/contact'">
+                <i>🆘</i>
+                <div>Get Support</div>
+            </button>
+            {% endif %}
             {% if current_user.subscription_tier != 'free' or is_admin %}
             <button class="action-btn" onclick="location.href='/my-catalog'">
                 <i>📚</i>
@@ -540,9 +551,10 @@
             box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.8), 0 0 20px rgba(76, 175, 80, 0.5);
             transition: all 0.5s ease;
             pointer-events: none;
+            z-index: 10001;
         }
         .tour-tooltip {
-            position: absolute;
+            position: fixed;
             background: white;
             border-radius: 15px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -550,6 +562,7 @@
             min-width: 300px;
             transform: scale(0.8);
             transition: all 0.3s ease;
+            z-index: 10003;
         }
         .tour-overlay.active .tour-tooltip {
             transform: scale(1);
@@ -627,6 +640,31 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+        
+        /* Support notification effect */
+        .support-btn {
+            position: relative;
+        }
+        
+        .support-btn.has-tickets {
+            animation: support-pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
+        }
+        
+        @keyframes support-pulse {
+            0% { 
+                transform: scale(1); 
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+            }
+            70% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+            }
+            100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+            }
+        }
     </style>
 
     <script>
@@ -699,26 +737,15 @@
             spotlight.style.width = (rect.width + 20) + 'px';
             spotlight.style.height = (rect.height + 20) + 'px';
             
-            // Position tooltip
-            let tooltipLeft, tooltipTop;
-            if (step.position === 'right') {
-                tooltipLeft = rect.right + 30;
-                tooltipTop = rect.top;
-            } else if (step.position === 'left') {
-                tooltipLeft = rect.left - 330;
-                tooltipTop = rect.top;
-            } else if (step.position === 'top') {
-                tooltipLeft = rect.left + (rect.width / 2) - 150;
-                tooltipTop = rect.top - 200;
-            } else {
-                tooltipLeft = rect.left + (rect.width / 2) - 150;
-                tooltipTop = rect.bottom + 30;
-            }
+            // Position tooltip - always center it on screen for better visibility
+            let tooltipLeft = (window.innerWidth / 2) - 200;
+            let tooltipTop = (window.innerHeight / 2) - 100;
             
             // Keep tooltip in viewport
             if (tooltipLeft < 20) tooltipLeft = 20;
-            if (tooltipLeft > window.innerWidth - 320) tooltipLeft = window.innerWidth - 320;
+            if (tooltipLeft > window.innerWidth - 420) tooltipLeft = window.innerWidth - 420;
             if (tooltipTop < 20) tooltipTop = 20;
+            if (tooltipTop > window.innerHeight - 300) tooltipTop = window.innerHeight - 300;
             
             tooltip.style.left = tooltipLeft + 'px';
             tooltip.style.top = tooltipTop + 'px';
