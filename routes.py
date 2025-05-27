@@ -74,6 +74,57 @@ def index():
     
     return render_template('landing.html')
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    """User registration page"""
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # Validation
+        if not username or not email or not password:
+            flash('All fields are required', 'error')
+            return render_template('signup.html')
+            
+        if password != confirm_password:
+            flash('Passwords do not match', 'error')
+            return render_template('signup.html')
+            
+        if len(password) < 6:
+            flash('Password must be at least 6 characters', 'error')
+            return render_template('signup.html')
+        
+        # Check if user already exists
+        existing_user = User.query.filter(
+            (User.email == email) | (User.username == username)
+        ).first()
+        
+        if existing_user:
+            flash('Username or email already exists', 'error')
+            return render_template('signup.html')
+        
+        # Create new user
+        from werkzeug.security import generate_password_hash
+        user = User(
+            id=f'user-{username}-{hash(email) % 100000}',
+            username=username,
+            email=email,
+            password_hash=generate_password_hash(password),
+            subscription_tier='free',
+            posts_today=0,
+            auto_posts_enabled=False
+        )
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        flash('Account created successfully! You can now sign in.', 'success')
+        return redirect(url_for('replit_auth.login'))
+    
+    return render_template('signup.html')
+
 @app.route('/help')
 @require_login
 def help_page():
@@ -311,11 +362,14 @@ def campaigns():
     return render_template('campaigns.html', campaigns=user_campaigns)
 
 @app.route('/subscribe')
-@require_login
 def subscribe():
-    """Subscription upgrade page"""
-    user = current_user
-    return render_template('subscribe.html', user=user)
+    """Subscription upgrade page - accessible to all users"""
+    if current_user.is_authenticated:
+        user = current_user
+        return render_template('subscribe.html', user=user)
+    else:
+        # For non-logged-in users, show subscription page with signup prompt
+        return render_template('subscribe.html', user=None, show_signup=True)
 
 @app.route('/create-checkout-session', methods=['POST'])
 @require_login

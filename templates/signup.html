@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - AffiliateBot Pro{% endblock %}
+
+{% block content %}
+<style>
+    .signup-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .signup-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+    }
+    .form-control {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+    }
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    .btn-signup {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        border-radius: 10px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        width: 100%;
+        transition: transform 0.2s;
+    }
+    .btn-signup:hover {
+        transform: translateY(-2px);
+        color: white;
+    }
+</style>
+
+<div class="signup-container">
+    <div class="signup-card">
+        <div class="text-center mb-4">
+            <h2 style="color: #333; margin-bottom: 10px;">Create Your Account</h2>
+            <p style="color: #666;">Join thousands of successful affiliates</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('signup') }}">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="username" placeholder="Choose a username" required>
+            </div>
+            
+            <div class="mb-3">
+                <input type="email" class="form-control" name="email" placeholder="Your email address" required>
+            </div>
+            
+            <div class="mb-3">
+                <input type="password" class="form-control" name="password" placeholder="Create a password" required minlength="6">
+            </div>
+            
+            <div class="mb-3">
+                <input type="password" class="form-control" name="confirm_password" placeholder="Confirm your password" required minlength="6">
+            </div>
+
+            <button type="submit" class="btn btn-signup">
+                🚀 Create Account & Start Earning
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p style="color: #666;">Already have an account? 
+                <a href="{{ url_for('replit_auth.login') }}" style="color: #667eea; text-decoration: none; font-weight: 600;">Sign In</a>
+            </p>
+        </div>
+
+        <div class="text-center mt-3">
+            <small style="color: #999;">
+                By signing up, you agree to our 
+                <a href="{{ url_for('terms_of_service') }}" style="color: #667eea;">Terms</a> and 
+                <a href="{{ url_for('privacy_policy') }}" style="color: #667eea;">Privacy Policy</a>
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}
