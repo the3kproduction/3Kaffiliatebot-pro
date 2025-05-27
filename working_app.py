@@ -166,11 +166,23 @@ def create_account():
     if password != confirm_password:
         return "Passwords don't match. Please go back and try again."
     
-    # Create user session (in a real app, you'd save to database)
+    # Save user to database
+    new_user = User(
+        id=username,
+        email=email,
+        username=username,
+        password_hash=password,  # In production, hash this properly
+        subscription_tier='premium',
+        affiliate_id=affiliate_id
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    
+    # Create user session
     session['user_id'] = username
     session['user_email'] = email
     session['affiliate_id'] = affiliate_id
-    session['subscription_tier'] = 'premium'  # Since they just paid
+    session['subscription_tier'] = 'premium'
     
     return '''
     <!DOCTYPE html>
@@ -417,13 +429,26 @@ def admin_login():
         email = request.form.get('email')
         password = request.form.get('password')
         
-        # Check admin credentials (accept both email and username)
+        # Check admin credentials first (accept both email and username)
         if (email in ['the3kproduction@gmail.com', '3Kloudz'] and password == 'Password123'):
             session['user_id'] = 'admin'
             session['is_admin'] = True
             return redirect('/dashboard')
+        
+        # Check regular user credentials in database
+        user = User.query.filter(
+            (User.username == email) | (User.email == email)
+        ).first()
+        
+        if user and user.password_hash == password:
+            session['user_id'] = user.username
+            session['user_email'] = user.email
+            session['affiliate_id'] = getattr(user, 'affiliate_id', 'Not set')
+            session['subscription_tier'] = user.subscription_tier
+            session['is_admin'] = False
+            return redirect('/user-dashboard')
         else:
-            return "Invalid credentials"
+            return "Invalid credentials. Please try again."
     
     return '''
     <!DOCTYPE html>
