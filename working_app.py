@@ -2472,10 +2472,15 @@ def upload_product_image(asin):
         # Save the file
         file.save(file_path)
         
-        # Update product with new image URL
+        # Update product with new image URL - use full URL for external platforms
         product = ProductInventory.query.filter_by(asin=asin).first()
         if product:
-            product.image_url = f"/static/uploads/{filename}"
+            # Get the domain for full URL
+            domain = request.headers.get('Host', 'localhost:5000')
+            protocol = 'https' if 'replit.app' in domain or 'render.com' in domain else 'http'
+            full_image_url = f"{protocol}://{domain}/static/uploads/{filename}"
+            
+            product.image_url = full_image_url
             db.session.commit()
             return {"success": True, "message": "Image uploaded successfully", "image_url": product.image_url}
         else:
