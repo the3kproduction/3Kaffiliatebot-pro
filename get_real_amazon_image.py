@@ -15,28 +15,33 @@ def get_amazon_product_image(product_url):
         response = requests.get(product_url, headers=headers)
         soup = BeautifulSoup(response.content, 'html.parser')
         
-        # Try multiple selectors to find the main product image
+        # First try Open Graph and Twitter Card meta tags (what Discord/social media uses)
+        og_image = soup.find('meta', property='og:image')
+        if og_image and og_image.get('content'):
+            return og_image['content']
+            
+        twitter_image = soup.find('meta', name='twitter:image')
+        if twitter_image and twitter_image.get('content'):
+            return twitter_image['content']
+            
+        # Try other meta image tags
+        meta_image = soup.find('meta', {'name': 'image'})
+        if meta_image and meta_image.get('content'):
+            return meta_image['content']
+            
+        # As fallback, try the main product image selectors
         image_selectors = [
             '#landingImage',
-            '#imgBlkFront',
-            '.a-dynamic-image',
-            '[data-a-image-name="landingImage"]',
-            '.a-spacing-small img'
+            '#imgBlkFront', 
+            '.a-dynamic-image'
         ]
         
         for selector in image_selectors:
             img_element = soup.select_one(selector)
-            if img_element and img_element.get('src'):
-                image_url = img_element['src']
-                # Clean up the URL to get high quality version
-                if 'images-na.ssl-images-amazon.com' in image_url or 'm.media-amazon.com' in image_url:
-                    return image_url
-                    
-        # If no image found, try data-src attribute
-        for selector in image_selectors:
-            img_element = soup.select_one(selector)
-            if img_element and img_element.get('data-src'):
-                return img_element['data-src']
+            if img_element:
+                src = img_element.get('src') or img_element.get('data-src')
+                if src and ('amazon' in src):
+                    return src
                 
         print(f"Could not find image for {product_url}")
         return None
