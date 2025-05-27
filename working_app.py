@@ -1156,13 +1156,23 @@ def dashboard():
     # No featured products until members add them
     featured_products = []
     
+    # Count open support tickets for admin notification
+    open_tickets = 0
+    if is_admin:
+        try:
+            from models import ContactMessage
+            open_tickets = ContactMessage.query.filter_by(status='pending').count()
+        except:
+            open_tickets = 0
+    
     return render_template('dashboard_working.html', 
                          is_admin=is_admin, 
                          platform_status=platform_status,
                          current_user=current_user,
                          real_stats=real_stats,
                          auto_posting_enabled=auto_posting_enabled,
-                         featured_products=featured_products)
+                         featured_products=featured_products,
+                         open_tickets=open_tickets)
 
 @app.route('/admin/email-blast', methods=['GET', 'POST'])
 def admin_email_blast():
