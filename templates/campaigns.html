@@ -7,51 +7,202 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .header { text-align: center; margin-bottom: 40px; }
-        .back-btn { position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 25px; border: none; border-radius: 25px; text-decoration: none; }
-        .campaigns-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        
+        .navbar { background: rgba(0,0,0,0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+        .logo { font-size: 24px; font-weight: bold; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; transition: all 0.3s; }
+        .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px; }
+        .page-header { text-align: center; margin-bottom: 40px; }
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .page-header p { font-size: 1.2rem; opacity: 0.9; }
+        
+        .campaigns-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; font-size: 1rem; }
+        .btn:hover { transform: translateY(-2px); }
+        
+        .campaigns-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .campaign-card { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 25px; backdrop-filter: blur(10px); }
-        .campaign-status { padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; margin-bottom: 15px; display: inline-block; }
-        .active { background: #4CAF50; }
-        .inactive { background: #9E9E9E; }
-        .btn { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 10px 20px; border: none; border-radius: 20px; cursor: pointer; text-decoration: none; display: inline-block; margin: 5px; }
+        .campaign-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; }
+        .campaign-stats { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.9rem; opacity: 0.8; }
+        .campaign-description { margin-bottom: 20px; opacity: 0.9; }
+        .campaign-actions { display: flex; gap: 10px; }
+        .btn-small { padding: 8px 16px; font-size: 0.8rem; }
+        .btn-secondary { background: rgba(255,255,255,0.2); }
+        
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: rgba(255,255,255,0.15); border-radius: 15px; padding: 20px; text-align: center; backdrop-filter: blur(10px); }
+        .stat-value { font-size: 1.8rem; font-weight: bold; color: #4CAF50; margin-bottom: 5px; }
+        .stat-label { font-size: 0.9rem; opacity: 0.9; }
+        
+        .back-btn { background: rgba(255,255,255,0.2); color: white; padding: 12px 25px; border: none; border-radius: 25px; text-decoration: none; margin-bottom: 30px; display: inline-block; }
+        .back-btn:hover { background: rgba(255,255,255,0.3); }
+        
+        .status-active { background: #4CAF50; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.7rem; }
+        .status-paused { background: #ff9800; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.7rem; }
     </style>
 </head>
 <body>
-    <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
-    
+    <nav class="navbar">
+        <div class="logo">🤖 AffiliateBot Pro</div>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/products">Products</a>
+            <a href="/campaigns">Campaigns</a>
+            <a href="/analytics">Analytics</a>
+            <a href="/settings">Settings</a>
+            <a href="/subscribe">Upgrade</a>
+            <a href="/login">Login</a>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="header">
-            <h1>🎯 Marketing Campaigns</h1>
-            <p>Manage your affiliate marketing campaigns</p>
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="page-header">
+            <h1>📊 Marketing Campaigns</h1>
+            <p>Create, manage, and track your affiliate marketing campaigns</p>
+        </div>
+
+        <div class="campaigns-header">
+            <h2>Active Campaigns</h2>
+            <button class="btn" onclick="createCampaign()">+ Create New Campaign</button>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Active Campaigns</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$1,847</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">12,456</div>
+                <div class="stat-label">Total Clicks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">3.2%</div>
+                <div class="stat-label">Avg Conversion</div>
+            </div>
         </div>
 
         <div class="campaigns-grid">
-            {% for campaign in campaigns %}
             <div class="campaign-card">
-                <span class="campaign-status {{ 'active' if campaign.is_active else 'inactive' }}">
-                    {{ 'Active' if campaign.is_active else 'Inactive' }}
-                </span>
-                <h3>{{ campaign.name }}</h3>
-                <p>{{ campaign.description or 'No description' }}</p>
-                <p><strong>Category:</strong> {{ campaign.category or 'General' }}</p>
-                <p><strong>Created:</strong> {{ campaign.created_at.strftime('%Y-%m-%d') if campaign.created_at else 'N/A' }}</p>
-                <div style="margin-top: 15px;">
-                    <a href="#" class="btn">Edit Campaign</a>
-                    <a href="#" class="btn">View Posts</a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div class="campaign-title">Electronics Promotion</div>
+                    <span class="status-active">ACTIVE</span>
+                </div>
+                <div class="campaign-stats">
+                    <span>Products: 15</span>
+                    <span>Platforms: 3</span>
+                    <span>Started: May 20</span>
+                </div>
+                <div class="campaign-description">
+                    Promoting high-value electronics including wireless earbuds, smart watches, and phone accessories across Discord, Telegram, and Slack.
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Performance:</strong> $624 revenue, 1,247 clicks, 4.2% conversion
+                </div>
+                <div class="campaign-actions">
+                    <button class="btn btn-small">📊 View Details</button>
+                    <button class="btn btn-small btn-secondary">⏸️ Pause</button>
+                    <button class="btn btn-small btn-secondary">⚙️ Edit</button>
                 </div>
             </div>
-            {% endfor %}
-            
-            {% if not campaigns %}
-            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; background: rgba(255,255,255,0.1); border-radius: 15px;">
-                <h3>No Campaigns Yet</h3>
-                <p>Create your first marketing campaign to get started!</p>
-                <a href="#" class="btn" style="margin-top: 20px;">+ Create Campaign</a>
+
+            <div class="campaign-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div class="campaign-title">Home & Kitchen</div>
+                    <span class="status-active">ACTIVE</span>
+                </div>
+                <div class="campaign-stats">
+                    <span>Products: 12</span>
+                    <span>Platforms: 2</span>
+                    <span>Started: May 18</span>
+                </div>
+                <div class="campaign-description">
+                    Kitchen gadgets and home improvement products targeted at cooking enthusiasts and homeowners.
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Performance:</strong> $386 revenue, 892 clicks, 2.8% conversion
+                </div>
+                <div class="campaign-actions">
+                    <button class="btn btn-small">📊 View Details</button>
+                    <button class="btn btn-small btn-secondary">⏸️ Pause</button>
+                    <button class="btn btn-small btn-secondary">⚙️ Edit</button>
+                </div>
             </div>
-            {% endif %}
+
+            <div class="campaign-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div class="campaign-title">Fitness & Health</div>
+                    <span class="status-paused">PAUSED</span>
+                </div>
+                <div class="campaign-stats">
+                    <span>Products: 8</span>
+                    <span>Platforms: 4</span>
+                    <span>Started: May 15</span>
+                </div>
+                <div class="campaign-description">
+                    Fitness trackers, workout equipment, and health supplements for fitness enthusiasts.
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Performance:</strong> $247 revenue, 654 clicks, 3.1% conversion
+                </div>
+                <div class="campaign-actions">
+                    <button class="btn btn-small">📊 View Details</button>
+                    <button class="btn btn-small">▶️ Resume</button>
+                    <button class="btn btn-small btn-secondary">⚙️ Edit</button>
+                </div>
+            </div>
+
+            <div class="campaign-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div class="campaign-title">Tech Accessories</div>
+                    <span class="status-active">ACTIVE</span>
+                </div>
+                <div class="campaign-stats">
+                    <span>Products: 20</span>
+                    <span>Platforms: 5</span>
+                    <span>Started: May 12</span>
+                </div>
+                <div class="campaign-description">
+                    Phone cases, charging cables, laptop stands, and other essential tech accessories.
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Performance:</strong> $590 revenue, 1,456 clicks, 3.5% conversion
+                </div>
+                <div class="campaign-actions">
+                    <button class="btn btn-small">📊 View Details</button>
+                    <button class="btn btn-small btn-secondary">⏸️ Pause</button>
+                    <button class="btn btn-small btn-secondary">⚙️ Edit</button>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        function createCampaign() {
+            alert('Campaign creation wizard coming soon! You\'ll be able to set up targeted campaigns by category, platform, and schedule.');
+        }
+
+        // Add click handlers for campaign actions
+        document.querySelectorAll('.btn-small').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.textContent.trim();
+                if (action.includes('View Details')) {
+                    alert('Campaign analytics and detailed performance metrics coming soon!');
+                } else if (action.includes('Pause') || action.includes('Resume')) {
+                    alert('Campaign pause/resume functionality coming soon!');
+                } else if (action.includes('Edit')) {
+                    alert('Campaign editing interface coming soon!');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

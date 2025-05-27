@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - AffiliateBot Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        
+        .navbar { background: rgba(0,0,0,0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+        .logo { font-size: 24px; font-weight: bold; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; transition: all 0.3s; }
+        .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        
+        .container { max-width: 1000px; margin: 0 auto; padding: 30px; }
+        .page-header { text-align: center; margin-bottom: 40px; }
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .page-header p { font-size: 1.2rem; opacity: 0.9; }
+        
+        .settings-grid { display: grid; gap: 30px; }
+        .settings-panel { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; backdrop-filter: blur(10px); }
+        .panel-title { font-size: 1.5rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: bold; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; background: rgba(255,255,255,0.1); color: white; }
+        .form-input::placeholder { color: rgba(255,255,255,0.7); }
+        
+        .platform-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 15px; }
+        .platform-status { padding: 6px 12px; border-radius: 15px; font-size: 0.8rem; }
+        .status-connected { background: #4CAF50; color: white; }
+        .status-disconnected { background: #f44336; color: white; }
+        
+        .btn { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; font-size: 1rem; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-secondary { background: rgba(255,255,255,0.2); }
+        
+        .back-btn { background: rgba(255,255,255,0.2); color: white; padding: 12px 25px; border: none; border-radius: 25px; text-decoration: none; margin-bottom: 30px; display: inline-block; }
+        .back-btn:hover { background: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">🤖 AffiliateBot Pro</div>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/products">Products</a>
+            <a href="/campaigns">Campaigns</a>
+            <a href="/analytics">Analytics</a>
+            <a href="/settings">Settings</a>
+            <a href="/subscribe">Upgrade</a>
+            <a href="/login">Login</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="page-header">
+            <h1>⚙️ Account Settings</h1>
+            <p>Configure your affiliate links, platforms, and automation preferences</p>
+        </div>
+
+        <div class="settings-grid">
+            <div class="settings-panel">
+                <div class="panel-title">💼 Amazon Affiliate Settings</div>
+                <div class="form-group">
+                    <label class="form-label">Amazon Affiliate ID</label>
+                    <input type="text" class="form-input" placeholder="your-affiliate-id-20" value="luxoraconnect-20">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Affiliate Link Base</label>
+                    <input type="text" class="form-input" placeholder="amzn.to/xxxxxxx" value="amzn.to/44TOVc2">
+                </div>
+                <button class="btn">💾 Save Affiliate Settings</button>
+            </div>
+
+            <div class="settings-panel">
+                <div class="panel-title">🔗 Platform Connections</div>
+                <div class="platform-item">
+                    <span>📱 Discord</span>
+                    <div>
+                        <span class="platform-status status-connected">Connected</span>
+                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                    </div>
+                </div>
+                <div class="platform-item">
+                    <span>📧 Telegram</span>
+                    <div>
+                        <span class="platform-status status-connected">Connected</span>
+                        <button class="btn btn-secondary" style="margin-left: 10px;">Configure</button>
+                    </div>
+                </div>
+                <div class="platform-item">
+                    <span>💼 Slack</span>
+                    <div>
+                        <span class="platform-status status-disconnected">Not Connected</span>
+                        <button class="btn" style="margin-left: 10px;">Connect</button>
+                    </div>
+                </div>
+                <div class="platform-item">
+                    <span>📧 Email</span>
+                    <div>
+                        <span class="platform-status status-disconnected">Not Connected</span>
+                        <button class="btn" style="margin-left: 10px;">Connect</button>
+                    </div>
+                </div>
+                <div class="platform-item">
+                    <span>📌 Pinterest</span>
+                    <div>
+                        <span class="platform-status status-disconnected">Not Connected</span>
+                        <button class="btn" style="margin-left: 10px;">Connect</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-panel">
+                <div class="panel-title">🤖 Automation Settings</div>
+                <div class="form-group">
+                    <label class="form-label">Auto-Post Frequency</label>
+                    <select class="form-input">
+                        <option>Every 3 hours</option>
+                        <option>Every 6 hours</option>
+                        <option>Daily</option>
+                        <option>Disabled</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" style="margin-right: 10px;">
+                        Enable AI Product Selection
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" style="margin-right: 10px;" checked>
+                        Email Notifications
+                    </label>
+                </div>
+                <button class="btn">🚀 Save Automation Settings</button>
+            </div>
+
+            <div class="settings-panel">
+                <div class="panel-title">💳 Subscription & Billing</div>
+                <p style="margin-bottom: 20px;">Current Plan: <strong>Free Tier</strong></p>
+                <p style="margin-bottom: 20px;">Posts per day: <strong>2</strong></p>
+                <button class="btn" onclick="location.href='/subscribe'">🚀 Upgrade to Premium</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.textContent.includes('Save') || this.textContent.includes('Connect')) {
+                    alert('Feature coming soon! Your settings will be saved.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

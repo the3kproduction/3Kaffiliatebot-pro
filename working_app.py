@@ -127,17 +127,17 @@ def products():
 @app.route('/campaigns')
 def campaigns():
     """Campaign management"""
-    return "<h1>📊 Campaigns</h1><p>Create and manage your affiliate campaigns here. Coming soon!</p><a href='/dashboard'>← Back to Dashboard</a>"
+    return render_template('campaigns.html')
 
 @app.route('/analytics')
 def analytics():
     """Analytics dashboard"""
-    return "<h1>📈 Analytics</h1><p>Track your earnings and performance metrics here. Coming soon!</p><a href='/dashboard'>← Back to Dashboard</a>"
+    return render_template('analytics.html')
 
 @app.route('/settings')
 def settings():
     """User settings"""
-    return "<h1>⚙️ Settings</h1><p>Configure your platforms and affiliate settings here. Coming soon!</p><a href='/dashboard'>← Back to Dashboard</a>"
+    return render_template('settings.html')
 
 @app.route('/login')
 def login():
