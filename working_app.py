@@ -1645,10 +1645,10 @@ def save_email_config():
         user_id = session.get('user_id')
         
         if user_id == 'admin':
-            # For admin, store in session or environment
-            session['email_sendgrid_key'] = data.get('sendgrid_key')
-            session['email_from_address'] = data.get('from_email')
+            # For admin, store in session 
+            session['user_email'] = data.get('user_email')
             session['email_list'] = data.get('email_list')
+            session['email_configured'] = True
             return jsonify({'success': True})
         
         user = User.query.get(user_id)
