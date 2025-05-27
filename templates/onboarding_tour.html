@@ -419,13 +419,8 @@
         ];
         
         function startTour() {
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('tourOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden'; // Disable scrolling during tour
-            currentTourStep = 0;
-            showTourStep();
-            updateProgress();
-            createConfetti();
+            // Redirect to dashboard with tour parameter
+            window.location.href = '/dashboard?tour=start';
         }
         
         function skipTour() {
