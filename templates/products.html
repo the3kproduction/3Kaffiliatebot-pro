@@ -31,6 +31,14 @@
         <div class="header">
             <h1>🛍️ Product Catalog</h1>
             <p>AI-recommended products for your affiliate marketing</p>
+            
+            <!-- Search Bar for Website Products -->
+            <div style="margin-top: 20px; text-align: center;">
+                <input type="text" id="productSearch" placeholder="🔍 Search products on this website..." 
+                       style="width: 400px; padding: 15px; border-radius: 25px; border: none; background: rgba(255,255,255,0.9); font-size: 16px; margin-right: 10px;"
+                       onkeyup="searchProducts(this.value)">
+                <button onclick="clearSearch()" style="background: linear-gradient(135deg, #f44336, #d32f2f); color: white; border: none; padding: 15px 20px; border-radius: 25px; cursor: pointer;">Clear</button>
+            </div>
         </div>
 
         <div class="products-grid">
