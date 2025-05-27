@@ -2754,7 +2754,7 @@ Join thousands making passive income: {signup_url}
     
     try:
         # 1. POST TO DISCORD
-        discord_webhook = session.get('discord_webhook_url')
+        discord_webhook = os.environ.get('DISCORD_WEBHOOK_URL')
         if discord_webhook:
             try:
                 import requests
@@ -2779,8 +2779,8 @@ Join thousands making passive income: {signup_url}
                 errors.append(f"Discord: {str(e)}")
 
         # 2. POST TO SLACK
-        slack_token = session.get('slack_bot_token')
-        slack_channel = session.get('slack_channel_id')
+        slack_token = os.environ.get('SLACK_BOT_TOKEN')
+        slack_channel = os.environ.get('SLACK_CHANNEL_ID')
         if slack_token and slack_channel:
             try:
                 slack_url = "https://slack.com/api/chat.postMessage"
@@ -2807,8 +2807,8 @@ Join thousands making passive income: {signup_url}
                 errors.append(f"Slack: {str(e)}")
 
         # 3. POST TO TELEGRAM
-        telegram_token = session.get('telegram_bot_token')
-        telegram_chat = session.get('telegram_chat_id')
+        telegram_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+        telegram_chat = os.environ.get('TELEGRAM_CHAT_ID')
         if telegram_token and telegram_chat:
             try:
                 telegram_url = f"https://api.telegram.org/bot{telegram_token}/sendMessage"
