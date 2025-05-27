@@ -158,7 +158,7 @@ def promote_product(asin):
         affiliate_url = f"https://www.amazon.com/dp/{asin}?tag={affiliate_id}"
         
         # Format promotion message
-        message = f"""🔥 **DEAL ALERT!** 🔥
+        message = f"""🔥 DEAL ALERT! 🔥
 
 {product.product_title}
 💰 Price: {product.price}
@@ -199,14 +199,19 @@ def promote_product(asin):
             try:
                 import requests
                 telegram_url = f"https://api.telegram.org/bot{telegram_token}/sendMessage"
+                telegram_message = f"🔥 *DEAL ALERT!* 🔥\n\n*{product.product_title}*\n💰 Price: {product.price}\n⭐ Rating: {product.rating}/5\n\n🛒 [Get it here]({affiliate_url})\n\n#AmazonDeals #TechDeals #Affiliate"
                 telegram_data = {
                     "chat_id": telegram_chat,
-                    "text": message,
-                    "parse_mode": "Markdown"
+                    "text": telegram_message,
+                    "parse_mode": "Markdown",
+                    "disable_web_page_preview": False
                 }
                 response = requests.post(telegram_url, json=telegram_data)
-                if response.status_code == 200:
+                result = response.json()
+                if response.status_code == 200 and result.get('ok'):
                     platforms_posted.append("Telegram")
+                else:
+                    print(f"Telegram API error: {result}")
             except Exception as e:
                 print(f"Telegram posting error: {e}")
         
