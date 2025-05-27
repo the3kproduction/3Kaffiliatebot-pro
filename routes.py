@@ -202,49 +202,36 @@ def products():
     
     user = current_user
     
-    # Get the exact real products from your database that I confirmed exist
-    products = [
-        {
-            'asin': 'B08N5WRWNW',
-            'product_title': 'Echo Dot (4th Gen) | Smart speaker with Alexa',
-            'title': 'Echo Dot (4th Gen) | Smart speaker with Alexa',
-            'price': '$49.99',
-            'rating': 4.7,
-            'category': 'Electronics'
-        },
-        {
-            'asin': 'B07YTF4YQK', 
-            'product_title': 'Cuisinart Coffee Maker',
-            'title': 'Cuisinart Coffee Maker',
-            'price': '$89.95',
-            'rating': 4.3,
-            'category': 'Kitchen'
-        },
-        {
-            'asin': 'B09JQMJHXY',
-            'product_title': 'Kindle Paperwhite (11th Gen)',
-            'title': 'Kindle Paperwhite (11th Gen)', 
-            'price': '$139.99',
-            'rating': 4.6,
-            'category': 'Electronics'
-        },
-        {
-            'asin': 'B0B7BP6CJN',
-            'product_title': 'Apple AirPods Pro (2nd Generation)',
-            'title': 'Apple AirPods Pro (2nd Generation)',
-            'price': '$249.00', 
-            'rating': 4.4,
-            'category': 'Electronics'
-        },
-        {
-            'asin': 'B0BSHF7LLL',
-            'product_title': 'Apple Watch Series 9 GPS',
-            'title': 'Apple Watch Series 9 GPS',
-            'price': '$399.00',
-            'rating': 4.5,
-            'category': 'Electronics'
-        }
-    ]
+    # Get all 16 real Amazon products from your database
+    try:
+        from sqlalchemy import text
+        result = db.session.execute(text("""
+            SELECT asin, product_title, price, rating, category, image_url 
+            FROM product_inventory 
+            WHERE product_title IS NOT NULL 
+            AND product_title != 'Unknown Product' 
+            AND product_title != '' 
+            LIMIT 16
+        """))
+        
+        products = []
+        for row in result:
+            products.append({
+                'asin': row[0],
+                'product_title': row[1],
+                'title': row[1],
+                'price': row[2],
+                'rating': float(row[3]) if row[3] else 4.5,
+                'category': row[4],
+                'image_url': row[5] or f'https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={row[0]}&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=luxoraconnect-20'
+            })
+        
+        print(f"Loaded {len(products)} real Amazon products from database")
+        
+    except Exception as e:
+        print(f"Error loading products: {e}")
+        # Fallback to ensure something displays
+        products = []
     
     categories = ['Electronics', 'Kitchen', 'Health', 'Sports', 'Books']
     
