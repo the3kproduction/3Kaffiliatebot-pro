@@ -360,18 +360,23 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('🚀 Success! ' + data.message);
-                    location.reload(); // Refresh to update stats
+                    btn.innerHTML = '<i>✅</i><div>Posted!</div>';
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('❌ ' + data.error);
+                    btn.innerHTML = '<i>❌</i><div>Failed</div>';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i>🚀</i><div>Post Now</div>';
+                    }, 2000);
                 }
             })
             .catch(error => {
-                alert('❌ Error: ' + error);
+                btn.innerHTML = '<i>❌</i><div>Error</div>';
+                setTimeout(() => {
+                    btn.innerHTML = '<i>🚀</i><div>Post Now</div>';
+                }, 2000);
             })
             .finally(() => {
                 btn.disabled = false;
-                btn.innerHTML = '<i>🚀</i><div>Post Now</div>';
             });
         }
 

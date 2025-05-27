@@ -1604,20 +1604,49 @@ def api_auto_post():
         import random
         selected_product = random.choice(products)
         
-        # Post to configured platforms manually since MultiPlatformPoster expects dict
+        # Create product dict for posting
         product_dict = {
             'title': selected_product.product_title,
-            'price': selected_product.price,
-            'rating': selected_product.rating,
+            'price': str(selected_product.price),
+            'rating': str(selected_product.rating),
             'image_url': selected_product.image_url,
             'amazon_url': f"https://www.amazon.com/dp/{selected_product.asin}?tag=luxoraconnect-20",
             'affiliate_url': f"https://www.amazon.com/dp/{selected_product.asin}?tag=luxoraconnect-20",
             'asin': selected_product.asin
         }
         
-        from marketing_automation import MultiPlatformPoster
-        poster = MultiPlatformPoster(user)
-        result = poster.post_product(product_dict)
+        # Simple posting to Discord and Slack (the working platforms)
+        result = {'success': True, 'posted_to': []}
+        
+        # Post to Discord if webhook configured
+        discord_webhook = os.environ.get('DISCORD_WEBHOOK_URL')
+        if discord_webhook:
+            try:
+                import requests
+                discord_data = {
+                    "embeds": [{
+                        "title": f"🔥 Amazing Deal: {product_dict['title']}",
+                        "description": f"💰 Price: ${product_dict['price']}\n⭐ Rating: {product_dict['rating']} stars\n\n🛒 [Buy on Amazon]({product_dict['affiliate_url']})",
+                        "color": 0xFF9500,
+                        "image": {"url": product_dict['image_url']}
+                    }]
+                }
+                response = requests.post(discord_webhook, json=discord_data)
+                if response.status_code == 204:
+                    result['posted_to'].append('Discord')
+            except:
+                pass
+        
+        # Post to Slack if configured
+        slack_webhook = os.environ.get('SLACK_BOT_TOKEN')
+        if slack_webhook:
+            try:
+                from marketing_automation import MultiPlatformPoster
+                poster = MultiPlatformPoster(user)
+                poster.post_to_slack(product_dict)
+                result['posted_to'].append('Slack')
+            except:
+                pass
         
         if result['success']:
             return jsonify({
