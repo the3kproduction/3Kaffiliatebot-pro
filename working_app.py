@@ -65,6 +65,18 @@ class ProductInventory(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
+# Product promotion tracking model
+class ProductPromotion(db.Model):
+    __tablename__ = 'product_promotions'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'))
+    asin = db.Column(db.String(20), db.ForeignKey('product_inventory.asin'))
+    promoted_at = db.Column(db.DateTime, default=datetime.now)
+    platform = db.Column(db.String(50))
+    campaign_id = db.Column(db.Integer, db.ForeignKey('campaigns.id'))
+    clicks_generated = db.Column(db.Integer, default=0)
+    revenue_generated = db.Column(db.Float, default=0.0)
+
 # Routes
 @app.route('/')
 def index():
