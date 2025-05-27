@@ -944,11 +944,15 @@ def dashboard():
         'affiliate_id': session.get('affiliate_id', 'luxoraconnect-20')
     })()
     
+    # Get recent posts (real data only)
+    recent_posts = []  # Empty list shows "No recent posts yet" message
+    
     return render_template('dashboard_working.html', 
                          is_admin=is_admin, 
                          platform_status=platform_status,
                          real_stats=real_stats,
-                         current_user=current_user)
+                         current_user=current_user,
+                         recent_posts=recent_posts)
 
 @app.route('/admin/email-blast', methods=['GET', 'POST'])
 def admin_email_blast():
