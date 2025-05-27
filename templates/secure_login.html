@@ -88,7 +88,10 @@
             
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <button type="button" id="togglePassword" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 18px;">👁️</button>
+                </div>
             </div>
             
             <div class="form-group" style="display: flex; align-items: center; margin-bottom: 25px;">
@@ -107,5 +110,21 @@
             🔐 Secure access to your AffiliateBot Pro dashboard.
         </div>
     </div>
+    
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const toggleButton = document.getElementById('togglePassword');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleButton.innerHTML = '🙈'; // Hide password icon
+            } else {
+                passwordField.type = 'password';
+                toggleButton.innerHTML = '👁️'; // Show password icon
+            }
+        });
+    </script>
 </body>
 </html>
