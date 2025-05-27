@@ -808,7 +808,7 @@ def settings():
         'discord': bool(os.environ.get('DISCORD_WEBHOOK_URL')),
         'telegram': bool(os.environ.get('TELEGRAM_BOT_TOKEN') and os.environ.get('TELEGRAM_CHAT_ID')),
         'slack': bool(os.environ.get('SLACK_BOT_TOKEN') and os.environ.get('SLACK_CHANNEL_ID')),
-        'email': bool(os.environ.get('SENDGRID_API_KEY')),
+        'email': bool(user and user.email),  # Check if user has email saved
         'pinterest': False,  # Not configured yet
         'reddit': bool(os.environ.get('REDDIT_CLIENT_ID') and os.environ.get('REDDIT_CLIENT_SECRET'))
     }
