@@ -347,29 +347,63 @@ def products():
     if not session.get('user_id'):
         return redirect('/subscribe')
     
-    # Allow admin access
+    # Allow admin access or paid members
     is_admin = session.get('is_admin', False)
-    if is_admin:
-        user = None  # Admin doesn't need user object
+    user_id = session.get('user_id')
+    
+    if is_admin or user_id == 'admin':
+        # Admin has full access
+        user = None
     else:
         # Check if user is paid member (Premium or Pro only)
-        user = User.query.get(session['user_id'])
-        if not user or user.subscription_tier not in ['premium', 'pro']:
+        user = User.query.get(user_id)
+        if not user or user.subscription_tier == 'free':
+            # For free users, show limited products
+            pass
+        elif user.subscription_tier not in ['premium', 'pro', 'free']:
             return redirect('/subscribe')
     
     page = request.args.get('page', 1, type=int)
     per_page = 12
     
     # Get all active products from inventory
-    pagination = ProductInventory.query.filter_by(is_active=True).paginate(
-        page=page, per_page=per_page, error_out=False
-    )
-    products = pagination.items
+    all_products = ProductInventory.query.filter_by(is_active=True).all()
+    
+    # Limit products for free users to only 6
+    if user and user.subscription_tier == 'free':
+        products = all_products[:6]
+        pagination = None  # No pagination for free users
+    else:
+        # Full access for admin and paid users
+        pagination = ProductInventory.query.filter_by(is_active=True).paginate(
+            page=page, per_page=per_page, error_out=False
+        )
+        products = pagination.items
+    
+    # Convert to list for template
+    products_list = []
+    affiliate_id = session.get('amazon_affiliate_id', 'luxoraconnect-20')
+    
+    for product in products:
+        affiliate_url = f"https://amazon.com/dp/{product.asin}?tag={affiliate_id}"
+        products_list.append({
+            'asin': product.asin,
+            'title': product.product_title,
+            'price': product.price,
+            'rating': product.rating,
+            'category': product.category,
+            'image_url': product.image_url,
+            'affiliate_url': affiliate_url
+        })
+    
+    subscription_tier = user.subscription_tier if user else 'admin'
     
     return render_template('products_new.html', 
-                         products=products, 
+                         products=products_list, 
                          pagination=pagination,
-                         user=user)
+                         user=user,
+                         subscription_tier=subscription_tier,
+                         search_query='')
 
 @app.route('/analytics')
 def analytics():
