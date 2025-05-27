@@ -1785,6 +1785,29 @@ def api_auto_post():
             'error': f'Auto-posting failed: {str(e)}'
         }), 500
 
+@app.route('/api/save-reddit-config', methods=['POST'])
+def save_reddit_config():
+    """Save Reddit configuration for user"""
+    if not session.get('user_id'):
+        return jsonify({'success': False, 'error': 'Not authenticated'}), 401
+    
+    client_id = request.form.get('client_id', '').strip()
+    client_secret = request.form.get('client_secret', '').strip()
+    username = request.form.get('username', '').strip()
+    password = request.form.get('password', '').strip()
+    
+    if not all([client_id, client_secret, username, password]):
+        return jsonify({'success': False, 'error': 'All Reddit credentials required'}), 400
+    
+    # Save Reddit configuration to session
+    session['reddit_client_id'] = client_id
+    session['reddit_client_secret'] = client_secret
+    session['reddit_username'] = username
+    session['reddit_password'] = password
+    session.permanent = True
+    
+    return jsonify({'success': True, 'message': 'Reddit configuration saved successfully'})
+
 @app.route('/api/save-email-config', methods=['POST'])
 def save_email_config():
     """Save email configuration for user"""
