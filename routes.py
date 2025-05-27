@@ -285,6 +285,7 @@ def products():
             })
         
         print(f"Loaded {len(products)} real Amazon products from database (page {page})")
+        print(f"First product: {products[0] if products else 'NO PRODUCTS'}")
         
     except Exception as e:
         print(f"Error loading products: {e}")
