@@ -461,11 +461,11 @@ def admin_login():
     </style></head>
     <body>
         <div class="login-form">
-            <h2>🔐 Admin Login</h2>
+            <h2>🔐 Login</h2>
             <form method="POST">
-                <input type="email" name="email" placeholder="Admin Email" required>
+                <input type="text" name="email" placeholder="Email or Username" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <button type="submit">Login as Admin</button>
+                <button type="submit">Login</button>
             </form>
         </div>
     </body></html>
