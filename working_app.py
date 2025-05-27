@@ -266,10 +266,56 @@ def api_promote_product(asin):
     """API endpoint for promoting products"""
     return promote_product(asin)
 
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    """Admin login page"""
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        # Check admin credentials
+        if email == 'the3kproduction@gmail.com' and password == 'Password123':
+            session['user_id'] = 'admin'
+            session['is_admin'] = True
+            return redirect('/dashboard')
+        else:
+            return "Invalid credentials"
+    
+    return '''
+    <!DOCTYPE html>
+    <html><head><title>Admin Login - AffiliateBot Pro</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .login-form { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); width: 400px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 10px; }
+        button { background: #4CAF50; color: white; padding: 15px; border: none; border-radius: 10px; width: 100%; font-size: 16px; cursor: pointer; }
+    </style></head>
+    <body>
+        <div class="login-form">
+            <h2>🔐 Admin Login</h2>
+            <form method="POST">
+                <input type="email" name="email" placeholder="Admin Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Login as Admin</button>
+            </form>
+        </div>
+    </body></html>
+    '''
+
+@app.route('/logout')
+def logout():
+    """Logout user"""
+    session.clear()
+    return redirect('/')
+
 @app.route('/dashboard')
 def dashboard():
-    """Professional affiliate marketing dashboard"""
-    return render_template('dashboard_working.html')
+    """Professional affiliate marketing dashboard - Requires login"""
+    if not session.get('user_id'):
+        return redirect('/login')
+    
+    is_admin = session.get('is_admin', False)
+    return render_template('dashboard_working.html', is_admin=is_admin)
 
 # Create database tables and add sample products
 with app.app_context():
