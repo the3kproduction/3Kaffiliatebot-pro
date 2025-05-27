@@ -312,10 +312,19 @@ def logout():
 def dashboard():
     """Professional affiliate marketing dashboard - Requires login"""
     if not session.get('user_id'):
-        return redirect('/login')
+        return redirect('/admin-login')
     
     is_admin = session.get('is_admin', False)
-    return render_template('dashboard_working.html', is_admin=is_admin)
+    
+    # Check real platform status using actual secrets
+    platform_status = {
+        'discord': bool(os.environ.get('DISCORD_WEBHOOK_URL')),
+        'telegram': bool(os.environ.get('TELEGRAM_BOT_TOKEN') and os.environ.get('TELEGRAM_CHAT_ID')),
+        'slack': bool(os.environ.get('SLACK_BOT_TOKEN') and os.environ.get('SLACK_CHANNEL_ID')),
+        'email': False  # Email not configured yet
+    }
+    
+    return render_template('dashboard_working.html', is_admin=is_admin, platform_status=platform_status)
 
 # Create database tables and add sample products
 with app.app_context():
