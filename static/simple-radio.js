@@ -17,21 +17,28 @@ function saveRadioState() {
 function loadRadioState() {
     const state = localStorage.getItem('radioState');
     if (state) {
-        const radioState = JSON.parse(state);
-        if (radioState.url && radioState.url !== 'Select a station') {
-            setTimeout(() => {
-                // Only load if player exists
-                const stationElement = document.getElementById('current-station');
-                if (stationElement) {
-                    playStation(radioState.url, radioState.name);
-                    if (currentAudio) {
-                        currentAudio.volume = radioState.volume || 0.7;
-                        if (radioState.isPlaying) {
-                            currentAudio.play();
+        try {
+            const radioState = JSON.parse(state);
+            if (radioState.url && radioState.url !== 'Select a station') {
+                setTimeout(() => {
+                    // Ensure player is created first
+                    if (!document.getElementById('simple-radio-player')) {
+                        createSimpleRadio();
+                    }
+                    const stationElement = document.getElementById('current-station');
+                    if (stationElement) {
+                        playStation(radioState.url, radioState.name);
+                        if (currentAudio) {
+                            currentAudio.volume = radioState.volume || 0.7;
+                            if (radioState.isPlaying) {
+                                currentAudio.play().catch(e => console.log('Auto-play prevented'));
+                            }
                         }
                     }
-                }
-            }, 1000);
+                }, 1500);
+            }
+        } catch (e) {
+            console.log('Error loading radio state:', e);
         }
     }
 }
