@@ -9,6 +9,12 @@ logger = logging.getLogger(__name__)
 class MultiPlatformPoster:
     def __init__(self, user):
         self.user = user
+        # Import Facebook poster
+        try:
+            from facebook_poster import FacebookPoster
+            self.facebook_poster = FacebookPoster()
+        except ImportError:
+            self.facebook_poster = None
         self.timeout = 30
         
         # Use environment secrets as primary, user settings as fallback
@@ -224,5 +230,18 @@ class MultiPlatformPoster:
         
         successful_posts = sum(results.values())
         logger.info(f"📊 Posted to {successful_posts} platforms")
+        
+        # Post to Facebook if configured
+        if self.facebook_poster:
+            try:
+                facebook_result = self.post_to_facebook(product)
+                results['facebook'] = facebook_result
+                if facebook_result['success']:
+                    platforms_posted.append('Facebook')
+                else:
+                    errors.append(f"Facebook: {facebook_result.get('error', 'Unknown error')}")
+            except Exception as e:
+                results['facebook'] = {'success': False, 'error': str(e)}
+                errors.append(f"Facebook: {str(e)}")
         
         return results

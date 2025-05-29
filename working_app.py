@@ -2386,6 +2386,7 @@ def add_amazon_product():
                     <p><strong>{title}</strong> has been added to:</p>
                     <p>✅ Public Products page<br>✅ Your personal catalog</p>
                     <div style="margin-top: 30px;">
+                        <a href="/add-amazon-product" class="btn" style="background: #FF6B35;">🔗 Add Another Product</a>
                         <a href="/dashboard" class="btn">🏠 Back to Dashboard</a>
                         <a href="/products" class="btn btn-secondary">🛍️ View Products</a>
                         <a href="/my-catalog" class="btn btn-catalog">📋 My Catalog</a>
