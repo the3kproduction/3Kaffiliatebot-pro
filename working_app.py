@@ -2387,6 +2387,8 @@ def add_amazon_product():
     
     if request.method == 'POST':
         amazon_url = request.form.get('amazon_url', '').strip()
+        manual_title = request.form.get('product_title', '').strip()
+        manual_price = request.form.get('product_price', '').strip()
         
         if not amazon_url:
             return "Please provide an Amazon URL"
@@ -2405,30 +2407,41 @@ def add_amazon_product():
             
             asin = asin_match.group(1)
             
-            # Get product details from Amazon page
-            import requests
-            from bs4 import BeautifulSoup
-            
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-            }
-            
-            response = requests.get(f"https://www.amazon.com/dp/{asin}", headers=headers, timeout=10)
-            soup = BeautifulSoup(response.content, 'html.parser')
-            
-            # Extract product title
-            title_elem = soup.find('span', {'id': 'productTitle'})
-            title = title_elem.get_text().strip() if title_elem else f"Amazon Product {asin}"
-            
-            # Extract price
-            price_elem = soup.find('span', class_='a-price-whole') or soup.find('span', class_='a-offscreen')
-            price = "29.99"  # Default price
-            if price_elem:
-                price_text = price_elem.get_text().strip().replace('$', '').replace(',', '')
-                try:
-                    price = str(float(price_text))
-                except:
-                    price = "29.99"
+            # Use manual inputs if provided, otherwise try to scrape
+            if manual_title and manual_price:
+                title = manual_title
+                price = manual_price
+            else:
+                # Get product details from Amazon page
+                import requests
+                from bs4 import BeautifulSoup
+                
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                }
+                
+                response = requests.get(f"https://www.amazon.com/dp/{asin}", headers=headers, timeout=10)
+                soup = BeautifulSoup(response.content, 'html.parser')
+                
+                # Extract product title (use manual if provided, otherwise scrape)
+                if manual_title:
+                    title = manual_title
+                else:
+                    title_elem = soup.find('span', {'id': 'productTitle'})
+                    title = title_elem.get_text().strip() if title_elem else f"Amazon Product {asin}"
+                
+                # Extract price (use manual if provided, otherwise scrape)
+                if manual_price:
+                    price = manual_price
+                else:
+                    price_elem = soup.find('span', class_='a-price-whole') or soup.find('span', class_='a-offscreen')
+                    price = "29.99"  # Default price
+                    if price_elem:
+                        price_text = price_elem.get_text().strip().replace('$', '').replace(',', '')
+                        try:
+                            price = str(float(price_text))
+                        except:
+                            price = "29.99"
             
             # Check if product already exists
             existing = ProductInventory.query.filter_by(asin=asin).first()
@@ -2528,6 +2541,16 @@ def add_amazon_product():
                 <div class="form-group">
                     <label>Amazon Product URL</label>
                     <input type="url" name="amazon_url" placeholder="https://www.amazon.com/dp/XXXXXXXXXX" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Product Title (Optional - will auto-detect if blank)</label>
+                    <input type="text" name="product_title" placeholder="e.g., Apple AirPods Pro (2nd Generation)">
+                </div>
+                
+                <div class="form-group">
+                    <label>Price (Optional - will auto-detect if blank)</label>
+                    <input type="text" name="product_price" placeholder="e.g., 199.99 (without $ sign)">
                 </div>
                 
                 <div class="form-group">
