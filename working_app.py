@@ -2375,6 +2375,10 @@ def edit_catalog_product(product_id):
                 <a href="/my-catalog" class="btn btn-cancel">Cancel</a>
             </form>
         </div>
+        
+        <!-- Radio Player -->
+        <link rel="stylesheet" href="/static/radio-player.css">
+        <script src="/static/simple-radio.js"></script>
     </body>
     </html>
     '''
