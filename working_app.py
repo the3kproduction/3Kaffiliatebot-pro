@@ -2320,13 +2320,28 @@ def edit_catalog_product(product_id):
             
             <form method="POST">
                 <div class="form-group">
+                    <label>Amazon URL</label>
+                    <input type="url" name="amazon_url" value="{saved_product.amazon_url or ''}" placeholder="https://www.amazon.com/dp/...">
+                </div>
+                
+                <div class="form-group">
                     <label>Product Title</label>
                     <input type="text" name="title" value="{saved_product.product_title}" required>
                 </div>
                 
                 <div class="form-group">
-                    <label>Price ($)</label>
+                    <label>Current Price ($)</label>
                     <input type="text" name="price" value="{saved_product.price}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Original Price ($ - for discounted products)</label>
+                    <input type="text" name="original_price" value="{saved_product.original_price or ''}" placeholder="e.g., 249.99">
+                </div>
+                
+                <div class="form-group">
+                    <label>Discount Percentage (%)</label>
+                    <input type="text" name="discount_percent" value="{saved_product.discount_percent or ''}" placeholder="e.g., 20">
                 </div>
                 
                 <div class="form-group">
