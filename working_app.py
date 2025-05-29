@@ -148,6 +148,11 @@ def index():
     </html>
     '''
 
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Railway deployment"""
+    return {"status": "healthy", "service": "AffiliateBot Pro"}, 200
+
 @app.route('/subscribe')
 def subscribe():
     """Subscription page - NO AUTHENTICATION REQUIRED"""
