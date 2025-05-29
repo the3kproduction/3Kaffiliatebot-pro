@@ -1,5 +1,36 @@
-// Simple Radio Player that works
+// Simple Radio Player that works across all pages
 let radioPlayerVisible = false;
+
+// Use localStorage to persist radio state across pages
+function saveRadioState() {
+    if (currentAudio && currentAudio.src) {
+        localStorage.setItem('radioState', JSON.stringify({
+            url: currentAudio.src,
+            name: document.getElementById('current-station').textContent,
+            isPlaying: isPlaying,
+            currentTime: currentAudio.currentTime,
+            volume: currentAudio.volume
+        }));
+    }
+}
+
+function loadRadioState() {
+    const state = localStorage.getItem('radioState');
+    if (state) {
+        const radioState = JSON.parse(state);
+        if (radioState.url && radioState.url !== 'Select a station') {
+            setTimeout(() => {
+                playStation(radioState.url, radioState.name);
+                if (currentAudio) {
+                    currentAudio.volume = radioState.volume || 0.7;
+                    if (radioState.isPlaying) {
+                        currentAudio.play();
+                    }
+                }
+            }, 500);
+        }
+    }
+}
 
 function createSimpleRadio() {
     const radioHTML = `
@@ -49,9 +80,11 @@ function createSimpleRadio() {
                     
                     <div id="stations-list" style="max-height: 200px; overflow-y: auto;">
                         <div id="pop-stations" class="station-group">
-                            <div onclick="playStation('https://playerservices.streamtheworld.com/api/livestream-redirect/SIRIUSXM_HITS1.mp3', 'SiriusXM Hits 1')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🎵</span><span>SiriusXM Hits 1</span></div>
-                            <div onclick="playStation('https://stream.kissfm.ro:8000/kissfm.aacp', 'Kiss FM')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">💋</span><span>Kiss FM</span></div>
-                            <div onclick="playStation('https://media-ice.musicradio.com/CapitalMP3', 'Capital FM')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🏙️</span><span>Capital FM</span></div>
+                            <div onclick="playStation('https://stream.heart.co.uk/heart.mp3', 'Heart FM')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">❤️</span><span>Heart FM</span></div>
+                            <div onclick="playStation('https://media-ssl.musicradio.com/CapitalMP3', 'Capital FM')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🏙️</span><span>Capital FM</span></div>
+                            <div onclick="playStation('https://ice55.securenetsystems.net/DASH32', 'Hit Music Only')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🎵</span><span>Hit Music Only</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/70051', 'Today Hits')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">💫</span><span>Today Hits</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/61975', 'Top 40 Radio')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🔥</span><span>Top 40 Radio</span></div>
                         </div>
                         
                         <div id="rock-stations" class="station-group" style="display: none;">
@@ -176,6 +209,9 @@ function playStation(url, name) {
     if (visualizer) {
         visualizer.style.animation = 'pulse 1s infinite';
     }
+    
+    // Save state for persistence across pages
+    saveRadioState();
 }
 
 function togglePlay() {
@@ -219,6 +255,9 @@ function setVolume(value) {
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
+    // Load previous radio state if it exists
+    loadRadioState();
+    
     // Add toggle button
     const toggleBtn = document.createElement('button');
     toggleBtn.innerHTML = '📻';
