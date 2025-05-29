@@ -112,7 +112,11 @@ class SupportMessage(db.Model):
 # Routes
 @app.route('/')
 def index():
-    """Landing page"""
+    """Landing page - also works as health check"""
+    # Quick health check for Railway
+    if 'health' in request.args or request.headers.get('User-Agent', '').startswith('Railway'):
+        return {"status": "healthy", "service": "AffiliateBot Pro"}, 200
+    
     return '''
     <!DOCTYPE html>
     <html>
