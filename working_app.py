@@ -85,9 +85,12 @@ class UserSavedProducts(db.Model):
     asin = db.Column(db.String(20))
     product_title = db.Column(db.String(200))
     price = db.Column(db.String(20))
+    original_price = db.Column(db.String(20), nullable=True)
+    discount_percent = db.Column(db.String(10), nullable=True)
     rating = db.Column(db.Float)
     category = db.Column(db.String(50))
     image_url = db.Column(db.String(500))
+    amazon_url = db.Column(db.String(500), nullable=True)
     saved_at = db.Column(db.DateTime, default=datetime.now)
     notes = db.Column(db.Text)  # Personal notes about the product
     priority = db.Column(db.String(20), default='medium')  # high, medium, low
@@ -2120,6 +2123,9 @@ def my_catalog():
             <div class="page-title">
                 <h1>📚 My Personal Catalog</h1>
                 <p>Your saved favorite products that stay safe even when trending lists update</p>
+                <div style="margin-top: 20px;">
+                    <a href="/add-amazon-product" class="btn" style="background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 15px 30px; border-radius: 25px; text-decoration: none; font-weight: bold; display: inline-block;">➕ Add Amazon Product</a>
+                </div>
             </div>
             
             <div class="catalog-stats">
@@ -2280,9 +2286,12 @@ def edit_catalog_product(product_id):
         # Update product details
         saved_product.product_title = request.form.get('title', saved_product.product_title)
         saved_product.price = request.form.get('price', saved_product.price)
+        saved_product.original_price = request.form.get('original_price', saved_product.original_price)
+        saved_product.discount_percent = request.form.get('discount_percent', saved_product.discount_percent)
         saved_product.category = request.form.get('category', saved_product.category)
         saved_product.priority = request.form.get('priority', saved_product.priority)
         saved_product.notes = request.form.get('notes', saved_product.notes)
+        saved_product.amazon_url = request.form.get('amazon_url', saved_product.amazon_url)
         
         db.session.commit()
         return redirect('/my-catalog')
@@ -2396,6 +2405,18 @@ def add_amazon_product():
             return "Please provide an Amazon URL"
         
         try:
+            # Handle short URLs like amzn.to/xxxxx by following redirects
+            import requests
+            if 'amzn.to' in amazon_url or 'amazon.com/hz/mobile' in amazon_url:
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+                try:
+                    response = requests.head(amazon_url, headers=headers, allow_redirects=True, timeout=10)
+                    amazon_url = response.url
+                except:
+                    pass
+            
             # Extract ASIN from Amazon URL (more flexible patterns)
             import re
             asin_match = re.search(r'/dp/([A-Z0-9]{10})', amazon_url)
@@ -2414,7 +2435,7 @@ def add_amazon_product():
                 asin_match = re.search(r'([A-Z0-9]{10})', amazon_url)
             
             if not asin_match:
-                return "Could not extract ASIN from Amazon URL. Please use a direct product link."
+                return f"Could not extract ASIN from URL: {amazon_url}. Please use a direct product link with the product code."
             
             asin = asin_match.group(1)
             
