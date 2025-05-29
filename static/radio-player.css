@@ -1,0 +1,357 @@
+/* Floating Radio Player Styles */
+.radio-player {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    width: 350px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.radio-player.minimized {
+    height: 50px;
+}
+
+.radio-header {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    user-select: none;
+}
+
+.radio-title {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
+.radio-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.radio-text {
+    font-size: 14px;
+}
+
+.radio-controls-header {
+    display: flex;
+    gap: 5px;
+}
+
+.control-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.control-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.radio-content {
+    padding: 20px;
+    color: white;
+}
+
+.now-playing {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.station-info {
+    flex: 1;
+}
+
+.station-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.station-genre {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.visualizer {
+    display: flex;
+    align-items: end;
+    gap: 2px;
+    height: 30px;
+}
+
+.visualizer .bar {
+    width: 3px;
+    background: #4ecdc4;
+    border-radius: 2px;
+    transition: height 0.1s ease;
+}
+
+.visualizer.active .bar {
+    animation: visualize 0.8s ease-in-out infinite alternate;
+}
+
+.visualizer .bar:nth-child(1) { height: 10px; animation-delay: 0s; }
+.visualizer .bar:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+.visualizer .bar:nth-child(3) { height: 15px; animation-delay: 0.2s; }
+.visualizer .bar:nth-child(4) { height: 25px; animation-delay: 0.3s; }
+.visualizer .bar:nth-child(5) { height: 12px; animation-delay: 0.4s; }
+
+@keyframes visualize {
+    0% { height: 5px; }
+    100% { height: 30px; }
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.main-control {
+    font-size: 18px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+}
+
+.volume-slider {
+    flex: 1;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    outline: none;
+    appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #4ecdc4;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #4ecdc4;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.station-categories {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.category-tab {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.category-tab:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.category-tab.active {
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+    transform: scale(1.05);
+}
+
+.stations-container {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.station-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.station-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.station-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.station-item.active {
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+    transform: scale(1.02);
+}
+
+.station-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.station-title {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.loading-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+}
+
+.loading-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #4ecdc4;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Radio Toggle Button */
+.radio-toggle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.radio-toggle-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.radio-toggle-button:active {
+    transform: scale(0.95);
+}
+
+/* Scrollbar Styling */
+.stations-container::-webkit-scrollbar,
+.station-categories::-webkit-scrollbar {
+    width: 6px;
+}
+
+.stations-container::-webkit-scrollbar-track,
+.station-categories::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.stations-container::-webkit-scrollbar-thumb,
+.station-categories::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.stations-container::-webkit-scrollbar-thumb:hover,
+.station-categories::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .radio-player {
+        width: 300px;
+        right: 10px;
+    }
+    
+    .category-tab {
+        font-size: 10px;
+        padding: 6px 10px;
+    }
+    
+    .station-title {
+        font-size: 12px;
+    }
+}
+
+/* Animation for player appearance */
+.radio-player {
+    animation: slideInFromRight 0.5s ease-out;
+}
+
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
