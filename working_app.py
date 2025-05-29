@@ -2396,13 +2396,22 @@ def add_amazon_product():
             return "Please provide an Amazon URL"
         
         try:
-            # Extract ASIN from Amazon URL
+            # Extract ASIN from Amazon URL (more flexible patterns)
             import re
             asin_match = re.search(r'/dp/([A-Z0-9]{10})', amazon_url)
             if not asin_match:
                 asin_match = re.search(r'/gp/product/([A-Z0-9]{10})', amazon_url)
             if not asin_match:
                 asin_match = re.search(r'asin=([A-Z0-9]{10})', amazon_url)
+            if not asin_match:
+                asin_match = re.search(r'/product/([A-Z0-9]{10})', amazon_url)
+            if not asin_match:
+                asin_match = re.search(r'amazon\.com/([^/]+/)?([A-Z0-9]{10})', amazon_url)
+                if asin_match:
+                    asin_match = re.search(r'([A-Z0-9]{10})', asin_match.group(0))
+            if not asin_match:
+                # Try to find any 10-character alphanumeric string that looks like an ASIN
+                asin_match = re.search(r'([A-Z0-9]{10})', amazon_url)
             
             if not asin_match:
                 return "Could not extract ASIN from Amazon URL. Please use a direct product link."
