@@ -414,11 +414,16 @@ def products():
     affiliate_id = session.get('amazon_affiliate_id', 'luxoraconnect-20')
     
     for product in products:
-        affiliate_url = f"https://amazon.com/dp/{product.asin}?tag={affiliate_id}"
+        affiliate_url = f"https://www.amazon.com/dp/{product.asin}?tag={affiliate_id}"
+        # Ensure price is formatted correctly
+        price = product.price
+        if isinstance(price, str) and not price.startswith('$'):
+            if price.replace('.', '').isdigit():
+                price = f"{float(price):.2f}"
         products_list.append({
             'asin': product.asin,
             'title': product.product_title,
-            'price': product.price,
+            'price': price,
             'rating': product.rating,
             'category': product.category,
             'image_url': product.image_url,
@@ -2429,7 +2434,7 @@ def add_amazon_product():
                 <p>4. The system will automatically create your affiliate link!</p>
             </div>
             
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label>Amazon Product URL</label>
                     <input type="url" name="amazon_url" placeholder="https://www.amazon.com/dp/XXXXXXXXXX" required>
@@ -2451,6 +2456,12 @@ def add_amazon_product():
                         <option value="Pet Supplies">Pet Supplies</option>
                         <option value="General">General</option>
                     </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>📸 Product Image (Optional)</label>
+                    <input type="file" name="product_image" accept="image/*" style="background: rgba(255,255,255,0.2); color: white;">
+                    <small style="opacity: 0.8; display: block; margin-top: 5px;">Upload a custom image for this product. If not provided, we'll use Amazon's default image.</small>
                 </div>
                 
                 <button type="submit" class="btn">🚀 Add Product & Create Affiliate Link</button>
