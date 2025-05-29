@@ -259,6 +259,7 @@ class FloatingRadioPlayer {
 
     showPlayer() {
         this.playerElement.style.display = 'block';
+        this.playerElement.style.visibility = 'visible';
     }
 
     updatePlayState(playing) {
@@ -317,11 +318,11 @@ class FloatingRadioPlayer {
 }
 
 // Global radio player instance
-let radioPlayer;
+window.radioPlayer = null;
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    radioPlayer = new FloatingRadioPlayer();
+    window.radioPlayer = new FloatingRadioPlayer();
 });
 
 // Add radio toggle button to existing pages
@@ -334,8 +335,13 @@ function addRadioToggleButton() {
         toggleBtn.title = 'Open Radio Player';
         
         toggleBtn.addEventListener('click', () => {
-            if (radioPlayer) {
-                radioPlayer.showPlayer();
+            console.log('Radio toggle clicked');
+            if (window.radioPlayer) {
+                window.radioPlayer.showPlayer();
+            } else {
+                console.log('Radio player not initialized yet');
+                // Initialize if not ready
+                window.radioPlayer = new FloatingRadioPlayer();
             }
         });
         
