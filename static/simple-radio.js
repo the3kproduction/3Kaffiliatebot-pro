@@ -197,15 +197,17 @@ function minimizeRadio() {
     const content = document.getElementById('radio-content');
     
     if (content.style.display === 'none') {
-        // Expand the player
+        // Expand the player back to full size
         content.style.display = 'block';
         player.style.width = '320px';
         player.style.height = 'auto';
+        player.style.borderRadius = '15px';
     } else {
-        // Minimize to small button
+        // Minimize to small round button
         content.style.display = 'none';
         player.style.width = '60px';
         player.style.height = '60px';
+        player.style.borderRadius = '50%';
     }
 }
 
