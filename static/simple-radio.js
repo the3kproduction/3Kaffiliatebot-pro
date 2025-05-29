@@ -193,11 +193,19 @@ function closeRadio() {
 }
 
 function minimizeRadio() {
+    const player = document.getElementById('simple-radio-player');
     const content = document.getElementById('radio-content');
+    
     if (content.style.display === 'none') {
+        // Expand the player
         content.style.display = 'block';
+        player.style.width = '320px';
+        player.style.height = 'auto';
     } else {
+        // Minimize to small button
         content.style.display = 'none';
+        player.style.width = '60px';
+        player.style.height = '60px';
     }
 }
 
