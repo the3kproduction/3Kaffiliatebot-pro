@@ -20,21 +20,25 @@ function loadRadioState() {
         const radioState = JSON.parse(state);
         if (radioState.url && radioState.url !== 'Select a station') {
             setTimeout(() => {
-                playStation(radioState.url, radioState.name);
-                if (currentAudio) {
-                    currentAudio.volume = radioState.volume || 0.7;
-                    if (radioState.isPlaying) {
-                        currentAudio.play();
+                // Only load if player exists
+                const stationElement = document.getElementById('current-station');
+                if (stationElement) {
+                    playStation(radioState.url, radioState.name);
+                    if (currentAudio) {
+                        currentAudio.volume = radioState.volume || 0.7;
+                        if (radioState.isPlaying) {
+                            currentAudio.play();
+                        }
                     }
                 }
-            }, 500);
+            }, 1000);
         }
     }
 }
 
 function createSimpleRadio() {
     const radioHTML = `
-        <div id="simple-radio-player" style="position: fixed; top: 100px; right: 20px; width: 350px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); z-index: 9999; font-family: Arial, sans-serif; color: white; display: none;">
+        <div id="simple-radio-player" style="position: fixed; top: 100px; right: 20px; width: 350px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); z-index: 9999; font-family: Arial, sans-serif; color: white; display: none; border: 1px solid rgba(255, 255, 255, 0.2);">
             <div style="background: rgba(0, 0, 0, 0.2); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; cursor: move;">
                 <div style="display: flex; align-items: center;">
                     <span style="margin-right: 8px; font-size: 16px;">📻</span>
@@ -85,27 +89,52 @@ function createSimpleRadio() {
                             <div onclick="playStation('https://ice55.securenetsystems.net/DASH32', 'Hit Music Only')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🎵</span><span>Hit Music Only</span></div>
                             <div onclick="playStation('https://stream.rcast.net/70051', 'Today Hits')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">💫</span><span>Today Hits</span></div>
                             <div onclick="playStation('https://stream.rcast.net/61975', 'Top 40 Radio')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🔥</span><span>Top 40 Radio</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-power_128k.mp3', '181 Power Hits')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">⚡</span><span>181 Power Hits</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-party_128k.mp3', '181 Party')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🎉</span><span>181 Party</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/252047', 'Hit Mix Radio')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🎶</span><span>Hit Mix Radio</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/251234', 'Pop Central')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">🌟</span><span>Pop Central</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/252789', 'Chart Toppers')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: all 0.3s ease;"><span style="margin-right: 10px;">📈</span><span>Chart Toppers</span></div>
                         </div>
                         
                         <div id="rock-stations" class="station-group" style="display: none;">
                             <div onclick="playStation('https://planetradio.co.uk/planetrock/live/', 'Planet Rock')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🤘</span><span>Planet Rock</span></div>
                             <div onclick="playStation('https://stream.kerrangradio.co.uk/kerrang.mp3', 'Kerrang! Radio')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">⚡</span><span>Kerrang! Radio</span></div>
                             <div onclick="playStation('https://cast2.asurahosting.com:8045/radio.mp3', 'Metal Radio')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🔥</span><span>Metal Radio</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-rock_128k.mp3', '181 Rock')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎸</span><span>181 Rock</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-classic-rock_128k.mp3', '181 Classic Rock')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎵</span><span>181 Classic Rock</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/252486', 'Rock FM')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🔨</span><span>Rock FM</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/251892', 'Hard Rock Radio')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">⚔️</span><span>Hard Rock Radio</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/253741', 'Alternative Rock')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🌊</span><span>Alternative Rock</span></div>
                         </div>
                         
                         <div id="electronic-stations" class="station-group" style="display: none;">
                             <div onclick="playStation('https://radiofg.impek.com/fg', 'Radio FG')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎧</span><span>Radio FG</span></div>
                             <div onclick="playStation('https://ibizaglobalradio.streaming-pro.com:8024/ibizaglobal.mp3', 'Ibiza Global Radio')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🏝️</span><span>Ibiza Global Radio</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-dance_128k.mp3', '181 Dance')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">💃</span><span>181 Dance</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-trance_128k.mp3', '181 Trance')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🌀</span><span>181 Trance</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/252741', 'Electronic Beats')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">⚡</span><span>Electronic Beats</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/253892', 'Techno Radio')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🤖</span><span>Techno Radio</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/252047', 'House Music')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🏠</span><span>House Music</span></div>
                         </div>
                         
                         <div id="hiphop-stations" class="station-group" style="display: none;">
                             <div onclick="playStation('https://playerservices.streamtheworld.com/api/livestream-redirect/WQHTFM.mp3', 'Hot 97')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🔥</span><span>Hot 97</span></div>
                             <div onclick="playStation('https://playerservices.streamtheworld.com/api/livestream-redirect/KPWRFM.mp3', 'Power 106')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">💪</span><span>Power 106</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-hiphop_128k.mp3', '181 Hip Hop')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎤</span><span>181 Hip Hop</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-90shiphop_128k.mp3', '181 90s Hip Hop')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">📻</span><span>181 90s Hip Hop</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/252963', 'Rap Central')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎵</span><span>Rap Central</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/253147', 'Urban Beats')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🏙️</span><span>Urban Beats</span></div>
                         </div>
                         
                         <div id="jazz-stations" class="station-group" style="display: none;">
                             <div onclick="playStation('https://playerservices.streamtheworld.com/api/livestream-redirect/SMOOTHJAZZ.mp3', 'Smooth Jazz')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎷</span><span>Smooth Jazz</span></div>
                             <div onclick="playStation('https://edge-bauerseoprod-01-gos2.sharp-stream.com/jazzfm.mp3', 'Jazz FM')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎺</span><span>Jazz FM</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-fusionjazz_128k.mp3', '181 Fusion Jazz')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎹</span><span>181 Fusion Jazz</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-smoothjazz_128k.mp3', '181 Smooth Jazz')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">✨</span><span>181 Smooth Jazz</span></div>
+                            <div onclick="playStation('https://listen.181fm.com/181-blues_128k.mp3', '181 Blues')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎸</span><span>181 Blues</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/252685', 'Jazz Cafe')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">☕</span><span>Jazz Cafe</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/261982', 'Vintage Jazz')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🎭</span><span>Vintage Jazz</span></div>
+                            <div onclick="playStation('https://stream.rcast.net/253741', 'Contemporary Jazz')" style="display: flex; align-items: center; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; margin-bottom: 5px;"><span style="margin-right: 10px;">🌟</span><span>Contemporary Jazz</span></div>
                         </div>
                         
                         <div id="classical-stations" class="station-group" style="display: none;">
