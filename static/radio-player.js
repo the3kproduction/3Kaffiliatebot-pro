@@ -70,7 +70,7 @@ class FloatingRadioPlayer {
 
     createPlayer() {
         const playerHTML = `
-            <div id="floating-radio-player" class="radio-player">
+            <div id="floating-radio-player" class="radio-player" style="display: block;">
                 <div class="radio-header">
                     <div class="radio-title">
                         <span class="radio-icon">📻</span>
@@ -137,43 +137,59 @@ class FloatingRadioPlayer {
         this.playerElement = document.getElementById('floating-radio-player');
         
         // Show first category by default
-        const firstCategory = Object.keys(this.stations)[0];
-        document.querySelector(`[data-category="${firstCategory}"]`).style.display = 'block';
-        document.querySelector(`.category-tab[data-category="${firstCategory}"]`).classList.add('active');
+        setTimeout(() => {
+            const firstCategory = Object.keys(this.stations)[0];
+            const firstStationList = document.querySelector(`[data-category="${firstCategory}"]`);
+            const firstTab = document.querySelector(`.category-tab[data-category="${firstCategory}"]`);
+            if (firstStationList) firstStationList.style.display = 'block';
+            if (firstTab) firstTab.classList.add('active');
+        }, 100);
     }
 
     initializeEvents() {
-        // Category tabs
-        document.querySelectorAll('.category-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const category = e.target.dataset.category;
-                this.showCategory(category);
+        // Add small delay to ensure DOM is ready
+        setTimeout(() => {
+            // Category tabs
+            const tabs = document.querySelectorAll('.category-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const category = e.target.dataset.category;
+                    this.showCategory(category);
+                });
             });
-        });
 
-        // Station selection
-        document.querySelectorAll('.station-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                const url = e.currentTarget.dataset.url;
-                const name = e.currentTarget.dataset.name;
-                this.playStation(url, name);
+            // Station selection
+            const stationItems = document.querySelectorAll('.station-item');
+            stationItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const url = e.currentTarget.dataset.url;
+                    const name = e.currentTarget.dataset.name;
+                    this.playStation(url, name);
+                });
             });
-        });
 
-        // Player controls
-        document.getElementById('play-pause-btn').addEventListener('click', () => this.togglePlayPause());
-        document.getElementById('stop-btn').addEventListener('click', () => this.stopPlayback());
-        document.getElementById('mute-btn').addEventListener('click', () => this.toggleMute());
-        document.getElementById('minimize-radio').addEventListener('click', () => this.toggleMinimize());
-        document.getElementById('close-radio').addEventListener('click', () => this.closePlayer());
-        
-        // Volume control
-        document.getElementById('volume-slider').addEventListener('input', (e) => {
-            this.setVolume(e.target.value / 100);
-        });
+            // Player controls
+            const playBtn = document.getElementById('play-pause-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            const muteBtn = document.getElementById('mute-btn');
+            const minimizeBtn = document.getElementById('minimize-radio');
+            const closeBtn = document.getElementById('close-radio');
+            const volumeSlider = document.getElementById('volume-slider');
+            
+            if (playBtn) playBtn.addEventListener('click', () => this.togglePlayPause());
+            if (stopBtn) stopBtn.addEventListener('click', () => this.stopPlayback());
+            if (muteBtn) muteBtn.addEventListener('click', () => this.toggleMute());
+            if (minimizeBtn) minimizeBtn.addEventListener('click', () => this.toggleMinimize());
+            if (closeBtn) closeBtn.addEventListener('click', () => this.closePlayer());
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', (e) => {
+                    this.setVolume(e.target.value / 100);
+                });
+            }
 
-        // Make player draggable
-        this.makeDraggable();
+            // Make player draggable
+            this.makeDraggable();
+        }, 200);
     }
 
     showCategory(category) {
