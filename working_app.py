@@ -2148,6 +2148,7 @@ def my_catalog():
                     {"<div class='product-notes'>📝 " + product.notes + "</div>" if product.notes else ""}
                     <div class="product-actions">
                         <a href="/promote/{product.asin}" class="btn btn-primary">🚀</a>
+                        <a href="/edit-catalog-product/{product.id}" class="btn btn-secondary">✏️ Edit</a>
                         <button onclick="document.getElementById('imageInput_{product.asin}').click()" class="btn btn-upload">📸</button>
                         <input type="file" id="imageInput_{product.asin}" style="display: none;" accept="image/*" onchange="uploadImageFromCatalog('{product.asin}', this)">
                         <a href="/remove-saved-product/{product.id}" class="btn btn-danger" onclick="return confirm('Remove?')">❌</a>
@@ -2264,6 +2265,95 @@ def save_product(asin):
     db.session.commit()
     
     return {'success': True, 'message': 'Product saved to your catalog!'}
+
+@app.route('/edit-catalog-product/<int:product_id>', methods=['GET', 'POST'])
+def edit_catalog_product(product_id):
+    """Edit product in user's personal catalog"""
+    if not session.get('user_id'):
+        return redirect('/login')
+    
+    saved_product = UserSavedProducts.query.filter_by(id=product_id, user_id=session['user_id']).first()
+    if not saved_product:
+        return redirect('/my-catalog')
+    
+    if request.method == 'POST':
+        # Update product details
+        saved_product.product_title = request.form.get('title', saved_product.product_title)
+        saved_product.price = request.form.get('price', saved_product.price)
+        saved_product.category = request.form.get('category', saved_product.category)
+        saved_product.priority = request.form.get('priority', saved_product.priority)
+        saved_product.notes = request.form.get('notes', saved_product.notes)
+        
+        db.session.commit()
+        return redirect('/my-catalog')
+    
+    return f'''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Edit Product - AffiliateBot Pro</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; padding: 20px; }}
+            .container {{ max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; backdrop-filter: blur(10px); }}
+            .form-group {{ margin-bottom: 20px; }}
+            label {{ display: block; margin-bottom: 5px; font-weight: bold; }}
+            input, select, textarea {{ width: 100%; padding: 12px; border: none; border-radius: 8px; background: rgba(255,255,255,0.9); color: #333; }}
+            .btn {{ background: #4CAF50; color: white; padding: 15px 30px; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; margin-right: 10px; }}
+            .btn-cancel {{ background: #f44336; }}
+            .back-btn {{ background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border: none; border-radius: 20px; text-decoration: none; margin-bottom: 20px; display: inline-block; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <a href="/my-catalog" class="back-btn">← Back to My Catalog</a>
+            <h1>✏️ Edit Product</h1>
+            <p>Update the details for this product in your personal catalog</p>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label>Product Title</label>
+                    <input type="text" name="title" value="{saved_product.product_title}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Price ($)</label>
+                    <input type="text" name="price" value="{saved_product.price}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category">
+                        <option value="Electronics" {"selected" if saved_product.category == "Electronics" else ""}>Electronics</option>
+                        <option value="Kitchen" {"selected" if saved_product.category == "Kitchen" else ""}>Kitchen & Home</option>
+                        <option value="Books" {"selected" if saved_product.category == "Books" else ""}>Books</option>
+                        <option value="Health" {"selected" if saved_product.category == "Health" else ""}>Health & Personal Care</option>
+                        <option value="Sports" {"selected" if saved_product.category == "Sports" else ""}>Sports & Outdoors</option>
+                        <option value="Beauty" {"selected" if saved_product.category == "Beauty" else ""}>Beauty</option>
+                        <option value="General" {"selected" if saved_product.category == "General" else ""}>General</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Priority</label>
+                    <select name="priority">
+                        <option value="high" {"selected" if saved_product.priority == "high" else ""}>High Priority</option>
+                        <option value="medium" {"selected" if saved_product.priority == "medium" else ""}>Medium Priority</option>
+                        <option value="low" {"selected" if saved_product.priority == "low" else ""}>Low Priority</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Notes (Optional)</label>
+                    <textarea name="notes" rows="3" placeholder="Add any notes about this product...">{saved_product.notes or ""}</textarea>
+                </div>
+                
+                <button type="submit" class="btn">💾 Save Changes</button>
+                <a href="/my-catalog" class="btn btn-cancel">Cancel</a>
+            </form>
+        </div>
+    </body>
+    </html>
+    '''
 
 @app.route('/remove-saved-product/<int:product_id>')
 def remove_saved_product(product_id):
