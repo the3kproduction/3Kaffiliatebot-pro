@@ -249,7 +249,15 @@
                 
                 <div class="product-category">{{ product.category }}</div>
                 <div class="product-title">{{ product.title }}</div>
-                <div class="product-price">${{ product.price }}</div>
+                <div class="product-price">
+                    {% if product.original_price and product.discount_percent %}
+                        <span style="text-decoration: line-through; color: #888; font-size: 0.9em;">${{ product.original_price }}</span>
+                        <span style="color: #e74c3c; font-weight: bold; margin-left: 8px;">${{ product.price }}</span>
+                        <span style="background: #e74c3c; color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.8em; margin-left: 8px;">-{{ product.discount_percent }}%</span>
+                    {% else %}
+                        ${{ product.price }}
+                    {% endif %}
+                </div>
                 
                 {% if product.rating %}
                 <div class="product-rating">

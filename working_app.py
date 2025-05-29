@@ -2389,6 +2389,8 @@ def add_amazon_product():
         amazon_url = request.form.get('amazon_url', '').strip()
         manual_title = request.form.get('product_title', '').strip()
         manual_price = request.form.get('product_price', '').strip()
+        original_price = request.form.get('original_price', '').strip()
+        discount_percent = request.form.get('discount_percent', '').strip()
         
         if not amazon_url:
             return "Please provide an Amazon URL"
@@ -2453,6 +2455,8 @@ def add_amazon_product():
             product.asin = asin
             product.product_title = title[:200]
             product.price = price
+            product.original_price = original_price if original_price else None
+            product.discount_percent = discount_percent if discount_percent else None
             product.rating = 4.5
             product.category = request.form.get('category', 'General')
             product.image_url = f"https://images-na.ssl-images-amazon.com/images/P/{asin}.jpg"
@@ -2549,8 +2553,18 @@ def add_amazon_product():
                 </div>
                 
                 <div class="form-group">
-                    <label>Price (Optional - will auto-detect if blank)</label>
+                    <label>Current Price (Optional - will auto-detect if blank)</label>
                     <input type="text" name="product_price" placeholder="e.g., 199.99 (without $ sign)">
+                </div>
+                
+                <div class="form-group">
+                    <label>Original Price (Optional - for discounted products)</label>
+                    <input type="text" name="original_price" placeholder="e.g., 249.99 (original price before discount)">
+                </div>
+                
+                <div class="form-group">
+                    <label>Discount Percentage (Optional)</label>
+                    <input type="text" name="discount_percent" placeholder="e.g., 20 (percentage off)">
                 </div>
                 
                 <div class="form-group">

@@ -184,6 +184,8 @@ class ProductInventory(db.Model):
     product_title = db.Column(db.String(200), nullable=False)
     category = db.Column(db.String(50))
     price = db.Column(db.String(20))
+    original_price = db.Column(db.String(20), nullable=True)
+    discount_percent = db.Column(db.String(10), nullable=True)
     rating = db.Column(db.Float)
     image_url = db.Column(db.String(500))
     
